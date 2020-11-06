@@ -94,8 +94,19 @@
         </x-slot>
 
         <x-slot name="footer">
-            <button class="px-4 py-2 text-sm font-medium leading-none text-teal-100 capitalize bg-teal-500 hover:bg-teal-600 hover:text-white rounded-md shadown">salvar</button>
-            <button @click.prevent="register()" class="px-4 py-2 text-sm font-medium leading-none text-teal-100 capitalize bg-teal-500 hover:bg-teal-600 hover:text-white rounded-md shadown">registrar</button>
+            <div x-show="message.show" class="block mr-auto"><span x-text="message.content"></span></div>
+            <button 
+                @click.prevent="saveDraft()" 
+                class="px-4 py-2 text-sm font-medium leading-none text-teal-100 capitalize bg-teal-500 hover:bg-teal-600 hover:text-white rounded-md shadown"
+            >
+                salvar
+            </button>
+            <button 
+                @click.prevent="register()" 
+                class="px-4 py-2 text-sm font-medium leading-none text-teal-100 capitalize bg-teal-500 hover:bg-teal-600 hover:text-white rounded-md shadown"
+            >
+                registrar
+            </button>
         </x-slot>
 
     </x-card.form-layout>
@@ -110,7 +121,11 @@
         function form() {
             return {
                 data: {
-                    register: '',
+                    register: '{{ $lesson->register }}',
+                },
+                message: {
+                    content: '',
+                    show: false,
                 },
                 errors: {
                     register: {
@@ -123,8 +138,17 @@
                         .then(response => {this.redirectToLesson()})
                         .catch(error => {this.handleErrors(error.response.data.errors)});
                 },
+                saveDraft() {
+                    axios.post('lessons/draft/{{ $lesson->id }}', this.data)
+                        .then(response => {this.showSuccessMessage('Rascunho salvo com sucesso!')})
+                        .catch(error => {this.handleErrors(error.response.data.errors)});
+                },
                 redirectToLesson() {
                     window.location.assign('{{ route('lessons.show', ['lesson' => $lesson->id]) }}');
+                },
+                showSuccessMessage($message) {
+                    this.message.content = $message;
+                    this.message.show = true;
                 },
                 handleErrors(errors) {
                     Object.entries(errors).forEach((key) => {

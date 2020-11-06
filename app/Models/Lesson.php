@@ -20,7 +20,7 @@ class Lesson extends Model
 
     public function isRegistered()
     {
-        return empty($this->register) ? false : true;
+        return empty($this->registered_at) ? false : true;
     }
 
     public function isForToday()

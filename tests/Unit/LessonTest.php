@@ -23,17 +23,24 @@ class LessonTest extends TestCase
     /** @test */
     public function can_check_if_it_is_registered()
     {
-        $lesson = Lesson::factory()->registered()->make([]);
+        $lesson = Lesson::factory()->make([
+            'register' => 'Fake register.',
+            'registered_at' => Carbon::parse('+2 weeks'),
+        ]);
 
         $this->assertTrue($lesson->isRegistered());
+        $this->assertNotNull($lesson->registered_at);
     }
 
     /** @test */
     public function can_check_if_it_is_not_registered()
     {
-        $lesson = Lesson::factory()->notRegistered()->make([]);
+        $lesson = Lesson::factory()->make([
+            'registered_at' => null,
+        ]);
 
         $this->assertFalse($lesson->isRegistered());
+        $this->assertNull($lesson->registered_at);
     }
 
     /** @test */

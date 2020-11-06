@@ -22,6 +22,7 @@ class CreateLessonsTable extends Migration
             $table->string('hourly_load');
             $table->string('novice');
             $table->text('register')->nullable();
+            $table->dateTime('registered_at')->nullable();
             $table->timestamps();
         });
     }

@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LessonDraftController;
 use App\Http\Controllers\LessonRegisterController;
 
 /*
@@ -19,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::post('/lessons/register/{lesson}', [LessonRegisterController::class, 'store'])->name('lessons.register.store');
+Route::post('/lessons/draft/{lesson}', [LessonDraftController::class, 'store'])->name('lessons.draft.store');

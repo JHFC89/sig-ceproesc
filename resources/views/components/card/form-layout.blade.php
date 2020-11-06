@@ -10,7 +10,7 @@
             {{ $inputs }}
         </div>
 
-        <div class="flex justify-end px-6 py-4 bg-gray-100 space-x-2">
+        <div class="flex items-center justify-end px-6 py-4 bg-gray-100 space-x-2">
             {{ $footer }}
         </div>
 

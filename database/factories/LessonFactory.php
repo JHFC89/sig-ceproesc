@@ -37,6 +37,7 @@ class LessonFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'register' => 'Fake register.',
+                'registered_at' => Carbon::parse('+2 weeks'),
             ];
         });
     }
@@ -57,6 +58,7 @@ class LessonFactory extends Factory
                 'date' => Carbon::now(),
             ];
         });
+
     }
 
     public function notForToday()
@@ -64,6 +66,15 @@ class LessonFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'date' => Carbon::parse('+2 weeks'),
+            ];
+        });
+    }
+
+    public function draft()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'register' => 'Fake draft register.',
             ];
         });
     }
