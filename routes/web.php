@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LessonController;
+use App\Http\Controllers\LessonRegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,3 +14,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
+
+Route::get('/lessons/register/create/{lesson}', [LessonRegisterController::class, 'create'])->name('lessons.register.create');
+
+Route::view('/mockups/lessons/create', 'mockups.lessons.create');
