@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Lesson;
 use Illuminate\Http\Request;
 
@@ -26,11 +27,21 @@ class LessonRegisterController extends Controller
 
         request()->validate([
             'register' => 'required',
+            'presenceList' => 'required',
         ]);
 
         $lesson->register = request()->register;
         $lesson->registered_at = now();
         $lesson->save();
+
+        try {
+            $presence = collect(request()->presenceList);
+            $presence->each(function ($frequency, $id) use ($lesson) {
+                $lesson->registerPresence(User::find($id), $frequency);
+            });
+        } catch (NoviceNotEnrolledException $exception) {
+            abort(403, $exception->getMessage());
+        }
 
         return response('', 201);
     }

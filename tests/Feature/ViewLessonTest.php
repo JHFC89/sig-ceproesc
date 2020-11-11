@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Lesson;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -22,18 +23,26 @@ class ViewLessonTest extends TestCase
             'class'         => '2021 - janeiro',
             'discipline'    => 'administração',
             'hourly_load'   => '123hr',
-            'novice'        => 'Mary Jane'
         ]);
+        $noviceA = User::factory()->create();
+        $noviceB = User::factory()->create();
+        $noviceC = User::factory()->create();
+        collect([$noviceA, $noviceB, $noviceC])->each(function ($novice) use ($lesson) {
+            $lesson->enroll($novice);
+        });
 
         $reponse = $this->get('lessons/' . $lesson->id);
 
-        $reponse->assertOk();
-        $reponse->assertSee('John Doe');
-        $reponse->assertSee($date->format('d/m/Y'));
-        $reponse->assertSee('2021 - janeiro');
-        $reponse->assertSee('administração');
-        $reponse->assertSee('123hr');
-        $reponse->assertSee('Mary Jane');
+        $reponse
+            ->assertOk()
+            ->assertSee('John Doe')
+            ->assertSee($date->format('d/m/Y'))
+            ->assertSee('2021 - janeiro')
+            ->assertSee('administração')
+            ->assertSee('123hr')
+            ->assertSee($noviceA->name)
+            ->assertSee($noviceB->name)
+            ->assertSee($noviceC->name);
     }
 
     /** @test */

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Lesson;
 use Illuminate\Http\Request;
+use App\Exceptions\NoviceNotEnrolledException;
 
 class LessonDraftController extends Controller
 {
@@ -19,10 +21,20 @@ class LessonDraftController extends Controller
 
         request()->validate([
             'register' => 'required',
+            'presenceList' => 'required',
         ]);
 
         $lesson->register = request()->register;
         $lesson->save();
+
+        try {
+            $presence = collect(request()->presenceList);
+            $presence->each(function ($frequency, $id) use ($lesson) {
+                $lesson->registerPresence(User::find($id), $frequency);
+            });
+        } catch (NoviceNotEnrolledException $exception) {
+            abort(403, $exception->getMessage());
+        }
 
         return response('', 201);
     }

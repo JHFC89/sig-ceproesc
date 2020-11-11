@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use App\Exceptions\NoviceNotEnrolledException;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Lesson extends Model
 {
@@ -26,5 +28,59 @@ class Lesson extends Model
     public function isForToday()
     {
         return ($this->date->format('d/m/Y') == now()->format('d/m/Y')) ? true : false;
+    }
+
+    public function enroll(User $novice)
+    {
+        $this->novices()->attach($novice->id);
+    }
+
+    public function isEnrolled(User $novice)
+    {
+        return $this->enrolled($novice->id)->count() > 0 ? true : false;
+    }
+
+    public function registerPresence(User $novice, Int $frequency)
+    {
+        throw_unless(
+            $this->isEnrolled($novice),
+            NoviceNotEnrolledException::class,
+            'Trying to register presence to a novice that is not enrolled to this lesson.'
+        );
+
+        if($this->novices->find($novice->id)->presence->frequency === $frequency) {
+            return 1;
+        }
+
+        return $this->novices()->updateExistingPivot($novice->id, ['frequency' => $frequency]);
+    }
+
+    public function novicesFrequencyToJsonObject()
+    {
+        $novices = $this->novices->reduce(function ($novices, $novice) {
+            $frequency = $novice->lessons->find($this)->presence->frequency;
+            if($frequency === null) {
+                $novices[$novice->id] = 3;
+            } else {
+                $novices[$novice->id] = $frequency;
+            }
+            return $novices;
+        }, []);
+
+        return json_encode($novices);
+    }
+
+    public function novices()
+    {
+        return $this->belongsToMany(User::class)
+                    ->as('presence')
+                    ->withPivot('frequency');
+    }
+
+    public function scopeEnrolled($query, int $noviceId)
+    {
+        return $query->wherehas('novices', function (builder $query) use ($noviceId) {
+            $query->where('user_id', $noviceId);
+        });
     }
 }

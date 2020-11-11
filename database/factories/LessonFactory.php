@@ -28,7 +28,6 @@ class LessonFactory extends Factory
             'class'         => '2021 - janeiro',
             'discipline'    => 'fake discipline',
             'hourly_load'   => '123hr',
-            'novice'        => 'Mary Jane'
         ];
     }
 

@@ -26,29 +26,35 @@
 
         <x-slot name="body">
 
-            <x-card.list.table-body-item class="col-span-1">
-                <x-slot name="item">
-                    <span>123</span>
-                </x-slot>
-            </x-card.list.table-body-item>
+            @foreach($lesson->novices as $novice)
+            <x-card.list.table-row>
+                <x-slot name="items">
+                    <x-card.list.table-body-item class="col-span-1">
+                        <x-slot name="item">
+                            <span>123</span>
+                        </x-slot>
+                    </x-card.list.table-body-item>
 
-            <x-card.list.table-body-item class="col-span-5">
-                <x-slot name="item">
-                    <span>{{ $lesson->novice }}</span>
-                </x-slot>
-            </x-card.list.table-body-item>
+                    <x-card.list.table-body-item class="col-span-5">
+                        <x-slot name="item">
+                            <span>{{ $novice->name }}</span>
+                        </x-slot>
+                    </x-card.list.table-body-item>
 
-            <x-card.list.table-body-item class="col-span-2">
-                <x-slot name="item">
-                    <span>2021 - janeiro</span>
-                </x-slot>
-            </x-card.list.table-body-item>
+                    <x-card.list.table-body-item class="col-span-2">
+                        <x-slot name="item">
+                            <span>2021 - janeiro</span>
+                        </x-slot>
+                    </x-card.list.table-body-item>
 
-            <x-card.list.table-body-item class="col-span-4">
-                <x-slot name="item">
-                    <span>3 hrs</span>
+                    <x-card.list.table-body-item class="col-span-4">
+                        <x-slot name="item">
+                            <span>{{ $novice->lessons->find($lesson)->presence->frequency }} hrs</span>
+                        </x-slot>
+                    </x-card.list.table-body-item>
                 </x-slot>
-            </x-card.list.table-body-item>
+            </x-card.list.table-row>
+            @endforeach
 
         </x-slot>
 

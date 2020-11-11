@@ -21,53 +21,90 @@
             <x-card.list.table-header class="col-span-1" name="turma"/>
             <x-card.list.table-header class="col-span-5" name="presença"/>
         </x-slot>
+
         <x-slot name="body">
 
-            <x-card.list.table-body-item class="col-span-1">
-                <x-slot name="item">
-                    <span>123</span>
-                </x-slot>
-            </x-card.list.table-body-item>
+            @foreach($lesson->novices as $novice)
+            <x-card.list.table-row>
+                <x-slot name="items">
+                    <x-card.list.table-body-item class="col-span-1">
+                        <x-slot name="item">
+                            <span>123</span>
+                        </x-slot>
+                    </x-card.list.table-body-item>
 
-            <x-card.list.table-body-item class="col-span-5">
-                <x-slot name="item">
-                    <span>{{ $lesson->novice }}</span>
-                </x-slot>
-            </x-card.list.table-body-item>
+                    <x-card.list.table-body-item class="col-span-5">
+                        <x-slot name="item">
+                            <span>{{ $novice->name }}</span>
+                        </x-slot>
+                    </x-card.list.table-body-item>
 
-            <x-card.list.table-body-item class="col-span-1">
-                <x-slot name="item">
-                    <span>2021 - janeiro</span>
-                </x-slot>
-            </x-card.list.table-body-item>
+                    <x-card.list.table-body-item class="col-span-1">
+                        <x-slot name="item">
+                            <span>2021 - janeiro</span>
+                        </x-slot>
+                    </x-card.list.table-body-item>
 
-            <x-card.list.table-body-item class="col-span-5">
-                <x-slot name="item">
-                    <div class="space-x-4">
-                        <label class="inline-flex items-center space-x-2">
-                            <input class="form-radio" type="radio" name="presence1" value="0">
-                            <span>0</span>
-                        </label>
-                        <label class="inline-flex items-center space-x-2">
-                            <input class="form-radio" type="radio" name="presence1" value="1">
-                            <span>1</span>
-                        </label>
-                        <label class="inline-flex items-center space-x-2">
-                            <input class="form-radio" type="radio" name="presence1" value="2">
-                            <span>2</span>
-                        </label>
-                        <label class="inline-flex items-center space-x-2">
-                            <input class="form-radio" type="radio" name="presence1" value="3" checked>
-                            <span>3</span>
-                        </label>
-                    </div>
+                    <x-card.list.table-body-item class="col-span-5">
+                        <x-slot name="item">
+                            <div x-data class="space-x-4">
+                                <label class="inline-flex items-center space-x-2"> 
+                                    <input 
+                                        @change="$dispatch('frequency-event', {'{{ $novice->id }}' : 0})" 
+                                        class="form-radio" 
+                                        type="radio" 
+                                        name="presence-{{ $novice->id }}" 
+                                        value="0"
+                                        {{ $novice->lessons->find($lesson)->presence->frequency === 0 ? 'checked' : '' }}
+                                    >
+                                    <span>0</span>
+                                </label>
+                                <label class="inline-flex items-center space-x-2">
+                                    <input 
+                                        @change="$dispatch('frequency-event', {'{{ $novice->id }}' : 1})" 
+                                        class="form-radio" 
+                                        type="radio" 
+                                        name="presence-{{ $novice->id }}" 
+                                        value="1"
+                                        {{ $novice->lessons->find($lesson)->presence->frequency == 1 ? 'checked' : '' }}
+                                    >
+                                    <span>1</span>
+                                </label>
+                                <label class="inline-flex items-center space-x-2">
+                                    <input 
+                                        @change="$dispatch('frequency-event', {'{{ $novice->id }}' : 2})" 
+                                        class="form-radio" 
+                                        type="radio" 
+                                        name="presence-{{ $novice->id }}" 
+                                        value="2"
+                                        {{ $novice->lessons->find($lesson)->presence->frequency == 2 ? 'checked' : '' }}
+                                    >
+                                    <span>2</span>
+                                </label>
+                                <label class="inline-flex items-center space-x-2">
+                                    <input 
+                                        @change="$dispatch('frequency-event', {'{{ $novice->id }}' : 3})" 
+                                        class="form-radio" 
+                                        type="radio" 
+                                        name="presence-{{ $novice->id }}" 
+                                        value="3" 
+                                        {{ $novice->lessons->find($lesson)->presence->frequency == 3 ? 'checked' : '' }}
+                                        {{ $novice->lessons->find($lesson)->presence->frequency === null ? 'checked' : '' }}
+                                    >
+                                    <span>3</span>
+                                </label>
+                            </div>
+                        </x-slot>
+                    </x-card.list.table-body-item>
                 </x-slot>
-            </x-card.list.table-body-item>
+            </x-card.list.table-row>
+            @endforeach
 
         </x-slot>
+
     </x-card.list.table-layout>
 
-    <x-card.form-layout x-data="form()" title="registro da aula">
+    <x-card.form-layout x-data="form()" @frequency-event.window="changeFrequency($event.detail)" title="registro da aula">
 
         <x-slot name="inputs">
 
@@ -122,6 +159,7 @@
             return {
                 data: {
                     register: '{{ $lesson->register }}',
+                    presenceList: {!! $lesson->novicesFrequencyToJsonObject() !!},
                 },
                 message: {
                     content: '',
@@ -137,6 +175,10 @@
                     axios.post('lessons/register/{{ $lesson->id }}', this.data)
                         .then(response => {this.redirectToLesson()})
                         .catch(error => {this.handleErrors(error.response.data.errors)});
+                },
+                changeFrequency(novice) {
+                    key = Object.keys(novice)[0];
+                    this.data.presenceList[key] = novice[key];
                 },
                 saveDraft() {
                     axios.post('lessons/draft/{{ $lesson->id }}', this.data)

@@ -12,11 +12,7 @@
         </div>
 
         <div class="capitalize bg-white divide-y">
-
-            <div class="px-6 py-4 text-base capitalize bg-white grid-cols-12 grid">
-                {{ $body }}
-            </div>
-
+            {{ $body }}
         </div>
     </div>
 </div>
