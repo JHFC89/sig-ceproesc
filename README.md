@@ -2,4 +2,4 @@
 
 ## CEPROESC
 
-#### Registro de Aulas
+### Registro de Aulas
