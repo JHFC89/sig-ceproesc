@@ -17,19 +17,17 @@ class ViewLessonTest extends TestCase
     public function a_user_can_view_a_lesson_not_registered()
     {
         $date = Carbon::now();
-        $lesson = Lesson::create([
-            'instructor'    => 'John Doe',
-            'date'          => $date,
-            'class'         => '2021 - janeiro',
-            'discipline'    => 'administração',
-            'hourly_load'   => '123hr',
+        $lesson = Lesson::factory()
+            ->notRegistered()
+            ->hasNovices(3)
+            ->create([
+                'instructor'    => 'John Doe',
+                'date'          => $date,
+                'class'         => '2021 - janeiro',
+                'discipline'    => 'administração',
+                'hourly_load'   => '123hr',
         ]);
-        $noviceA = User::factory()->create();
-        $noviceB = User::factory()->create();
-        $noviceC = User::factory()->create();
-        collect([$noviceA, $noviceB, $noviceC])->each(function ($novice) use ($lesson) {
-            $lesson->enroll($novice);
-        });
+        extract($lesson->novices->all(), EXTR_PREFIX_ALL, 'novice');
 
         $reponse = $this->get('lessons/' . $lesson->id);
 
@@ -40,9 +38,9 @@ class ViewLessonTest extends TestCase
             ->assertSee('2021 - janeiro')
             ->assertSee('administração')
             ->assertSee('123hr')
-            ->assertSee($noviceA->name)
-            ->assertSee($noviceB->name)
-            ->assertSee($noviceC->name);
+            ->assertSee($novice_0->name)
+            ->assertSee($novice_1->name)
+            ->assertSee($novice_2->name);
     }
 
     /** @test */

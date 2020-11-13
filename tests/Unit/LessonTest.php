@@ -86,6 +86,7 @@ class LessonTest extends TestCase
         $lesson = Lesson::factory()->create();
         
         $lesson->enroll($novice);
+
         $this->assertNotNull($novice->lessons);
         $this->assertEquals($lesson->id, $novice->lessons->first()->id);
     }
@@ -113,9 +114,8 @@ class LessonTest extends TestCase
     /** @test */
     public function can_register_the_presence_of_an_enrolled_novice()
     {
-        $novice = User::factory()->create();
-        $lesson = Lesson::factory()->create();
-        $lesson->enroll($novice);
+        $lesson = Lesson::factory()->hasNovices(1)->create();
+        $novice = $lesson->novices->first();
 
         $lesson->registerPresence($novice, 3);
 
@@ -139,6 +139,18 @@ class LessonTest extends TestCase
     }
 
     /** @test */
+    public function can_get_frequency_of_a_novice()
+    {
+        $lesson = Lesson::factory()->hasNovices(1)->create();
+        $novice = $lesson->novices->first();
+        $lesson->registerPresence($novice, 3);
+
+        $frequency = $lesson->frequencyForNovice($novice);
+
+        $this->assertEquals(3, $frequency);
+    }
+
+    /** @test */
     public function the_frequency_of_enrolled_novice_but_with_no_presence_registered_should_be_null()
     {
         $novice = User::factory()->create();
@@ -152,9 +164,8 @@ class LessonTest extends TestCase
     /** @test */
     public function the_frequency_of_enrolled_novice_registered_as_not_present_should_return_zero()
     {
-        $novice = User::factory()->create();
-        $lesson = Lesson::factory()->create();
-        $lesson->enroll($novice);
+        $lesson = Lesson::factory()->hasNovices(1)->create();
+        $novice = $lesson->novices->first();
 
         $lesson->registerPresence($novice, 0);
 
@@ -164,9 +175,8 @@ class LessonTest extends TestCase
     /** @test */
     public function can_update_a_novices_presence_with_different_value()
     {
-        $novice = User::factory()->create();
-        $lesson = Lesson::factory()->create();
-        $lesson->enroll($novice);
+        $lesson = Lesson::factory()->hasNovices(1)->create();
+        $novice = $lesson->novices->first();
         $lesson->registerPresence($novice, 1);
         $this->assertEquals(1, $novice->lessons->first()->presence->frequency);
 
@@ -178,9 +188,8 @@ class LessonTest extends TestCase
     /** @test */
     public function can_update_a_novices_presence_with_same_actual_value()
     {
-        $novice = User::factory()->create();
-        $lesson = Lesson::factory()->create();
-        $lesson->enroll($novice);
+        $lesson = Lesson::factory()->hasNovices(1)->create();
+        $novice = $lesson->novices->first();
         $lesson->registerPresence($novice, 3);
         $this->assertEquals(3, $novice->lessons->first()->presence->frequency);
 
@@ -213,7 +222,7 @@ class LessonTest extends TestCase
             $lesson->registerPresence($novice, $key);
         });
         $expectedResult = $novices->reduce(function ($expectedResult, $novice) use ($lesson) {
-            $expectedResult[$novice->id] = $novice->lessons->find($lesson)->presence->frequency;
+            $expectedResult[$novice->id] = $novice->frequencyForLesson($lesson);
             return $expectedResult;
         }, []);
 

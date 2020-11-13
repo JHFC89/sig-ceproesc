@@ -55,7 +55,7 @@
                                         type="radio" 
                                         name="presence-{{ $novice->id }}" 
                                         value="0"
-                                        {{ $novice->lessons->find($lesson)->presence->frequency === 0 ? 'checked' : '' }}
+                                        {{ $novice->frequencyForLesson($lesson) === 0 ? 'checked' : '' }}
                                     >
                                     <span>0</span>
                                 </label>
@@ -66,7 +66,7 @@
                                         type="radio" 
                                         name="presence-{{ $novice->id }}" 
                                         value="1"
-                                        {{ $novice->lessons->find($lesson)->presence->frequency == 1 ? 'checked' : '' }}
+                                        {{ $novice->frequencyForLesson($lesson) == 1 ? 'checked' : '' }}
                                     >
                                     <span>1</span>
                                 </label>
@@ -77,7 +77,7 @@
                                         type="radio" 
                                         name="presence-{{ $novice->id }}" 
                                         value="2"
-                                        {{ $novice->lessons->find($lesson)->presence->frequency == 2 ? 'checked' : '' }}
+                                        {{ $novice->frequencyForLesson($lesson) == 2 ? 'checked' : '' }}
                                     >
                                     <span>2</span>
                                 </label>
@@ -88,8 +88,8 @@
                                         type="radio" 
                                         name="presence-{{ $novice->id }}" 
                                         value="3" 
-                                        {{ $novice->lessons->find($lesson)->presence->frequency == 3 ? 'checked' : '' }}
-                                        {{ $novice->lessons->find($lesson)->presence->frequency === null ? 'checked' : '' }}
+                                        {{ $novice->frequencyForLesson($lesson) == 3 ? 'checked' : '' }}
+                                        {{ $novice->frequencyForLesson($lesson) === null ? 'checked' : '' }}
                                     >
                                     <span>3</span>
                                 </label>

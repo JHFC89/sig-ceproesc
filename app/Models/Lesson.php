@@ -55,6 +55,11 @@ class Lesson extends Model
         return $this->novices()->updateExistingPivot($novice->id, ['frequency' => $frequency]);
     }
 
+    public function frequencyForNovice(User $novice)
+    {
+        return $this->novices()->where('user_id', $novice->id)->first()->presence->frequency;
+    }
+
     public function novicesFrequencyToJsonObject()
     {
         $novices = $this->novices->reduce(function ($novices, $novice) {
@@ -79,7 +84,7 @@ class Lesson extends Model
 
     public function scopeEnrolled($query, int $noviceId)
     {
-        return $query->wherehas('novices', function (builder $query) use ($noviceId) {
+        return $query->whereHas('novices', function (builder $query) use ($noviceId) {
             $query->where('user_id', $noviceId);
         });
     }

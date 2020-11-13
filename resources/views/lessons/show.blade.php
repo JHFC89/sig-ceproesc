@@ -49,7 +49,7 @@
 
                     <x-card.list.table-body-item class="col-span-4">
                         <x-slot name="item">
-                            <span>{{ $novice->lessons->find($lesson)->presence->frequency }} hrs</span>
+                            <span>{{ $novice->frequencyForLesson($lesson) }} hrs</span>
                         </x-slot>
                     </x-card.list.table-body-item>
                 </x-slot>

@@ -47,4 +47,9 @@ class User extends Authenticatable
                     ->as('presence')
                     ->withPivot('frequency');
     }
+
+    public function frequencyForLesson($lesson)
+    {
+        return $this->lessons()->where('lesson_id', $lesson->id)->first()->presence->frequency;
+    }
 }
