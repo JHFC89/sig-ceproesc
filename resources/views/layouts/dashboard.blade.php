@@ -6,7 +6,7 @@
     <meta name="api-base-url" content="{{ url('api') }}" />
     <title>@yield('title') - SIG Ceproesc</title>
     <link rel="stylesheet" href="{{ mix('css/main.css') }}">
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.3/dist/alpine.min.js" defer></script>
+    <script src="{{ mix('js/app.js') }}" defer></script>
 </head>
 <body class="flex h-screen overflow-hidden">
 
