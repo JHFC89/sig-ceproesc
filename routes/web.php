@@ -28,3 +28,9 @@ Route::middleware(['auth'])->group(function () {
 Route::get('login', function () {
     dump('login page');
 })->name('login');
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+require __DIR__.'/auth.php';
