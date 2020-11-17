@@ -15,9 +15,12 @@ class LessonSeeder extends Seeder
      */
     public function run()
     {
-        $lesson = Lesson::factory()
-                    ->forToday()
-                    ->hasNovices(10)
-                    ->create();
+        Lesson::factory()
+            ->forToday()
+            ->notRegistered()
+            ->hasNovices(10)
+            ->create([
+                'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
+            ]);
     }
 }
