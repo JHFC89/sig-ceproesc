@@ -6,7 +6,7 @@
 
     <x-card.list.description-layout title="detalhes da aula">
         <x-slot name="items">
-            <x-card.list.description-item label="instrutor" :description="$lesson->instructor"/>
+            <x-card.list.description-item label="instrutor" :description="$lesson->instructor->name"/>
             <x-card.list.description-item label="data" :description="$lesson->formatted_date"/>
             <x-card.list.description-item label="turma" :description="$lesson->class"/>
             <x-card.list.description-item label="disciplina" :description="$lesson->discipline"/>

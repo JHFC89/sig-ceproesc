@@ -65,6 +65,20 @@ class LessonTest extends TestCase
     }
 
     /** @test */
+    public function can_check_assigned_instructor()
+    {
+        $lesson = Lesson::factory()->forInstructor()->create();
+        $assignedInstructor = $lesson->instructor;
+        $notAssignedInstructor = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
+
+        $resultForAssignedInstructor = $lesson->isForInstructor($assignedInstructor);
+        $resultForNotAssignedInstructor = $lesson->isForInstructor($notAssignedInstructor);
+        
+        $this->assertTrue($resultForAssignedInstructor);
+        $this->assertFalse($resultForNotAssignedInstructor);
+    }
+
+    /** @test */
     public function the_date_is_saved_as_utc_timezone()
     {
         $this->markTestSkipped();

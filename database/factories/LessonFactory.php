@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Lesson;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,7 +24,7 @@ class LessonFactory extends Factory
     public function definition()
     {
         return [
-            'instructor'    => 'John Doe',
+            'instructor_id' => User::factory()->hasRoles(1, ['name' => 'instructor']),
             'date'          => Carbon::parse('+2 weeks'),
             'class'         => '2021 - janeiro',
             'discipline'    => 'fake discipline',

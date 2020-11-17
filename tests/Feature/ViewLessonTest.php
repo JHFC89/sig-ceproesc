@@ -17,11 +17,16 @@ class ViewLessonTest extends TestCase
     public function a_user_can_view_a_lesson_not_registered()
     {
         $date = Carbon::now();
+        $instructor = User::factory()
+            ->hasRoles(1, ['name' => 'instructor'])
+            ->create([
+                'name' => 'John Doe'
+            ]);
         $lesson = Lesson::factory()
             ->notRegistered()
             ->hasNovices(3)
             ->create([
-                'instructor'    => 'John Doe',
+                'instructor_id' => $instructor->id,
                 'date'          => $date,
                 'class'         => '2021 - janeiro',
                 'discipline'    => 'administração',

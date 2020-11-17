@@ -15,7 +15,7 @@ class CreateLessonsTable extends Migration
     {
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
-            $table->string('instructor');
+            $table->foreignId('instructor_id');
             $table->dateTime('date');
             $table->string('class');
             $table->string('discipline');

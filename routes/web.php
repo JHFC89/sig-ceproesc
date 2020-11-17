@@ -17,6 +17,14 @@ use App\Http\Controllers\LessonRegisterController;
 
 Route::get('/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
 
-Route::get('/lessons/register/create/{lesson}', [LessonRegisterController::class, 'create'])->name('lessons.register.create');
 
 Route::view('/mockups/lessons/create', 'mockups.lessons.create');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/lessons/register/create/{lesson}', [LessonRegisterController::class, 'create'])
+        ->name('lessons.register.create');
+});
+
+Route::get('login', function () {
+    dump('login page');
+})->name('login');

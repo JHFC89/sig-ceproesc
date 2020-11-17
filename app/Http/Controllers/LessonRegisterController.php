@@ -8,9 +8,15 @@ use Illuminate\Http\Request;
 
 class LessonRegisterController extends Controller
 {
-    public function create(Lesson $lesson)
+    public function create(Request $request, Lesson $lesson)
     {
+        abort_unless($request->user()->isInstructor(), 401);
+
         abort_if($lesson->isRegistered(), 404);
+
+        abort_unless($lesson->isForToday(), 404);
+
+        abort_unless($lesson->isForInstructor($request->user()), 401);
 
         return view('lessons.register.create', compact('lesson'));
     }

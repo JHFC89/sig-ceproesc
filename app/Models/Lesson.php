@@ -30,6 +30,11 @@ class Lesson extends Model
         return ($this->date->format('d/m/Y') == now()->format('d/m/Y')) ? true : false;
     }
 
+    public function isForInstructor(User $instructor)
+    {
+        return $this->instructor->id === $instructor->id;
+    }
+
     public function enroll(User $novice)
     {
         $this->novices()->attach($novice->id);
@@ -80,6 +85,11 @@ class Lesson extends Model
         return $this->belongsToMany(User::class)
                     ->as('presence')
                     ->withPivot('frequency');
+    }
+
+    public function instructor()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function scopeEnrolled($query, int $noviceId)
