@@ -53,10 +53,13 @@ class DraftLessonTest extends TestCase
     /** @test */
     public function a_registered_lesson_cannot_be_saved_as_draft()
     {
-        $lesson = Lesson::factory()->registered()->create();
+        $lesson = Lesson::factory()->registered()->create(['instructor_id' => $this->instructor->id]);
         
-        $response = $this->postJson('api/lessons/register/' . $lesson->id,
-            $this->data()->change('register', 'Trying to save a registered lesson as draft')->get()
+        $response = $this
+            ->actingAs($this->instructor, 'api')
+            ->postJson(
+                'api/lessons/draft/' . $lesson->id,
+                $this->data()->change('register', 'Trying to save a registered lesson as draft')->get()
         );
 
         $response
