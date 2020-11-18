@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\User;
 use App\Models\Lesson;
 use Tests\Traits\LessonTestData;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -11,10 +12,19 @@ class RegisterLessonTest extends TestCase
 {
     use RefreshDatabase, LessonTestData;
 
-    /** @test */
-    public function can_be_registered()
+    private $instructor;
+
+    protected function setUp():void
     {
-        $lesson = Lesson::factory()->forToday()->hasNovices(2)->create();
+        parent::setUp();
+
+        $this->instructor = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
+    }
+
+    /** @test */
+    public function a_lesson_can_be_registered_by_an_instructor_assigned_to_it()
+    {
+        $lesson = Lesson::factory()->forToday()->hasNovices(2)->create(['instructor_id' => $this->instructor->id]);
         extract($lesson->novices->all(), EXTR_PREFIX_ALL, 'novice');
 
         $data = $this->data()
@@ -25,7 +35,7 @@ class RegisterLessonTest extends TestCase
                      ])
                      ->get();
         
-        $response = $this->postJson('api/lessons/register/' . $lesson->id, $data);
+        $response = $this->actingAs($this->instructor, 'api')->postJson('api/lessons/register/' . $lesson->id, $data);
 
         $response->assertStatus(201);
         $this->assertEquals('Example lesson register', $lesson->fresh()->register);
@@ -36,14 +46,62 @@ class RegisterLessonTest extends TestCase
     }
 
     /** @test */
+    public function a_guest_cannot_register_a_lesson()
+    {
+        $lesson = Lesson::factory()->forToday()->hasNovices(2)->create(['instructor_id' => $this->instructor->id]);
+
+        $data = $this->data()->lesson($lesson)->get();
+        
+        $response = $this->postJson('api/lessons/register/' . $lesson->id, $data);
+
+        $response->assertUnauthorized();
+        $this->assertNull($lesson->fresh()->register);
+    }
+
+    /** @test */
+    public function a_lesson_cannot_be_registered_by_an_user_thats_not_an_instructor()
+    {
+        $userNotInstructor = User::factory()->create();
+        $lesson = Lesson::factory()->forToday()->hasNovices(2)->create(['instructor_id' => $this->instructor->id]);
+        $data = $this->data()->lesson($lesson)->get();
+        
+        $response = $this
+            ->actingAs($userNotInstructor, 'api')
+            ->postJson('api/lessons/register/' . $lesson->id, $data);
+
+        $response
+            ->assertUnauthorized()
+            ->assertJson(['error' => 'Action not authorized for this user']);
+        $this->assertNull($lesson->fresh()->register);
+    }
+
+    /** @test */
+    public function a_lesson_cannot_be_registered_by_an_instructor_not_assigned_to_it()
+    {
+        $instructor = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
+        $lessonForAnotherInstructor = Lesson::factory()->forToday()->hasNovices(2)->create(['instructor_id' => $this->instructor->id]);
+        $data = $this->data()->lesson($lessonForAnotherInstructor)->get();
+        
+        $response = $this
+            ->actingAs($instructor, 'api')
+            ->postJson('api/lessons/register/' . $lessonForAnotherInstructor->id, $data);
+
+        $response
+            ->assertUnauthorized()
+            ->assertJson(['error' => 'Action not authorized for this instructor']);
+        $this->assertNull($lessonForAnotherInstructor->fresh()->register);
+    }
+
+    /** @test */
     public function a_registered_lesson_cannot_be_registered_again()
     {
-        $lesson = Lesson::factory()->registered()->create();
+        $lesson = Lesson::factory()->registered()->create(['instructor_id' => $this->instructor->id]);
         
-        $response = $this->postJson(
-            'api/lessons/register/' . $lesson->id, 
-            $this->data()->change('register', 'Trying to register lesson again')->get()
-        );
+        $response = $this->actingAs($this->instructor, 'api')
+                         ->postJson(
+                            'api/lessons/register/' . $lesson->id, 
+                            $this->data()->change('register', 'Trying to register lesson again')->get()
+                        );
 
         $response
             ->assertStatus(422)
@@ -56,12 +114,15 @@ class RegisterLessonTest extends TestCase
     /** @test */
     public function only_todays_lesson_can_be_registered()
     {
-        $lesson = Lesson::factory()->notForToday()->create();
+        $lesson = Lesson::factory()->notForToday()->create(['instructor_id' => $this->instructor->id]);
 
-        $response = $this->postJson(
-            'api/lessons/register/' . $lesson->id,
-            $this->data()->change('register', 'Lesson is not available to register at this date')->get()
-        );
+        $response = $this->actingAs($this->instructor, 'api')
+                         ->postJson(
+                            'api/lessons/register/' . $lesson->id,
+                            $this->data()
+                                 ->change('register', 'Lesson is not available to register at this date')
+                                 ->get()
+                         );
 
         $response
             ->assertStatus(422)
@@ -74,15 +135,16 @@ class RegisterLessonTest extends TestCase
     /** @test */
     public function registering_a_draft_lesson()
     {
-        $lesson = Lesson::factory()->forToday()->hasNovices(1)->draft()->create();
+        $lesson = Lesson::factory()->forToday()->hasNovices(1)->draft()->create(['instructor_id' => $this->instructor->id]);
         $novice = $lesson->novices->first();
         
-        $response = $this->postJson('api/lessons/register/' . $lesson->id, [
-            'register' => 'Example draft lesson register',
-            'presenceList' => [
-                $novice->id => 3,
-            ],
-        ]);
+        $response = $this->actingAs($this->instructor, 'api')
+                         ->postJson('api/lessons/register/' . $lesson->id, [
+                            'register' => 'Example draft lesson register',
+                            'presenceList' => [
+                                $novice->id => 3,
+                            ],
+                        ]);
 
         $response->assertStatus(201);
         $this->assertEquals('Example draft lesson register', $lesson->fresh()->register);
@@ -92,7 +154,7 @@ class RegisterLessonTest extends TestCase
     /** @test */
     public function registering_a_draft_lesson_wont_duplicate_the_novices_presence()
     {
-        $lesson = Lesson::factory()->forToday()->hasNovices(2)->draft()->create();
+        $lesson = Lesson::factory()->forToday()->hasNovices(2)->draft()->create(['instructor_id' => $this->instructor->id]);
         extract($lesson->novices->all(), EXTR_PREFIX_ALL, 'novice');
         $data = $this->data()
                      ->change('presenceList', [
@@ -100,7 +162,7 @@ class RegisterLessonTest extends TestCase
                         $novice_1->id => 1,
                      ])
                      ->get();
-        $this->postJson('api/lessons/draft/' . $lesson->id, $data);
+        $this->actingAs($this->instructor, 'api')->postJson('api/lessons/draft/' . $lesson->id, $data);
 
         $data = $this->data()
                      ->change('presenceList', [
@@ -108,7 +170,7 @@ class RegisterLessonTest extends TestCase
                         $novice_1->id => 3,
                      ])
                      ->get();
-        $response = $this->postJson('api/lessons/register/' . $lesson->id, $data);
+        $response = $this->actingAs($this->instructor, 'api')->postJson('api/lessons/register/' . $lesson->id, $data);
 
         $response->assertStatus(201);
         $this->assertCount(2, $lesson->fresh()->novices);
@@ -117,11 +179,13 @@ class RegisterLessonTest extends TestCase
     /** @test */
     public function register_field_is_required()
     {
-        $lesson = Lesson::factory()->forToday()->create();
+        $lesson = Lesson::factory()->forToday()->create(['instructor_id' => $this->instructor->id]);
         
-        $response = $this->postJson('api/lessons/register/' . $lesson->id,
-            $this->data()->exclude('register')->get()
-        );
+        $response = $this->actingAs($this->instructor, 'api')
+                         ->postJson(
+                            'api/lessons/register/' . $lesson->id,
+                            $this->data()->exclude('register')->get()
+                        );
 
         $response
             ->assertStatus(422)
@@ -131,11 +195,13 @@ class RegisterLessonTest extends TestCase
     /** @test */
     public function presence_list_field_is_required()
     {
-        $lesson = Lesson::factory()->forToday()->create();
+        $lesson = Lesson::factory()->forToday()->create(['instructor_id' => $this->instructor->id]);
         
-        $response = $this->postJson('api/lessons/register/' . $lesson->id,
-            $this->data()->exclude('presenceList')->get()
-        );
+        $response = $this->actingAs($this->instructor, 'api')
+                         ->postJson(
+                            'api/lessons/register/' . $lesson->id,
+                            $this->data()->exclude('presenceList')->get()
+                        );
 
         $response
             ->assertStatus(422)
