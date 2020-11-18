@@ -11,6 +11,15 @@ class LessonDraftController extends Controller
 {
     public function store(Lesson $lesson)
     {
+        if(! request()->user()->isInstructor()) {
+            return response()->json(['error' => 'Action not authorized for this user'], 401);
+        } 
+
+        if(! $lesson->isForInstructor(request()->user())) {
+            return response()->json(['error' => 'Action not authorized for this instructor'], 401);
+        } 
+        abort_unless($lesson->isForInstructor(request()->user()), 401);
+
         if($lesson->isRegistered()) {
             return response()->json(['error' => 'Lesson already registered'], 422);
         } 

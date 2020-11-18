@@ -19,5 +19,7 @@ use App\Http\Controllers\LessonRegisterController;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::middleware(['auth:api'])->group(function () {
+    Route::post('/lessons/draft/{lesson}', [LessonDraftController::class, 'store'])->name('lessons.draft.store');
+});
 Route::post('/lessons/register/{lesson}', [LessonRegisterController::class, 'store'])->name('lessons.register.store');
-Route::post('/lessons/draft/{lesson}', [LessonDraftController::class, 'store'])->name('lessons.draft.store');

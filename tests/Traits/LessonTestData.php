@@ -24,6 +24,16 @@ trait LessonTestData
                 ];
             }
 
+            public function lesson($lesson)
+            {
+                $presenceList = $lesson->novices->reduce(function ($presenceList, $novice) {
+                    $presenceList[$novice->id] = 3;
+                    return $presenceList;
+                }, []);
+                $this->change('presenceList', $presenceList);
+                return $this;
+            }
+
             public function exclude($key)
             {
                 unset($this->data[$key]);
