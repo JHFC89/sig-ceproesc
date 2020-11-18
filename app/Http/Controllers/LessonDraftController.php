@@ -18,7 +18,6 @@ class LessonDraftController extends Controller
         if(! $lesson->isForInstructor(request()->user())) {
             return response()->json(['error' => 'Action not authorized for this instructor'], 401);
         } 
-        abort_unless($lesson->isForInstructor(request()->user()), 401);
 
         if($lesson->isRegistered()) {
             return response()->json(['error' => 'Lesson already registered'], 422);
