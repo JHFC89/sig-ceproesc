@@ -16,6 +16,7 @@ class ViewLessonTest extends TestCase
     /** @test */
     public function a_user_can_view_a_lesson_not_registered()
     {
+        $this->withoutExceptionHandling();
         $date = Carbon::now();
         $instructor = User::factory()
             ->hasRoles(1, ['name' => 'instructor'])
@@ -34,7 +35,7 @@ class ViewLessonTest extends TestCase
         ]);
         extract($lesson->novices->all(), EXTR_PREFIX_ALL, 'novice');
 
-        $reponse = $this->get('lessons/' . $lesson->id);
+        $reponse = $this->actingAs(User::factory()->create())->get('lessons/' . $lesson->id);
 
         $reponse
             ->assertOk()
