@@ -1,4 +1,4 @@
-<aside class="w-64 h-full overflow-y-auto text-gray-100 bg-gray-700">
+<aside class="w-64 h-full overflow-y-auto text-gray-100 bg-gradient-to-b from-gray-800 to-gray-500">
     <div class="flex items-center h-16 px-4 text-lg uppercase bg-gray-900 shadow"> 
         <span class="font-serif text-3xl font-medium text-white">sig</span><span class="ml-2">- ceproesc</span>
     </div>
