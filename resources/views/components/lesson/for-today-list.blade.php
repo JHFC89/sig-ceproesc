@@ -1,7 +1,8 @@
 <x-card.list.table-layout :title="$title">
     <x-slot name="header">
-        <x-card.list.table-header class="col-span-5" name="turma"/>
-        <x-card.list.table-header class="col-span-5" name="disciplina"/>
+        <x-card.list.table-header class="col-span-4" name="turma"/>
+        <x-card.list.table-header class="col-span-2" name="disciplina"/>
+        <x-card.list.table-header class="text-center col-span-4" name="registrada"/>
         <x-card.list.table-header class="col-span-2" name=""/>
     </x-slot>
 
@@ -12,15 +13,29 @@
 
                 <time class="hidden" datetime="{{ $lesson->formatted_date }}"></time>
 
-                <x-card.list.table-body-item class="col-span-5">
+                <x-card.list.table-body-item class="col-span-4">
                     <x-slot name="item">
                         <span>{{ $lesson->class }}</span>
                     </x-slot>
                 </x-card.list.table-body-item>
 
-                <x-card.list.table-body-item class="col-span-5">
+                <x-card.list.table-body-item class="col-span-2">
                     <x-slot name="item">
                         <span>{{ $lesson->discipline }}</span>
+                    </x-slot>
+                </x-card.list.table-body-item>
+
+                <x-card.list.table-body-item class="col-span-4">
+                    <x-slot name="item">
+                        <div class="flex items-center justify-center h-full">
+                            <span 
+                                class="block w-2 h-2 rounded-full 
+                                    @if($lesson->isRegistered()) bg-green-400 
+                                    @else bg-red-400 
+                                    @endif
+                                ">
+                            </span>
+                        </div>
                     </x-slot>
                 </x-card.list.table-body-item>
 
