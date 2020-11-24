@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="api-base-url" content="{{ url('api') }}" />
-    <meta name="token" content="Bearer {{ Auth::user()->api_token }}">
+    <meta name="api_token" content="Bearer {{ Auth::user()->api_token }}">
 
     <title>@yield('title') - SIG Ceproesc</title>
 
     <link rel="stylesheet" href="{{ mix('css/main.css') }}">
 
-    <script src="{{ mix('js/app.js') }}" defer></script>
+    <script src="{{ mix('js/app.js') }}" async></script>
 </head>
 <body class="flex h-screen overflow-hidden antialiased">
 
