@@ -42,9 +42,11 @@
                 <x-card.list.table-body-item class="col-span-2">
                     <x-slot name="item">
                         <div class="flex justify-end space-x-2">
+                            @unless($lesson->isRegistered())
                             <a href="{{ route('lessons.register.create', ['lesson' => $lesson]) }}" class="text-gray-300 hover:text-blue-300">
                                 <x-icons.register-lesson class="w-6"/>
                             </a>
+                            @endunless
                             <a href="{{ route('lessons.show', ['lesson' => $lesson]) }}" class="text-gray-300 hover:text-blue-300">
                                 <x-icons.see class="w-6"/>
                             </a>
