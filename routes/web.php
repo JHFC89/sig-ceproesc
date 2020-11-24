@@ -29,10 +29,6 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
 
-Route::get('login', function () {
-    dump('login page');
-})->name('login');
-
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
