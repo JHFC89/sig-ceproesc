@@ -15,12 +15,14 @@ class LessonSeeder extends Seeder
      */
     public function run()
     {
+        // Lessons for instructor
         Lesson::factory()
             ->forToday()
             ->notRegistered()
             ->hasNovices(10)
             ->count(3)
             ->create([
+                'discipline' => 'português',
                 'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
             ]);
 
@@ -30,6 +32,7 @@ class LessonSeeder extends Seeder
             ->hasNovices(10)
             ->count(3)
             ->create([
+                'discipline' => 'administração',
                 'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
             ]);
 
@@ -39,6 +42,7 @@ class LessonSeeder extends Seeder
             ->hasNovices(10)
             ->count(3)
             ->create([
+                'discipline' => 'financeiro',
                 'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
             ]);
 
@@ -48,6 +52,7 @@ class LessonSeeder extends Seeder
             ->hasNovices(10)
             ->count(3)
             ->create([
+                'discipline' => 'inglês',
                 'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
             ]);
 
@@ -57,7 +62,19 @@ class LessonSeeder extends Seeder
             ->hasNovices(10)
             ->count(3)
             ->create([
+                'discipline' => 'ética',
                 'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
+            ]);
+        
+        // Lessons for instructor 2
+        Lesson::factory()
+            ->forToday()
+            ->notRegistered()
+            ->hasNovices(10)
+            ->count(2)
+            ->create([
+                'instructor_id' => User::where('email', 'instrutor2@sig.com.br')->first(),
+                'discipline' => 'matemática',
             ]);
     }
 }
