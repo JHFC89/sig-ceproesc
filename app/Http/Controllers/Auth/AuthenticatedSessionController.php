@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
@@ -32,6 +33,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        Auth::user()->api_token = Str::random(80);
+        Auth::user()->save();
+
         return redirect(RouteServiceProvider::HOME);
     }
 
@@ -43,6 +47,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request)
     {
+        Auth::user()->api_token = null;
+        Auth::user()->save();
         Auth::logout();
 
         $request->session()->invalidate();

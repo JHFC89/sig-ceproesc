@@ -20,7 +20,8 @@ class AuthenticationTest extends TestCase
 
     public function test_users_can_authenticate_using_the_login_screen()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['api_token' => null]);
+        $this->assertNull($user->api_token);
 
         $response = $this->post('/login', [
             'email' => $user->email,
@@ -29,11 +30,13 @@ class AuthenticationTest extends TestCase
 
         $this->assertAuthenticated();
         $response->assertRedirect(RouteServiceProvider::HOME);
+        $this->assertNotNull($user->fresh()->api_token);
     }
 
     public function test_users_can_not_authenticate_with_invalid_password()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['api_token' => null]);
+        $this->assertNull($user->api_token);
 
         $this->post('/login', [
             'email' => $user->email,
@@ -41,5 +44,18 @@ class AuthenticationTest extends TestCase
         ]);
 
         $this->assertGuest();
+        $this->assertNull($user->api_token);
+    }
+
+    /** @test */
+    public function user_api_token_is_set_to_null_when_logout()
+    {
+        $user = User::factory()->create();
+        $this->assertNotNull($user->api_token);
+
+        $this->actingAs($user)->post('logout');
+
+        $this->assertGuest();
+        $this->assertNull($user->fresh()->api_token);
     }
 }
