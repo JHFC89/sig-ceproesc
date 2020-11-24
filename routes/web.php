@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\LessonRegisterController;
+use App\Http\Controllers\ForTodayLessonListController;
+use App\Http\Controllers\ForWeekLessonListController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,14 +17,17 @@ use App\Http\Controllers\LessonRegisterController;
 |
 */
 
-Route::get('/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
-
 Route::view('/mockups/lessons/create', 'mockups.lessons.create');
 
+
 Route::middleware(['auth'])->group(function () {
+    Route::get('/lessons/today', ForTodayLessonListController::class)->name('lessons.today');
+    Route::get('/lessons/week', ForWeekLessonListController::class)->name('lessons.week');
     Route::get('/lessons/register/create/{lesson}', [LessonRegisterController::class, 'create'])
         ->name('lessons.register.create');
 });
+
+Route::get('/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
 
 Route::get('login', function () {
     dump('login page');

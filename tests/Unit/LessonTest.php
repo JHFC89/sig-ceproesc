@@ -244,4 +244,32 @@ class LessonTest extends TestCase
 
         $this->assertEquals(json_encode($expectedResult), $result);
     }
+
+    /** @test */
+    public function get_lessons_for_today()
+    {
+        $todayLessons = Lesson::factory()->forToday()->notRegistered()->hasNovices(3)->count(3)->create();
+        $yesterdayLessons = Lesson::factory()->notRegistered()->hasNovices(3)->count(3)->create(['date' => Carbon::parse('yesterday')]);
+        $tomorrowLessons = Lesson::factory()->notRegistered()->hasNovices(3)->count(3)->create(['date' => Carbon::parse('tomorrow')]);
+
+        $result = Lesson::today()->get();
+
+        $this->assertEquals($todayLessons->pluck('id'), $result->pluck('id'));
+        $this->assertNotEquals($yesterdayLessons->pluck('id'), $result->pluck('id'));
+        $this->assertNotEquals($tomorrowLessons->pluck('id'), $result->pluck('id'));
+    }
+
+    /** @test */
+    public function get_lessons_for_week()
+    {
+        $weekLessons = Lesson::factory()->forToday()->notRegistered()->hasNovices(3)->count(3)->create();
+        $lastWeekLessons = Lesson::factory()->notRegistered()->hasNovices(3)->count(3)->create(['date' => Carbon::parse('-1 week')]);
+        $nextWeekLessons = Lesson::factory()->notRegistered()->hasNovices(3)->count(3)->create(['date' => Carbon::parse('+1 week')]);
+
+        $result = Lesson::week()->get();
+
+        $this->assertEquals($weekLessons->pluck('id'), $result->pluck('id'));
+        $this->assertNotEquals($lastWeekLessons->pluck('id'), $result->pluck('id'));
+        $this->assertNotEquals($nextWeekLessons->pluck('id'), $result->pluck('id'));
+    }
 }

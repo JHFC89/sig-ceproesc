@@ -70,11 +70,65 @@ class LessonFactory extends Factory
         });
     }
 
+    public function forYesterday()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'date' => Carbon::parse('yesterday'),
+            ];
+        });
+    }
+
+    public function forTomorrow()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'date' => Carbon::parse('tomorrow'),
+            ];
+        });
+    }
+
+    public function thisWeek()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'date' => Carbon::now(),
+            ];
+        });
+    }
+
+    public function lastWeek()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'date' => Carbon::parse('-1 week'),
+            ];
+        });
+    }
+
+    public function nextWeek()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'date' => Carbon::parse('+1 week'),
+            ];
+        });
+    }
+
     public function draft()
     {
         return $this->state(function (array $attributes) {
             return [
                 'register' => 'Fake draft register.',
+            ];
+        });
+    }
+
+    public function instructor(User $instructor)
+    {
+        return $this->state(function (array $attributes) use ($instructor) {
+            return [
+                'instructor_id' => $instructor,
             ];
         });
     }

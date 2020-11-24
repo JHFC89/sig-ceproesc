@@ -98,4 +98,15 @@ class Lesson extends Model
             $query->where('user_id', $noviceId);
         });
     }
+
+    public function scopeToday($query)
+    {
+        return $query->whereDate('date', today());
+    }
+
+    public function scopeWeek($query)
+    {
+        Lesson::whereBetween('date', [now()->startOfWeek(), now()->endOfWeek()])->get()->count();
+        return $query->whereBetween('date', [now()->startOfWeek(), now()->endOfWeek()]);
+    }
 }

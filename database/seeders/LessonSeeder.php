@@ -19,6 +19,43 @@ class LessonSeeder extends Seeder
             ->forToday()
             ->notRegistered()
             ->hasNovices(10)
+            ->count(3)
+            ->create([
+                'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
+            ]);
+
+        Lesson::factory()
+            ->forTomorrow()
+            ->notRegistered()
+            ->hasNovices(10)
+            ->count(3)
+            ->create([
+                'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
+            ]);
+
+        Lesson::factory()
+            ->forYesterday()
+            ->notRegistered()
+            ->hasNovices(10)
+            ->count(3)
+            ->create([
+                'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
+            ]);
+
+        Lesson::factory()
+            ->lastWeek()
+            ->notRegistered()
+            ->hasNovices(10)
+            ->count(3)
+            ->create([
+                'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
+            ]);
+
+        Lesson::factory()
+            ->nextWeek()
+            ->notRegistered()
+            ->hasNovices(10)
+            ->count(3)
             ->create([
                 'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
             ]);
