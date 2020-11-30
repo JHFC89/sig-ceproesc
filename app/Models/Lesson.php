@@ -15,6 +15,8 @@ class Lesson extends Model
 
     protected $dates = ['date'];
 
+    protected $noviceToRegisterPresence;
+
     public function getFormattedDateAttribute()
     {
         return $this->date->format('d/m/Y');
@@ -45,7 +47,7 @@ class Lesson extends Model
         return $this->enrolled($novice->id)->count() > 0 ? true : false;
     }
 
-    public function registerPresence(User $novice, Int $frequency)
+    public function registerPresence(User $novice)
     {
         throw_unless(
             $this->isEnrolled($novice),
@@ -53,26 +55,43 @@ class Lesson extends Model
             'Trying to register presence to a novice that is not enrolled to this lesson.'
         );
 
-        if($this->novices->find($novice->id)->presence->frequency === $frequency) {
-            return 1;
-        }
+        $this->noviceToRegisterPresence = $novice;
 
-        return $this->novices()->updateExistingPivot($novice->id, ['frequency' => $frequency]);
+        return $this;
     }
 
-    public function frequencyForNovice(User $novice)
+    public function present()
     {
-        return $this->novices()->where('user_id', $novice->id)->first()->presence->frequency;
+        return $this->novices()->updateExistingPivot($this->noviceToRegisterPresence->id, ['present' => true]);
+    }
+
+    public function absent()
+    {
+        return $this->novices()->updateExistingPivot($this->noviceToRegisterPresence->id, ['present' => false]);
+    }
+
+    public function isPresent($novice)
+    {
+        $present = $this->novices()->where('user_id', $novice->id)->first()->presence->present;
+
+        return $present ? true : false;
+    }
+
+    public function isAbsent($novice)
+    {
+        $present = $this->novices()->where('user_id', $novice->id)->first()->presence->present;
+
+        return $present ? false : true;
     }
 
     public function novicesFrequencyToJsonObject()
     {
         $novices = $this->novices->reduce(function ($novices, $novice) {
-            $frequency = $novice->lessons->find($this)->presence->frequency;
-            if($frequency === null) {
-                $novices[$novice->id] = 3;
+            $present = $novice->lessons->find($this)->presence->present;
+            if($present === null) {
+                $novices[$novice->id] = 1;
             } else {
-                $novices[$novice->id] = $frequency;
+                $novices[$novice->id] = $present;
             }
             return $novices;
         }, []);
@@ -84,7 +103,7 @@ class Lesson extends Model
     {
         return $this->belongsToMany(User::class)
                     ->as('presence')
-                    ->withPivot('frequency');
+                    ->withPivot('frequency', 'present');
     }
 
     public function instructor()

@@ -21,7 +21,7 @@
             <x-card.list.table-header class="col-span-1" name="código"/>
             <x-card.list.table-header class="col-span-5" name="nome"/>
             <x-card.list.table-header class="col-span-2" name="turma"/>
-            <x-card.list.table-header class="col-span-4" name="presença"/>
+            <x-card.list.table-header class="text-center col-span-4" name="presença"/>
         </x-slot>
 
         <x-slot name="body">
@@ -49,7 +49,9 @@
 
                     <x-card.list.table-body-item class="col-span-4">
                         <x-slot name="item">
-                            <span>{{ $novice->frequencyForLesson($lesson) }} hrs</span>
+                            <div class="flex items-center justify-center h-full">
+                                <x-icons.active class="w-2 h-2" :active="$novice->presentForLesson($lesson)"/>
+                            </div>
                         </x-slot>
                     </x-card.list.table-body-item>
                 </x-slot>

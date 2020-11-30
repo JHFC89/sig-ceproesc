@@ -51,13 +51,13 @@
                                 <label class="inline-flex items-center space-x-2"> 
                                     <input 
                                         @change="$dispatch('frequency-event', {'{{ $novice->id }}' : 0})" 
-                                        class="form-radio" 
+                                        class="text-red-500 form-radio" 
                                         type="radio" 
                                         name="presence-{{ $novice->id }}" 
                                         value="0"
-                                        {{ $novice->frequencyForLesson($lesson) === 0 ? 'checked' : '' }}
+                                        {{ $novice->presentForLesson($lesson) === false ? 'checked' : '' }}
                                     >
-                                    <span>0</span>
+                                    <span>ausente</span>
                                 </label>
                                 <label class="inline-flex items-center space-x-2">
                                     <input 
@@ -65,33 +65,11 @@
                                         class="form-radio" 
                                         type="radio" 
                                         name="presence-{{ $novice->id }}" 
-                                        value="1"
-                                        {{ $novice->frequencyForLesson($lesson) == 1 ? 'checked' : '' }}
-                                    >
-                                    <span>1</span>
-                                </label>
-                                <label class="inline-flex items-center space-x-2">
-                                    <input 
-                                        @change="$dispatch('frequency-event', {'{{ $novice->id }}' : 2})" 
-                                        class="form-radio" 
-                                        type="radio" 
-                                        name="presence-{{ $novice->id }}" 
-                                        value="2"
-                                        {{ $novice->frequencyForLesson($lesson) == 2 ? 'checked' : '' }}
-                                    >
-                                    <span>2</span>
-                                </label>
-                                <label class="inline-flex items-center space-x-2">
-                                    <input 
-                                        @change="$dispatch('frequency-event', {'{{ $novice->id }}' : 3})" 
-                                        class="form-radio" 
-                                        type="radio" 
-                                        name="presence-{{ $novice->id }}" 
                                         value="3" 
-                                        {{ $novice->frequencyForLesson($lesson) == 3 ? 'checked' : '' }}
-                                        {{ $novice->frequencyForLesson($lesson) === null ? 'checked' : '' }}
+                                        {{ $novice->presentForLesson($lesson) ? 'checked' : '' }}
+                                        {{ $novice->presentForLesson($lesson) === null ? 'checked' : '' }}
                                     >
-                                    <span>3</span>
+                                    <span>presente</span>
                                 </label>
                             </div>
                         </x-slot>

@@ -30,8 +30,8 @@ class RegisterLessonTest extends TestCase
         $data = $this->data()
                      ->change('register', 'Example lesson register')
                      ->change('presenceList', [
-                        $novice_0->id => 3,
-                        $novice_1->id => 2,
+                        $novice_0->id => 1,
+                        $novice_1->id => 0,
                      ])
                      ->get();
         
@@ -40,8 +40,8 @@ class RegisterLessonTest extends TestCase
         $response->assertStatus(201);
         $this->assertEquals('Example lesson register', $lesson->fresh()->register);
         $this->assertNotNull($lesson->fresh()->registered_at);
-        $this->assertEquals(3, $novice_0->lessons->firstWhere('id', $lesson->id)->presence->frequency);
-        $this->assertEquals(2, $novice_1->lessons->firstWhere('id', $lesson->id)->presence->frequency);
+        $this->assertTrue($lesson->isPresent($novice_0));
+        $this->assertTrue($lesson->isAbsent($novice_1));
         $this->assertCount(2, $lesson->novices);
     }
 
@@ -142,7 +142,7 @@ class RegisterLessonTest extends TestCase
                          ->postJson('api/lessons/register/' . $lesson->id, [
                             'register' => 'Example draft lesson register',
                             'presenceList' => [
-                                $novice->id => 3,
+                                $novice->id => 1,
                             ],
                         ]);
 
@@ -158,16 +158,16 @@ class RegisterLessonTest extends TestCase
         extract($lesson->novices->all(), EXTR_PREFIX_ALL, 'novice');
         $data = $this->data()
                      ->change('presenceList', [
-                        $novice_0->id => 1,
-                        $novice_1->id => 1,
+                        $novice_0->id => 0,
+                        $novice_1->id => 0,
                      ])
                      ->get();
         $this->actingAs($this->instructor, 'api')->postJson('api/lessons/draft/' . $lesson->id, $data);
 
         $data = $this->data()
                      ->change('presenceList', [
-                        $novice_0->id => 3,
-                        $novice_1->id => 3,
+                        $novice_0->id => 1,
+                        $novice_1->id => 1,
                      ])
                      ->get();
         $response = $this->actingAs($this->instructor, 'api')->postJson('api/lessons/register/' . $lesson->id, $data);
@@ -206,5 +206,28 @@ class RegisterLessonTest extends TestCase
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors(['presenceList']);
+    }
+
+    /** @test */
+    public function presence_list_field_must_be_boolean()
+    {
+        $instructor = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
+        $lesson = Lesson::factory()->forToday()->hasNovices(2)->create(['instructor_id' => $this->instructor->id]);
+        extract($lesson->novices->all(), EXTR_PREFIX_ALL, 'novice');
+
+        $response = $this->actingAs($this->instructor, 'api')->postJson(
+            'api/lessons/register/' . $lesson->id,
+            $this->data()
+                 ->change('presenceList', [
+                    $novice_0->id => 2,
+                    $novice_1->id => 3,
+                 ])
+                 ->get()
+        );
+
+        $response
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['presenceList.' . $novice_0->id])
+            ->assertJsonValidationErrors(['presenceList.' . $novice_1->id]);
     }
 }

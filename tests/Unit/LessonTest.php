@@ -131,9 +131,20 @@ class LessonTest extends TestCase
         $lesson = Lesson::factory()->hasNovices(1)->create();
         $novice = $lesson->novices->first();
 
-        $lesson->registerPresence($novice, 3);
+        $lesson->registerPresence($novice)->present();
 
-        $this->assertEquals(3, $novice->lessons->first()->presence->frequency);
+        $this->assertTrue($novice->lessons->first()->presence->present === 1);
+    }
+
+    /** @test */
+    public function can_register_the_absence_of_an_enrolled_novice()
+    {
+        $lesson = Lesson::factory()->hasNovices(1)->create();
+        $novice = $lesson->novices->first();
+
+        $lesson->registerPresence($novice)->absent();
+
+        $this->assertTrue($novice->lessons->first()->presence->present === 0);
     }
 
     /** @test */
@@ -143,7 +154,7 @@ class LessonTest extends TestCase
         $lesson = Lesson::factory()->create();
 
         try {
-            $lesson->registerPresence($novice, 3);
+            $lesson->registerPresence($novice)->present();
         } catch (NoviceNotEnrolledException $exception) {
             $this->assertTrue(true);
             return;
@@ -153,63 +164,90 @@ class LessonTest extends TestCase
     }
 
     /** @test */
-    public function can_get_frequency_of_a_novice()
+    public function can_check_the_presence_of_a_novice()
     {
-        $lesson = Lesson::factory()->hasNovices(1)->create();
-        $novice = $lesson->novices->first();
-        $lesson->registerPresence($novice, 3);
+        $lesson = Lesson::factory()->hasNovices(2)->create();
+        $presentNovice = $lesson->novices->first();
+        $absentNovice = $lesson->novices->last();
+        $lesson->registerPresence($presentNovice)->present();
+        $lesson->registerPresence($absentNovice)->absent();
 
-        $frequency = $lesson->frequencyForNovice($novice);
+        $resultForPresentNovice = $lesson->isPresent($presentNovice);
+        $resultForAbsentNovice = $lesson->isPresent($absentNovice);
 
-        $this->assertEquals(3, $frequency);
+        $this->assertTrue($resultForPresentNovice);
+        $this->assertFalse($resultForAbsentNovice);
     }
 
     /** @test */
-    public function the_frequency_of_enrolled_novice_but_with_no_presence_registered_should_be_null()
+    public function can_check_the_absence_of_a_novice()
+    {
+        $lesson = Lesson::factory()->hasNovices(2)->create();
+        $absentNovice = $lesson->novices->first();
+        $presentNovice = $lesson->novices->last();
+        $lesson->registerPresence($absentNovice)->absent();
+        $lesson->registerPresence($presentNovice)->present();
+
+        $resultForAbsentNovice = $lesson->isAbsent($absentNovice);
+        $resultForPresentNovice = $lesson->isAbsent($presentNovice);
+
+        $this->assertTrue($resultForAbsentNovice);
+        $this->assertFalse($resultForPresentNovice);
+    }
+
+    /** @test */
+    public function the_presence_of_enrolled_novice_but_with_no_presence_registered_should_be_null()
     {
         $novice = User::factory()->create();
         $lesson = Lesson::factory()->create();
 
         $lesson->enroll($novice);
 
-        $this->assertNull($novice->lessons->first()->presence->frequency);
+        $this->assertNull($novice->lessons->first()->presence->present);
     }
 
     /** @test */
-    public function the_frequency_of_enrolled_novice_registered_as_not_present_should_return_zero()
+    public function can_update_a_novices_presence_from_present_to_absent()
     {
         $lesson = Lesson::factory()->hasNovices(1)->create();
         $novice = $lesson->novices->first();
+        $lesson->registerPresence($novice)->present();
+        $this->assertTrue($lesson->isPresent($novice));
 
-        $lesson->registerPresence($novice, 0);
+        $lesson->registerPresence($novice)->absent();
 
-        $this->assertEquals(0, $novice->lessons->first()->presence->frequency);
+        $this->assertTrue($lesson->isAbsent($novice));
     }
 
     /** @test */
-    public function can_update_a_novices_presence_with_different_value()
+    public function can_update_a_novices_presence_from_absent_to_present()
     {
         $lesson = Lesson::factory()->hasNovices(1)->create();
         $novice = $lesson->novices->first();
-        $lesson->registerPresence($novice, 1);
-        $this->assertEquals(1, $novice->lessons->first()->presence->frequency);
+        $lesson->registerPresence($novice)->absent();
+        $this->assertTrue($lesson->isAbsent($novice));
 
-        $lesson->registerPresence($novice, 3);
+        $lesson->registerPresence($novice)->present();
 
-        $this->assertEquals(3, $novice->fresh()->lessons->first()->presence->frequency);
+        $this->assertTrue($lesson->isPresent($novice));
     }
 
     /** @test */
     public function can_update_a_novices_presence_with_same_actual_value()
     {
-        $lesson = Lesson::factory()->hasNovices(1)->create();
-        $novice = $lesson->novices->first();
-        $lesson->registerPresence($novice, 3);
-        $this->assertEquals(3, $novice->lessons->first()->presence->frequency);
+        $lesson = Lesson::factory()->hasNovices(2)->create();
+        $presentNovice = $lesson->novices->first();
+        $absentNovice = $lesson->novices->last();
+        $lesson->registerPresence($presentNovice)->present();
+        $lesson->registerPresence($absentNovice)->absent();
+        $this->assertTrue($lesson->isPresent($presentNovice));
+        $this->assertTrue($lesson->isAbsent($absentNovice));
 
-        $lesson->registerPresence($novice, 3);
+        $lesson->registerPresence($presentNovice)->present();
+        $lesson->registerPresence($absentNovice)->absent();
 
-        $this->assertEquals(3, $novice->fresh()->lessons->first()->presence->frequency);
+        $this->assertTrue($lesson->isPresent($presentNovice));
+        $this->assertTrue($lesson->isAbsent($absentNovice));
     }
 
     /** @test */
@@ -218,7 +256,7 @@ class LessonTest extends TestCase
         $lesson = Lesson::factory()->hasNovices(5)->create();
         $novicesIds = $lesson->novices->pluck('id');
         $expectedResult = $lesson->novices->reduce(function ($expectedResult, $novice) {
-            $expectedResult[$novice->id] = 3;
+            $expectedResult[$novice->id] = 1;
             return $expectedResult;
         }, []);
 
@@ -230,13 +268,17 @@ class LessonTest extends TestCase
     /** @test */
     public function can_get_formatted_json_for_novices_with_different_frequencies_registered()
     {
-        $lesson = Lesson::factory()->hasNovices(4)->create();
+        $lesson = Lesson::factory()->hasNovices(5)->create();
         $novices = $lesson->novices;
         $novices->each(function ($novice, $key) use ($lesson) {
-            $lesson->registerPresence($novice, $key);
+            if ($key % 2 == 0) {
+                $lesson->registerPresence($novice)->present();
+            } else {
+                $lesson->registerPresence($novice)->absent();
+            }
         });
         $expectedResult = $novices->reduce(function ($expectedResult, $novice) use ($lesson) {
-            $expectedResult[$novice->id] = $novice->frequencyForLesson($lesson);
+            $expectedResult[$novice->id] = $novice->presentForLesson($lesson) ? 1 : 0;
             return $expectedResult;
         }, []);
 

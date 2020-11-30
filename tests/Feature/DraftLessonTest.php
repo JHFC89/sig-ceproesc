@@ -36,8 +36,8 @@ class DraftLessonTest extends TestCase
         $data = $this->data()
                      ->change('register', 'Example lesson register draft')
                      ->change('presenceList', [
-                        $novice_0->id => 3,
-                        $novice_1->id => 2,
+                        $novice_0->id => 1,
+                        $novice_1->id => 0,
                      ])
                      ->get();
         
@@ -46,8 +46,8 @@ class DraftLessonTest extends TestCase
         $response->assertStatus(201);
         $this->assertEquals('Example lesson register draft', $lesson->fresh()->register);
         $this->assertNull($lesson->fresh()->registered_at);
-        $this->assertEquals(3, $novice_0->lessons->firstWhere('id', $lesson->id)->presence->frequency);
-        $this->assertEquals(2, $novice_1->lessons->firstWhere('id', $lesson->id)->presence->frequency);
+        $this->assertTrue($novice_0->presentForLesson($lesson));
+        $this->assertFalse($novice_1->presentForLesson($lesson));
     }
 
     /** @test */
@@ -132,7 +132,7 @@ class DraftLessonTest extends TestCase
     }
 
     /** @test */
-    public function register_field_is_required_to_save_a_draft()
+    public function register_field_is_required()
     {
         $lesson = Lesson::factory()->forToday()->create(['instructor_id' => $this->instructor->id]);
         
@@ -147,7 +147,7 @@ class DraftLessonTest extends TestCase
     }
 
     /** @test */
-    public function presence_list_field_is_required_to_save_a_draft()
+    public function presence_list_field_is_required()
     {
         $lesson = Lesson::factory()->forToday()->create(['instructor_id' => $this->instructor->id]);
         
@@ -162,8 +162,32 @@ class DraftLessonTest extends TestCase
     }
 
     /** @test */
+    public function presence_list_field_must_be_boolean()
+    {
+        $instructor = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
+        $lesson = Lesson::factory()->forToday()->hasNovices(2)->create(['instructor_id' => $this->instructor->id]);
+        extract($lesson->novices->all(), EXTR_PREFIX_ALL, 'novice');
+
+        $response = $this->actingAs($this->instructor, 'api')->postJson(
+            'api/lessons/draft/' . $lesson->id,
+            $this->data()
+                 ->change('presenceList', [
+                    $novice_0->id => 2,
+                    $novice_1->id => 3,
+                 ])
+                 ->get()
+        );
+
+        $response
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['presenceList.' . $novice_0->id])
+            ->assertJsonValidationErrors(['presenceList.' . $novice_1->id]);
+    }
+
+    /** @test */
     public function saving_a_lesson_as_draft_twice()
     {
+        $this->withoutExceptionHandling();
         $lesson = Lesson::factory()
             ->forToday()
             ->hasNovices(2)
@@ -171,13 +195,13 @@ class DraftLessonTest extends TestCase
         extract($lesson->novices->all(), EXTR_PREFIX_ALL, 'novice');
         $data = $this->data()
                      ->change('presenceList', [
-                        $novice_0->id => 3,
-                        $novice_1->id => 3,
+                        $novice_0->id => 0,
+                        $novice_1->id => 0,
                      ])
                      ->get();
         $this->actingAs($this->instructor, 'api')->postJson('api/lessons/draft/' . $lesson->id, $data);
-        $this->assertEquals(3, $novice_0->lessons->first()->presence->frequency);
-        $this->assertEquals(3, $novice_1->lessons->first()->presence->frequency);
+        $this->assertFalse($novice_0->presentForLesson($lesson));
+        $this->assertFalse($novice_1->presentForLesson($lesson));
 
         $data = $this->data()
                      ->change('presenceList', [
@@ -189,8 +213,8 @@ class DraftLessonTest extends TestCase
 
         $response->assertStatus(201);
         $this->assertCount(2, $lesson->fresh()->novices);
-        $this->assertEquals(1, $novice_0->fresh()->lessons->first()->presence->frequency);
-        $this->assertEquals(1, $novice_1->fresh()->lessons->first()->presence->frequency);
+        $this->assertTrue($novice_0->presentForLesson($lesson));
+        $this->assertTrue($novice_1->presentForLesson($lesson));
     }
 
     /** @test */
@@ -200,20 +224,20 @@ class DraftLessonTest extends TestCase
         $novice = $lesson->novices->first();
         $data = $this->data()
                      ->change('presenceList', [
-                        $novice->id => 3,
+                        $novice->id => 1,
                      ])
                      ->get();
         $this->actingAs($this->instructor, 'api')->postJson('api/lessons/draft/' . $lesson->id, $data);
-        $this->assertEquals(3, $novice->lessons->first()->presence->frequency);
+        $this->assertTrue($novice->presentForLesson($lesson));
 
         $data = $this->data()
                      ->change('presenceList', [
-                        $novice->id => 3,
+                        $novice->id => 1,
                      ])
                      ->get();
         $response = $this->actingAs($this->instructor, 'api')->postJson('api/lessons/draft/' . $lesson->id, $data);
 
         $response->assertStatus(201);
-        $this->assertEquals(3, $novice->fresh()->lessons->first()->presence->frequency);
+        $this->assertTrue($novice->presentForLesson($lesson));
     }
 }

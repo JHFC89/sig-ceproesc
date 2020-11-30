@@ -18,6 +18,7 @@ class CreatesPresencePivotTableForLessonAndUser extends Migration
             $table->foreignId('lesson_id');
             $table->foreignId('user_id');
             $table->integer('frequency')->nullable();
+            $table->boolean('present')->nullable();
             $table->timestamps();
         });
     }
