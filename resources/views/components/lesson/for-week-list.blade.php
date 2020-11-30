@@ -33,13 +33,7 @@
                 <x-card.list.table-body-item class="col-span-2">
                     <x-slot name="item">
                         <div class="flex items-center justify-center h-full">
-                            <span 
-                                class="block w-2 h-2 rounded-full 
-                                    @if($lesson->isRegistered()) bg-green-400 
-                                    @else bg-red-400 
-                                    @endif
-                                ">
-                            </span>
+                            <x-icons.active class="w-2 h-2" :active="$lesson->isRegistered()"/>
                         </div>
                     </x-slot>
                 </x-card.list.table-body-item>
