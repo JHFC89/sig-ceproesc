@@ -270,7 +270,7 @@ class LessonTest extends TestCase
     }
 
     /** @test */
-    public function can_get_formatted_json_for_novices_with_different_frequencies_registered()
+    public function can_get_formatted_json_for_novices_with_different_presences_registered()
     {
         $lesson = Lesson::factory()->hasNovices(5)->create();
         $novices = $lesson->novices;
@@ -282,11 +282,14 @@ class LessonTest extends TestCase
             }
         });
         $expectedResult = $novices->reduce(function ($expectedResult, $novice) use ($lesson) {
-            $expectedResult[$novice->id] = $novice->presentForLesson($lesson) ? 1 : 0;
+            $expectedResult[$novice->id] = [ 
+                'presence' => $novice->presentForLesson($lesson) ? 1 : 0,
+                'observation' => null,
+            ];
             return $expectedResult;
         }, []);
 
-        $result = $lesson->novicesFrequencyToJsonObject(); 
+        $result = $lesson->novicesPresenceToJson(); 
 
         $this->assertEquals(json_encode($expectedResult), $result);
     }

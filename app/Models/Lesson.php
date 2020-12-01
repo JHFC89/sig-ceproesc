@@ -113,21 +113,6 @@ class Lesson extends Model
         return $present ? false : true;
     }
 
-    public function novicesFrequencyToJsonObject()
-    {
-        $novices = $this->novices->reduce(function ($novices, $novice) {
-            $present = $novice->lessons->find($this)->presence->present;
-            if($present === null) {
-                $novices[$novice->id] = 1;
-            } else {
-                $novices[$novice->id] = $present;
-            }
-            return $novices;
-        }, []);
-
-        return json_encode($novices);
-    }
-
     public function novicesPresenceToJson()
     {
         $novices = $this->novices->reduce(function ($novices, $novice) {
@@ -187,7 +172,7 @@ class Lesson extends Model
     {
         return $this->belongsToMany(User::class)
                     ->as('presence')
-                    ->withPivot('frequency', 'present', 'observation');
+                    ->withPivot('present', 'observation');
     }
 
     public function instructor()

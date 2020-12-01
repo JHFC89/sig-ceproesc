@@ -62,7 +62,7 @@
                                 </label>
                                 <label class="inline-flex items-center space-x-2">
                                     <input 
-                                        @change="$dispatch('frequency-event', {'{{ $novice->id }}' : 1})" 
+                                        @change="$dispatch('presence-event', {'{{ $novice->id }}' : 1})" 
                                         class="form-radio" 
                                         type="radio" 
                                         name="presence-{{ $novice->id }}" 

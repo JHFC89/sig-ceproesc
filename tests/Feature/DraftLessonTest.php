@@ -287,7 +287,7 @@ class DraftLessonTest extends TestCase
     }
 
     /** @test */
-    public function saving_a_lesson_as_draft_twice_while_keeping_the_same_frequency_value()
+    public function saving_a_lesson_as_draft_twice_while_keeping_the_same_presence_value()
     {
         $lesson = Lesson::factory()->forToday()->hasNovices(1)->create(['instructor_id' => $this->instructor->id]);
         $novice = $lesson->novices->first();
