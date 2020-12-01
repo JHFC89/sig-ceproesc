@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Lesson;
+use App\Exceptions\LessonRegisteredException;
 use App\Exceptions\NoviceNotEnrolledException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -131,7 +132,7 @@ class LessonTest extends TestCase
         $lesson = Lesson::factory()->hasNovices(1)->create();
         $novice = $lesson->novices->first();
 
-        $lesson->registerPresence($novice)->present();
+        $lesson->registerFor($novice)->present()->complete();
 
         $this->assertTrue($novice->lessons->first()->presence->present === 1);
     }
@@ -142,7 +143,7 @@ class LessonTest extends TestCase
         $lesson = Lesson::factory()->hasNovices(1)->create();
         $novice = $lesson->novices->first();
 
-        $lesson->registerPresence($novice)->absent();
+        $lesson->registerFor($novice)->absent()->complete();
 
         $this->assertTrue($novice->lessons->first()->presence->present === 0);
     }
@@ -169,8 +170,8 @@ class LessonTest extends TestCase
         $lesson = Lesson::factory()->hasNovices(2)->create();
         $presentNovice = $lesson->novices->first();
         $absentNovice = $lesson->novices->last();
-        $lesson->registerPresence($presentNovice)->present();
-        $lesson->registerPresence($absentNovice)->absent();
+        $lesson->registerFor($presentNovice)->present()->complete();
+        $lesson->registerFor($absentNovice)->absent()->complete();
 
         $resultForPresentNovice = $lesson->isPresent($presentNovice);
         $resultForAbsentNovice = $lesson->isPresent($absentNovice);
@@ -185,8 +186,8 @@ class LessonTest extends TestCase
         $lesson = Lesson::factory()->hasNovices(2)->create();
         $absentNovice = $lesson->novices->first();
         $presentNovice = $lesson->novices->last();
-        $lesson->registerPresence($absentNovice)->absent();
-        $lesson->registerPresence($presentNovice)->present();
+        $lesson->registerFor($absentNovice)->absent()->complete();
+        $lesson->registerFor($presentNovice)->present()->complete();
 
         $resultForAbsentNovice = $lesson->isAbsent($absentNovice);
         $resultForPresentNovice = $lesson->isAbsent($presentNovice);
@@ -211,10 +212,10 @@ class LessonTest extends TestCase
     {
         $lesson = Lesson::factory()->hasNovices(1)->create();
         $novice = $lesson->novices->first();
-        $lesson->registerPresence($novice)->present();
+        $lesson->registerFor($novice)->present()->complete();
         $this->assertTrue($lesson->isPresent($novice));
 
-        $lesson->registerPresence($novice)->absent();
+        $lesson->registerFor($novice)->absent()->complete();
 
         $this->assertTrue($lesson->isAbsent($novice));
     }
@@ -224,10 +225,10 @@ class LessonTest extends TestCase
     {
         $lesson = Lesson::factory()->hasNovices(1)->create();
         $novice = $lesson->novices->first();
-        $lesson->registerPresence($novice)->absent();
+        $lesson->registerFor($novice)->absent()->complete();
         $this->assertTrue($lesson->isAbsent($novice));
 
-        $lesson->registerPresence($novice)->present();
+        $lesson->registerFor($novice)->present()->complete();
 
         $this->assertTrue($lesson->isPresent($novice));
     }
@@ -238,13 +239,13 @@ class LessonTest extends TestCase
         $lesson = Lesson::factory()->hasNovices(2)->create();
         $presentNovice = $lesson->novices->first();
         $absentNovice = $lesson->novices->last();
-        $lesson->registerPresence($presentNovice)->present();
-        $lesson->registerPresence($absentNovice)->absent();
+        $lesson->registerFor($presentNovice)->present()->complete();
+        $lesson->registerFor($absentNovice)->absent()->complete();
         $this->assertTrue($lesson->isPresent($presentNovice));
         $this->assertTrue($lesson->isAbsent($absentNovice));
 
-        $lesson->registerPresence($presentNovice)->present();
-        $lesson->registerPresence($absentNovice)->absent();
+        $lesson->registerFor($presentNovice)->present()->complete();
+        $lesson->registerFor($absentNovice)->absent()->complete();
 
         $this->assertTrue($lesson->isPresent($presentNovice));
         $this->assertTrue($lesson->isAbsent($absentNovice));
@@ -256,11 +257,14 @@ class LessonTest extends TestCase
         $lesson = Lesson::factory()->hasNovices(5)->create();
         $novicesIds = $lesson->novices->pluck('id');
         $expectedResult = $lesson->novices->reduce(function ($expectedResult, $novice) {
-            $expectedResult[$novice->id] = 1;
+            $expectedResult[$novice->id] = [
+                'presence'      => 1,
+                'observation'   => null,
+            ];
             return $expectedResult;
         }, []);
 
-        $result = $lesson->novicesFrequencyToJsonObject(); 
+        $result = $lesson->novicesPresenceToJson(); 
 
         $this->assertEquals(json_encode($expectedResult), $result);
     }
@@ -272,9 +276,9 @@ class LessonTest extends TestCase
         $novices = $lesson->novices;
         $novices->each(function ($novice, $key) use ($lesson) {
             if ($key % 2 == 0) {
-                $lesson->registerPresence($novice)->present();
+                $lesson->registerFor($novice)->present()->complete();
             } else {
-                $lesson->registerPresence($novice)->absent();
+                $lesson->registerFor($novice)->absent()->complete();
             }
         });
         $expectedResult = $novices->reduce(function ($expectedResult, $novice) use ($lesson) {
@@ -313,5 +317,76 @@ class LessonTest extends TestCase
         $this->assertEquals($weekLessons->pluck('id'), $result->pluck('id'));
         $this->assertNotEquals($lastWeekLessons->pluck('id'), $result->pluck('id'));
         $this->assertNotEquals($nextWeekLessons->pluck('id'), $result->pluck('id'));
+    }
+
+    /** @test */
+    public function register_an_observation_for_a_novice()
+    {
+        $lesson = Lesson::factory()->notRegistered()->hasNovices(1)->create();
+        $novice = $lesson->novices->first();
+
+        $lesson->registerFor($novice)->present()->observation('test observation for a novice')->complete();
+
+        $this->assertEquals('test observation for a novice', $lesson->fresh()->novices->find($novice)->presence->observation);
+    }
+
+    /** @test */
+    public function register_an_observation_for_a_novice_and_leaving_it_null_for_another()
+    {
+        $lesson = Lesson::factory()->notRegistered()->hasNovices(2)->create();
+        $noviceA = $lesson->novices->first();
+        $noviceB = $lesson->novices->last();
+
+        $lesson->registerFor($noviceA)->present()->observation('test observation for a novice')->complete();
+        $lesson->registerFor($noviceB)->present()->complete();
+
+        $this->assertEquals('test observation for a novice', $lesson->fresh()->novices->find($noviceA)->presence->observation);
+        $this->assertNull($lesson->fresh()->novices->find($noviceB)->presence->observation);
+    }
+
+    /** @test */
+    public function updating_an_observation()
+    {
+        $lesson = Lesson::factory()->notRegistered()->hasNovices(1)->create();
+        $novice = $lesson->novices->first();
+        $lesson->registerFor($novice)->present()->observation('test observation for a novice')->complete();
+
+        $lesson->registerFor($novice)->present()->observation('update test observation for a novice')->complete();
+
+        $this->assertEquals('update test observation for a novice', $lesson->fresh()->novices->find($novice)->presence->observation);
+    }
+
+    /** @test */
+    public function trying_to_update_the_register_of_a_registered_lesson_should_throw_an_exception()
+    {
+        $lesson = Lesson::factory()->notRegistered()->hasNovices(1)->create();
+        $novice = $lesson->novices->first();
+        $lesson->registerFor($novice)->present()->observation('test observation for a novice')->complete();
+        $lesson->register();
+
+        try {
+            $lesson->fresh()
+                   ->registerFor($novice)
+                   ->absent()
+                   ->observation('update observation for a novice')
+                   ->complete();
+        } catch (LessonRegisteredException $exception) {
+            $this->assertTrue(true);
+            return;
+        }
+
+        $this->fail('Trying to update a register to a lesson already registered should throw a exception');
+    }
+
+    /** @test */
+    public function get_an_observation_registered_for_a_novice()
+    {
+        $lesson = Lesson::factory()->notRegistered()->hasNovices(1)->create();
+        $novice = $lesson->novices->first();
+        $lesson->registerFor($novice)->present()->observation('test observation for a novice')->complete();
+
+        $result = $lesson->observationFor($novice);
+
+        $this->assertEquals('test observation for a novice', $result);
     }
 }

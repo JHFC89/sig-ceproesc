@@ -19,9 +19,10 @@
 
         <x-slot name="header">
             <x-card.list.table-header class="col-span-1" name="código"/>
-            <x-card.list.table-header class="col-span-5" name="nome"/>
+            <x-card.list.table-header class="col-span-3" name="nome"/>
             <x-card.list.table-header class="col-span-2" name="turma"/>
-            <x-card.list.table-header class="text-center col-span-4" name="presença"/>
+            <x-card.list.table-header class="text-center col-span-2" name="presença"/>
+            <x-card.list.table-header class="col-span-4" name="observação"/>
         </x-slot>
 
         <x-slot name="body">
@@ -29,13 +30,14 @@
             @foreach($lesson->novices as $novice)
             <x-card.list.table-row>
                 <x-slot name="items">
+
                     <x-card.list.table-body-item class="col-span-1">
                         <x-slot name="item">
                             <span>123</span>
                         </x-slot>
                     </x-card.list.table-body-item>
 
-                    <x-card.list.table-body-item class="col-span-5">
+                    <x-card.list.table-body-item class="col-span-3">
                         <x-slot name="item">
                             <span>{{ $novice->name }}</span>
                         </x-slot>
@@ -47,13 +49,20 @@
                         </x-slot>
                     </x-card.list.table-body-item>
 
-                    <x-card.list.table-body-item class="col-span-4">
+                    <x-card.list.table-body-item class="col-span-2">
                         <x-slot name="item">
                             <div class="flex items-center justify-center h-full">
                                 <x-icons.active class="w-2 h-2" :active="$novice->presentForLesson($lesson)"/>
                             </div>
                         </x-slot>
                     </x-card.list.table-body-item>
+
+                    <x-card.list.table-body-item class="col-span-4">
+                        <x-slot name="item">
+                            <span class="normal-case">{{ $novice->observationForLesson($lesson) }}</span>
+                        </x-slot>
+                    </x-card.list.table-body-item>
+
                 </x-slot>
             </x-card.list.table-row>
             @endforeach

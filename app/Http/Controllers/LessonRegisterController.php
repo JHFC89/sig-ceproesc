@@ -42,25 +42,33 @@ class LessonRegisterController extends Controller
         request()->validate([
             'register' => 'required',
             'presenceList' => 'required',
-            'presenceList.*' => 'boolean',
+            'presenceList.*.presence' => 'required|boolean',
+            'presenceList.*.observation' => 'sometimes|nullable|string',
         ]);
 
         $lesson->register = request()->register;
-        $lesson->registered_at = now();
-        $lesson->save();
 
         try {
-            collect(request()->presenceList)->each(function ($present, $id) use ($lesson) {
-                if ($present) {
-                    $lesson->registerPresence(User::find($id))->present();
+            collect(request()->presenceList)->each(function ($novice, $id) use ($lesson) {
+                if ($novice['presence']) {
+                    $lesson->registerFor(User::find($id))->present();
                 } else {
-                    $lesson->registerPresence(User::find($id))->absent();
+                    $lesson->registerFor(User::find($id))->absent();
                 }
+
+                if (isset($novice['observation'])) {
+                    $lesson->observation($novice['observation']);
+                }
+
+                $lesson->complete();
             });
-            $presence = collect(request()->presenceList);
+
         } catch (NoviceNotEnrolledException $exception) {
             abort(403, $exception->getMessage());
         }
+
+        $lesson->registered_at = now();
+        $lesson->save();
 
         return response('', 201);
     }

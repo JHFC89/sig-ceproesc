@@ -46,7 +46,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Lesson::class)
                     ->as('presence')
-                    ->withPivot('frequency', 'present');
+                    ->withPivot('frequency', 'present', 'observation');
     }
 
     public function roles()
@@ -68,6 +68,11 @@ class User extends Authenticatable
         }
 
         return $presence ? true : false;
+    }
+
+    public function observationForLesson(Lesson $lesson)
+    {
+        return $this->lessons()->where('lesson_id', $lesson->id)->first()->presence->observation;
     }
     
     public function isInstructor()

@@ -15,7 +15,7 @@ class NoviceTest extends TestCase
     {
         $lesson = Lesson::factory()->hasNovices(1)->create();
         $novice = $lesson->novices->first();
-        $lesson->registerPresence($novice)->present();
+        $lesson->registerFor($novice)->present()->complete();
 
         $presence = $novice->presentForLesson($lesson); 
 
@@ -31,5 +31,17 @@ class NoviceTest extends TestCase
         $presence = $novice->presentForLesson($lesson); 
 
         $this->assertNull($presence);
+    }
+
+    /** @test */
+    public function getting_observation_for_a_lesson()
+    {
+        $lesson = Lesson::factory()->hasNovices(1)->create();
+        $novice = $lesson->novices->first();
+        $lesson->registerFor($novice)->present()->observation('test observation')->complete();
+
+        $result = $novice->observationForLesson($lesson);
+
+        $this->assertEquals('test observation', $result);
     }
 }

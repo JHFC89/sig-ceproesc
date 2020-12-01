@@ -30,20 +30,28 @@ class LessonDraftController extends Controller
         request()->validate([
             'register' => 'required',
             'presenceList' => 'required',
-            'presenceList.*' => 'boolean',
+            'presenceList.*.presence' => 'required|boolean',
+            'presenceList.*.observation' => 'sometimes|nullable|string',
         ]);
 
         $lesson->register = request()->register;
         $lesson->save();
 
         try {
-            collect(request()->presenceList)->each(function ($present, $id) use ($lesson) {
-                if ($present) {
-                    $lesson->registerPresence(User::find($id))->present();
+            collect(request()->presenceList)->each(function ($novice, $id) use ($lesson) {
+                if ($novice['presence']) {
+                    $lesson->registerFor(User::find($id))->present();
                 } else {
-                    $lesson->registerPresence(User::find($id))->absent();
+                    $lesson->registerFor(User::find($id))->absent();
                 }
+
+                if (isset($novice['observation'])) {
+                    $lesson->observation($novice['observation']);
+                }
+
+                $lesson->complete();
             });
+
         } catch (NoviceNotEnrolledException $exception) {
             abort(403, $exception->getMessage());
         }

@@ -16,10 +16,13 @@ trait LessonTestData
                 $this->data = [
                     'register' => 'Example lesson register',
                     'presenceList' => [
-                        User::factory()->create()->id => 3,
-                        User::factory()->create()->id => 2,
-                        User::factory()->create()->id => 1,
-                        User::factory()->create()->id => 0,
+                        User::factory()->create()->id => [
+                            'presence' => 1,
+                            'observation' => 'test observation',
+                        ],
+                        User::factory()->create()->id => [
+                            'presence' => 0,
+                        ],
                     ],
                 ];
             }
@@ -41,6 +44,12 @@ trait LessonTestData
             }
 
             public function change($key, $value)
+            {
+                $this->data[$key] = $value;
+                return $this;
+            }
+
+            public function add($key, $value)
             {
                 $this->data[$key] = $value;
                 return $this;

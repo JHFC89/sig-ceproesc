@@ -17,9 +17,10 @@
     <x-card.list.table-layout title="lista de presença">
         <x-slot name="header">
             <x-card.list.table-header class="col-span-1" name="código"/>
-            <x-card.list.table-header class="col-span-5" name="nome"/>
-            <x-card.list.table-header class="col-span-1" name="turma"/>
-            <x-card.list.table-header class="col-span-5" name="presença"/>
+            <x-card.list.table-header class="col-span-3" name="nome"/>
+            <x-card.list.table-header class="col-span-2" name="turma"/>
+            <x-card.list.table-header class="col-span-2" name="presença"/>
+            <x-card.list.table-header class="col-span-4" name="observação"/>
         </x-slot>
 
         <x-slot name="body">
@@ -27,37 +28,37 @@
             @foreach($lesson->novices as $novice)
             <x-card.list.table-row>
                 <x-slot name="items">
-                    <x-card.list.table-body-item class="col-span-1">
+                    <x-card.list.table-body-item class="flex items-center col-span-1">
                         <x-slot name="item">
                             <span>123</span>
                         </x-slot>
                     </x-card.list.table-body-item>
 
-                    <x-card.list.table-body-item class="col-span-5">
+                    <x-card.list.table-body-item class="flex items-center col-span-3">
                         <x-slot name="item">
                             <span>{{ $novice->name }}</span>
                         </x-slot>
                     </x-card.list.table-body-item>
 
-                    <x-card.list.table-body-item class="col-span-1">
+                    <x-card.list.table-body-item class="flex items-center col-span-2">
                         <x-slot name="item">
                             <span>2021 - janeiro</span>
                         </x-slot>
                     </x-card.list.table-body-item>
 
-                    <x-card.list.table-body-item class="col-span-5">
+                    <x-card.list.table-body-item class="flex items-center col-span-2">
                         <x-slot name="item">
                             <div x-data class="space-x-4">
                                 <label class="inline-flex items-center space-x-2"> 
                                     <input 
-                                        @change="$dispatch('frequency-event', {'{{ $novice->id }}' : 0})" 
+                                        @change="$dispatch('presence-event', {'{{ $novice->id }}' : 0})" 
                                         class="text-red-500 form-radio" 
                                         type="radio" 
                                         name="presence-{{ $novice->id }}" 
                                         value="0"
                                         {{ $novice->presentForLesson($lesson) === false ? 'checked' : '' }}
                                     >
-                                    <span>ausente</span>
+                                    <span>a</span>
                                 </label>
                                 <label class="inline-flex items-center space-x-2">
                                     <input 
@@ -69,11 +70,25 @@
                                         {{ $novice->presentForLesson($lesson) ? 'checked' : '' }}
                                         {{ $novice->presentForLesson($lesson) === null ? 'checked' : '' }}
                                     >
-                                    <span>presente</span>
+                                    <span>p</span>
                                 </label>
                             </div>
                         </x-slot>
                     </x-card.list.table-body-item>
+
+                    <x-card.list.table-body-item class="flex items-center col-span-4">
+                        <x-slot name="item">
+                            <input 
+                                x-data
+                                @input="$dispatch('observation-event', {'{{ $novice->id }}' : $event.target.value})"
+                                class="block w-full form-input" 
+                                type="text" 
+                                placeholder="Digite uma observação individual para este aprendiz"
+                                value="{{ $novice->observationForLesson($lesson) }}"
+                            >
+                        </x-slot>
+                    </x-card.list.table-body-item>
+
                 </x-slot>
             </x-card.list.table-row>
             @endforeach
@@ -82,7 +97,12 @@
 
     </x-card.list.table-layout>
 
-    <x-card.form-layout x-data="form()" @frequency-event.window="changeFrequency($event.detail)" title="registro da aula">
+    <x-card.form-layout 
+        x-data="form()" 
+        @presence-event.window="updatePresence($event.detail)" 
+        @observation-event.window="updateObservation($event.detail)" 
+        title="registro da aula"
+    >
 
         <x-slot name="inputs">
 
@@ -137,7 +157,7 @@
             return {
                 data: {
                     register: '{{ $lesson->register }}',
-                    presenceList: {!! $lesson->novicesFrequencyToJsonObject() !!},
+                    presenceList: {!! $lesson->novicesPresenceToJson() !!},
                 },
                 message: {
                     content: '',
@@ -154,9 +174,13 @@
                         .then(response => {this.redirectToLesson()})
                         .catch(error => {this.handleErrors(error.response.data.errors)});
                 },
-                changeFrequency(novice) {
+                updatePresence(novice) {
                     key = Object.keys(novice)[0];
-                    this.data.presenceList[key] = novice[key];
+                    this.data.presenceList[key].presence = novice[key];
+                },
+                updateObservation(novice) {
+                    key = Object.keys(novice)[0];
+                    this.data.presenceList[key].observation = novice[key];
                 },
                 saveDraft() {
                     axios.post('lessons/draft/{{ $lesson->id }}', this.data)
