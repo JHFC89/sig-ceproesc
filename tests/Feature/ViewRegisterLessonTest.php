@@ -23,11 +23,21 @@ class ViewRegisterLessonTest extends TestCase
     }
 
     /** @test */
-    public function an_instructor_can_view_the_registration_page()
+    public function an_instructor_can_view_a_lesson_available_to_registration_at_current_date()
     {
+        extract($this->lesson->novices->all(), EXTR_PREFIX_ALL, 'novice');
+
         $response = $this->actingAs($this->instructor)->get('lessons/register/create/' . $this->lesson->id);
 
-        $response->assertOk();
+        $response
+            ->assertOk()
+            ->assertViewHas('lesson', $this->lesson)
+            ->assertSee($this->lesson->class)
+            ->assertSee($this->lesson->discipline)
+            ->assertSee($this->lesson->hourly_load)
+            ->assertSee($novice_0->name)
+            ->assertSee($novice_1->name)
+            ->assertSee($novice_2->name);
     }
 
     /** @test */
@@ -59,25 +69,6 @@ class ViewRegisterLessonTest extends TestCase
         $response = $this->actingAs($this->instructor)->get('lessons/register/create/' . $lessonForAnotherInstructor->id);
 
         $response->assertUnauthorized();
-    }
-
-    /** @test */
-    public function an_instructor_can_view_a_lesson_available_to_registration_at_current_date()
-    {
-        $lesson = Lesson::factory()->forToday()->notRegistered()->hasNovices(3)->create();
-        extract($lesson->novices->all(), EXTR_PREFIX_ALL, 'novice');
-
-        $response = $this->actingAs($lesson->instructor)->get('lessons/register/create/' . $lesson->id);
-
-        $response
-            ->assertOk()
-            ->assertViewHas('lesson', $lesson)
-            ->assertSee($lesson->class)
-            ->assertSee($lesson->discipline)
-            ->assertSee($lesson->hourly_load)
-            ->assertSee($novice_0->name)
-            ->assertSee($novice_1->name)
-            ->assertSee($novice_2->name);
     }
 
     /** @test */
