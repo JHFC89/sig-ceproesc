@@ -22,20 +22,9 @@ class ForTodayList extends Component
     {
         $this->user = $user;
 
-        if ($this->user->isInstructor()) {
-            $this->lessons = Lesson::today()->where('instructor_id', $this->user->id)->get();
-        } else if ($this->user->isEmployer()) {
-            $this->lessons = Lesson::today()->enrolledNovices($this->user->novices->pluck('id')->toArray())->get();
-        } 
-        else {
-            $this->lessons = Lesson::today()->enrolled($this->user->id)->get();
-        }
+        $this->setLessons();
 
-        if ($this->lessons->count() === 0) {
-            $this->title = 'Nenhuma aula para hoje';
-        } else {
-            $this->title = $title;
-        }
+        $this->setTitle($title);
     }
 
     /**
@@ -56,5 +45,25 @@ class ForTodayList extends Component
     public function showRegisterButton(Lesson $lesson)
     {
         return (! $lesson->isRegistered() && $this->user->isInstructor()) ? true : false;
+    }
+
+    private function setLessons()
+    {
+        if ($this->user->isInstructor()) {
+            $this->lessons = Lesson::today()->forInstructor($this->user)->get();
+        } else if ($this->user->isEmployer()) {
+            $this->lessons = Lesson::today()->forEmployer($this->user)->get();
+        } else {
+            $this->lessons = Lesson::today()->forNovice($this->user)->get();
+        }
+    }
+
+    private function setTitle(string $title)
+    {
+        if ($this->lessons->count() === 0) {
+            $this->title = 'Nenhuma aula para hoje';
+        } else {
+            $this->title = $title;
+        }
     }
 }

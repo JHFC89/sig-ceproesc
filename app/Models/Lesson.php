@@ -204,4 +204,19 @@ class Lesson extends Model
         Lesson::whereBetween('date', [now()->startOfWeek(), now()->endOfWeek()])->get()->count();
         return $query->whereBetween('date', [now()->startOfWeek(), now()->endOfWeek()]);
     }
+
+    public function scopeForInstructor($query, User $instructor)
+    {
+        return $query->where('instructor_id', $instructor->id);
+    }
+
+    public function scopeForEmployer($query, User $employer)
+    {
+        return $query->enrolledNovices($employer->novices->pluck('id')->toArray());
+    }
+
+    public function scopeForNovice($query, User $novice)
+    {
+        return $query->enrolled($novice->id);
+    }
 }

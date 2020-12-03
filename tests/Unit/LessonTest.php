@@ -392,4 +392,45 @@ class LessonTest extends TestCase
 
         $this->assertEquals('test observation for a novice', $result);
     }
+
+    /** @test */
+    public function get_an_instructor_lessons()
+    {
+        $instructor = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
+        $lessons = Lesson::factory()->instructor($instructor)->count(3)->create();
+        
+        $result = Lesson::forInstructor($instructor)->get();
+
+        $this->assertEquals($lessons->pluck('id')->toArray(), $result->pluck('id')->toArray());
+    }
+
+    /** @test */
+    public function get_lessons_for_novices_that_belongs_to_an_employer()
+    {
+        $employer = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
+        $novice = User::factory()->hasRoles(1, ['name' => 'novice'])->create();
+        $employer->novices()->save($novice);
+        $lessons = Lesson::factory()->count(3)->create();
+        $lessons->each(function ($lesson) use ($novice) {
+            $lesson->enroll($novice);
+        });
+        
+        $result = Lesson::forEmployer($employer)->get();
+
+        $this->assertEquals($lessons->pluck('id')->toArray(), $result->pluck('id')->toArray());
+    }
+
+    /** @test */
+    public function get_a_novice_lessons()
+    {
+        $novice = User::factory()->hasRoles(1, ['name' => 'novice'])->create();
+        $lessons = Lesson::factory()->count(3)->create();
+        $lessons->each(function ($lesson) use ($novice) {
+            $lesson->enroll($novice);
+        });
+        
+        $result = Lesson::forNovice($novice)->get();
+
+        $this->assertEquals($lessons->pluck('id')->toArray(), $result->pluck('id')->toArray());
+    }
 }
