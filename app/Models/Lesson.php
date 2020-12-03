@@ -187,6 +187,13 @@ class Lesson extends Model
         });
     }
 
+    public function scopeEnrolledNovices($query, array $novicesIds)
+    {
+        return $query->whereHas('novices', function (builder $query) use ($novicesIds) {
+            $query->whereIn('user_id', $novicesIds);
+        });
+    }
+
     public function scopeToday($query)
     {
         return $query->whereDate('date', today());

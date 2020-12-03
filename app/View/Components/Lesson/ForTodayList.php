@@ -24,7 +24,10 @@ class ForTodayList extends Component
 
         if ($this->user->isInstructor()) {
             $this->lessons = Lesson::today()->where('instructor_id', $this->user->id)->get();
-        } else {
+        } else if ($this->user->isEmployer()) {
+            $this->lessons = Lesson::today()->enrolledNovices($this->user->novices->pluck('id')->toArray())->get();
+        } 
+        else {
             $this->lessons = Lesson::today()->enrolled($this->user->id)->get();
         }
 

@@ -78,5 +78,7 @@ class LessonSeeder extends Seeder
             ]);
 
         $lessons->first()->enroll(User::where('email', 'aprendiz@sig.com.br')->first());
+        $lessons->first()->enroll(User::where('email', 'aprendiz2@sig.com.br')->first());
+        $lessons->first()->enroll(User::where('email', 'aprendiz3@sig.com.br')->first());
     }
 }

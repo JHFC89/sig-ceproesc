@@ -54,6 +54,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
+    public function novices()
+    {
+        return $this->hasMany(User::class, 'employer_id');
+    }
+
     public function presentForLesson($lesson)
     {
         $presence = $this->lessons()->where('lesson_id', $lesson->id)->first()->presence->present;
@@ -74,6 +79,13 @@ class User extends Authenticatable
     {
         return $this->roles->contains(function ($role) {
             return $role->name == 'instructor';
+        });
+    }
+
+    public function isEmployer()
+    {
+        return $this->roles->contains(function ($role) {
+            return $role->name == 'employer';
         });
     }
 }
