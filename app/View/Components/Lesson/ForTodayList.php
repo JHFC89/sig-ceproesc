@@ -8,7 +8,10 @@ use Illuminate\View\Component;
 class ForTodayList extends Component
 {
     public $lessons;
+
     public $title;
+    
+    protected $user;
 
     /**
      * Create a new component instance.
@@ -17,7 +20,13 @@ class ForTodayList extends Component
      */
     public function __construct($title = '', $user)
     {
-        $this->lessons = Lesson::today()->where('instructor_id', $user->id)->get();;
+        $this->user = $user;
+
+        if ($this->user->isInstructor()) {
+            $this->lessons = Lesson::today()->where('instructor_id', $this->user->id)->get();
+        } else {
+            $this->lessons = Lesson::today()->enrolled($this->user->id)->get();
+        }
 
         if ($this->lessons->count() === 0) {
             $this->title = 'Nenhuma aula para hoje';
@@ -34,5 +43,15 @@ class ForTodayList extends Component
     public function render()
     {
         return view('components.lesson..for-today-list');
+    }
+
+    public function listForInstructor()
+    {
+        return $this->user->isInstructor();
+    }
+
+    public function showRegisterButton(Lesson $lesson)
+    {
+        return (! $lesson->isRegistered() && $this->user->isInstructor()) ? true : false;
     }
 }

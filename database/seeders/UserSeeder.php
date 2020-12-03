@@ -35,5 +35,12 @@ class UserSeeder extends Seeder
                 'email' => 'instrutorsemaula@sig.com.br',
                 'password' => Hash::make('asdf'),
             ]);
+
+        User::factory()
+            ->hasRoles(1, ['name' => 'novice'])
+            ->create([
+                'email' => 'aprendiz@sig.com.br',
+                'password' => Hash::make('asdf'),
+            ]);
     }
 }

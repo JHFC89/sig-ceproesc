@@ -16,7 +16,7 @@ class LessonSeeder extends Seeder
     public function run()
     {
         // Lessons for instructor
-        Lesson::factory()
+        $lessons = Lesson::factory()
             ->forToday()
             ->notRegistered()
             ->hasNovices(10)
@@ -76,5 +76,7 @@ class LessonSeeder extends Seeder
                 'instructor_id' => User::where('email', 'instrutor2@sig.com.br')->first(),
                 'discipline' => 'matemática',
             ]);
+
+        $lessons->first()->enroll(User::where('email', 'aprendiz@sig.com.br')->first());
     }
 }
