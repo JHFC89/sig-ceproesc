@@ -8,7 +8,11 @@ use Illuminate\View\Component;
 class ForWeekList extends Component
 {
     public $lessons;
+
     public $title;
+
+    protected $user;
+
     /**
      * Create a new component instance.
      *
@@ -16,13 +20,11 @@ class ForWeekList extends Component
      */
     public function __construct($title = '', $user)
     {
-        $this->lessons = Lesson::week()->where('instructor_id', $user->id)->get();
+        $this->user = $user;
 
-        if ($this->lessons->count() === 0) {
-            $this->title = 'Nenhuma aula para esta semana';
-        } else {
-            $this->title = $title;
-        }
+        $this->setLessons();
+
+        $this->setTitle($title);
     }
 
     /**
@@ -33,5 +35,41 @@ class ForWeekList extends Component
     public function render()
     {
         return view('components.lesson.for-week-list');
+    }
+
+    public function listForInstructor()
+    {
+        return $this->user->isInstructor();
+    }
+
+    public function showRegisterButton(Lesson $lesson)
+    {
+        return (
+            ! $lesson->isRegistered() 
+            && $lesson->isForToday()
+            && $this->user->isInstructor()
+        ) 
+        ? true 
+        : false;
+    }
+
+    private function setLessons()
+    {
+        if ($this->user->isInstructor()) {
+            $this->lessons = Lesson::week()->forInstructor($this->user)->oldest('date')->get();
+        } else if ($this->user->isEmployer()) {
+            $this->lessons = Lesson::week()->forEmployer($this->user)->oldest('date')->get();
+        } else {
+            $this->lessons = Lesson::week()->forNovice($this->user)->oldest('date')->get();
+        }
+    }
+
+    private function setTitle(string $title)
+    {
+        if ($this->lessons->count() === 0) {
+            $this->title = 'Nenhuma aula para esta semana';
+        } else {
+            $this->title = $title;
+        }
     }
 }
