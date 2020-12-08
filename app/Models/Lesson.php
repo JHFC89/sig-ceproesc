@@ -46,6 +46,12 @@ class Lesson extends Model
 
     public function enroll(User $novice)
     {
+        throw_if(
+            $this->isRegistered(),
+            LessonRegisteredException::class,
+            'Trying to enroll a novice to a lesson already registered.'
+        );
+
         $this->novices()->attach($novice->id);
     }
 

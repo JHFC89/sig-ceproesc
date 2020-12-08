@@ -127,6 +127,22 @@ class LessonTest extends TestCase
     }
 
     /** @test */
+    public function cannot_enroll_a_novice_if_lesson_is_already_registered()
+    {
+        $novice = User::factory()->create();
+        $lesson = Lesson::factory()->registered()->create();
+
+        try {
+            $lesson->enroll($novice);
+        } catch (LessonRegisteredException $exception) {
+            $this->assertTrue(true);
+            return;
+        }
+
+        $this->fail('Trying to enroll a novice to a lesson already registered should throw an exception');
+    }
+
+    /** @test */
     public function can_register_the_presence_of_an_enrolled_novice()
     {
         $lesson = Lesson::factory()->hasNovices(1)->create();
@@ -378,7 +394,7 @@ class LessonTest extends TestCase
             return;
         }
 
-        $this->fail('Trying to update a register to a lesson already registered should throw a exception');
+        $this->fail('Trying to update a register to a lesson already registered should throw an exception');
     }
 
     /** @test */
