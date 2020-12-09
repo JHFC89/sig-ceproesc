@@ -93,9 +93,9 @@ class ViewLessonTest extends TestCase
     {
         $lesson = Lesson::factory()->hasNovices(2)->create();
 
-        $response = $this->get('lesson/' . $lesson->id);
+        $response = $this->get('lessons/' . $lesson->id);
 
-        $response->assertNotFound();
+        $response->assertRedirect(route('login'));
     }
 
     /** @test */

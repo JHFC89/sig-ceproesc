@@ -21,13 +21,12 @@ Route::view('/mockups/lessons/create', 'mockups.lessons.create');
 
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
     Route::get('/lessons/today', ForTodayLessonListController::class)->name('lessons.today');
     Route::get('/lessons/week', ForWeekLessonListController::class)->name('lessons.week');
     Route::get('/lessons/register/create/{lesson}', [LessonRegisterController::class, 'create'])
         ->name('lessons.register.create');
 });
-
-Route::get('/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
