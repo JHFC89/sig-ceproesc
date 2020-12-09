@@ -311,6 +311,22 @@ class LessonTest extends TestCase
     }
 
     /** @test */
+    public function can_check_an_employer_has_novices_enrolled_to_a_lesson()
+    {
+        $lessonForEmployer = Lesson::factory()->hasNovices(1)->create();
+        $lessonNotForEmployer = Lesson::factory()->hasNovices(1)->create();
+        $noviceForEmployer = $lessonForEmployer->novices()->first();
+        $employer = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
+        $employer->novices()->save($noviceForEmployer);
+
+        $lessonForEmployerResult = $lessonForEmployer->hasNovicesForEmployer($employer);
+        $lessonNotForEmployerResult = $lessonNotForEmployer->hasNovicesForEmployer($employer);
+
+        $this->assertTrue($lessonForEmployerResult);
+        $this->assertFalse($lessonNotForEmployerResult);
+    }
+
+    /** @test */
     public function get_lessons_for_today()
     {
         $todayLessons = Lesson::factory()->forToday()->notRegistered()->hasNovices(3)->count(3)->create();

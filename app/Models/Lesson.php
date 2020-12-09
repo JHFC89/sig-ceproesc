@@ -174,6 +174,11 @@ class Lesson extends Model
         return $this->save();
     }
 
+    public function hasNovicesForEmployer(user $employer)
+    {
+        return $this->novices()->whereIn('user_id', $employer->novices->pluck('id')->toArray())->count() ? true : false;
+    }
+
     public function novices()
     {
         return $this->belongsToMany(User::class)

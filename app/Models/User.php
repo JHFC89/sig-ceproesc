@@ -42,6 +42,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function getCodeAttribute()
+    {
+        return '2021' . $this->id;
+    }
+
     public function lessons()
     {
         return $this->belongsToMany(Lesson::class)
@@ -75,6 +80,13 @@ class User extends Authenticatable
         return $this->lessons()->where('lesson_id', $lesson->id)->first()->presence->observation;
     }
     
+    public function isNovice()
+    {
+        return $this->roles->contains(function ($role) {
+            return $role->name == 'novice';
+        });
+    }
+
     public function isInstructor()
     {
         return $this->roles->contains(function ($role) {
@@ -87,5 +99,15 @@ class User extends Authenticatable
         return $this->roles->contains(function ($role) {
             return $role->name == 'employer';
         });
+    }
+
+    public function hasNoRole()
+    {
+        return $this->roles->isEmpty();
+    }
+
+    public function isEmployerOf(user $novice)
+    {
+        return $this->novices->contains($novice);
     }
 }
