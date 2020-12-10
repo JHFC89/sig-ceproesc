@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Lesson;
+use App\Models\CourseClass;
 use Illuminate\Database\Seeder;
 
 class LessonSeeder extends Seeder
@@ -16,69 +17,46 @@ class LessonSeeder extends Seeder
     public function run()
     {
         // Lessons for instructor
-        $lessons = Lesson::factory()
+        $lessonForToday = Lesson::factory()
             ->forToday()
             ->notRegistered()
-            ->hasNovices(10)
-            ->count(3)
             ->create([
                 'discipline' => 'português',
                 'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
             ]);
 
-        Lesson::factory()
-            ->forTomorrow()
+        $lessonForYesterday = Lesson::factory()
+            ->forYesterday()
             ->notRegistered()
-            ->hasNovices(10)
-            ->count(3)
             ->create([
                 'discipline' => 'administração',
                 'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
             ]);
 
-        Lesson::factory()
-            ->forYesterday()
+        $lessonForTomorrow = Lesson::factory()
+            ->forTomorrow()
             ->notRegistered()
-            ->hasNovices(10)
-            ->count(3)
             ->create([
-                'discipline' => 'financeiro',
+                'discipline' => 'finanças',
                 'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
             ]);
 
-        Lesson::factory()
-            ->lastWeek()
-            ->notRegistered()
-            ->hasNovices(10)
-            ->count(3)
-            ->create([
-                'discipline' => 'inglês',
-                'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
-            ]);
+        CourseClass::where('name', 'janeiro - 2020')->first()->novices->each(function ($novice) use ($lessonForToday, $lessonForYesterday, $lessonForTomorrow) {
+            $lessonForToday->enroll($novice);
+            $lessonForYesterday->enroll($novice);
+            $lessonForTomorrow->enroll($novice);
+        });
 
-        Lesson::factory()
-            ->nextWeek()
-            ->notRegistered()
-            ->hasNovices(10)
-            ->count(3)
-            ->create([
-                'discipline' => 'ética',
-                'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
-            ]);
-        
-        // Lessons for instructor 2
-        Lesson::factory()
-            ->forToday()
-            ->notRegistered()
-            ->hasNovices(10)
-            ->count(2)
-            ->create([
-                'instructor_id' => User::where('email', 'instrutor2@sig.com.br')->first(),
-                'discipline' => 'matemática',
-            ]);
+        CourseClass::where('name', 'julho - 2020')->first()->novices->each(function ($novice) use ($lessonForToday, $lessonForYesterday, $lessonForTomorrow) {
+            $lessonForToday->enroll($novice);
+            $lessonForYesterday->enroll($novice);
+            $lessonForTomorrow->enroll($novice);
+        });
 
-        $lessons->first()->enroll(User::where('email', 'aprendiz@sig.com.br')->first());
-        $lessons->first()->enroll(User::where('email', 'aprendiz2@sig.com.br')->first());
-        $lessons->first()->enroll(User::where('email', 'aprendiz3@sig.com.br')->first());
+        CourseClass::where('name', 'janeiro - 2021')->first()->novices->each(function ($novice) use ($lessonForToday, $lessonForYesterday, $lessonForTomorrow) {
+            $lessonForToday->enroll($novice);
+            $lessonForYesterday->enroll($novice);
+            $lessonForTomorrow->enroll($novice);
+        });
     }
 }

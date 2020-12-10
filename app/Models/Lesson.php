@@ -179,6 +179,13 @@ class Lesson extends Model
         return $this->novices()->whereIn('user_id', $employer->novices->pluck('id')->toArray())->count() ? true : false;
     }
 
+    public function relatedCourseClasses()
+    {
+        $relatedCourseClasses = $this->novices->pluck('class')->unique();
+
+        return $relatedCourseClasses->values()->all();
+    }
+
     public function novices()
     {
         return $this->belongsToMany(User::class)

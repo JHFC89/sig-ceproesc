@@ -11,7 +11,11 @@
             @endif
             <x-card.list.description-item label="instrutor" :description="$lesson->instructor->name"/>
             <x-card.list.description-item label="data" :description="$lesson->formatted_date"/>
-            <x-card.list.description-item label="turma" :description="$lesson->class"/>
+            @if(Auth::user()->isNovice())
+                <x-card.list.description-item label="turma" :description="Auth::user()->class"/>
+            @else
+            <x-card.list.description-item label="turma" :description="implode(', ', $lesson->relatedCourseClasses())"/>
+            @endif
             <x-card.list.description-item label="disciplina" :description="$lesson->discipline"/>
             <x-card.list.description-item label="carga horária" :description="$lesson->hourly_load"/>
             @if(Auth::user()->isNovice() && $lesson->isRegistered())
@@ -58,7 +62,7 @@
 
                         <x-card.list.table-body-item class="col-span-2">
                             <x-slot name="item">
-                                <span>2021 - janeiro</span>
+                                <span>{{ $novice->class }}</span>
                             </x-slot>
                         </x-card.list.table-body-item>
 

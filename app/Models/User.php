@@ -47,6 +47,11 @@ class User extends Authenticatable
         return '2021' . $this->id;
     }
 
+    public function getClassAttribute()
+    {
+        return $this->courseClass->name;
+    }
+
     public function lessons()
     {
         return $this->belongsToMany(Lesson::class)
@@ -62,6 +67,11 @@ class User extends Authenticatable
     public function novices()
     {
         return $this->hasMany(User::class, 'employer_id');
+    }
+
+    public function courseClass()
+    {
+        return $this->belongsTo(CourseClass::class);
     }
 
     public function presentForLesson($lesson)
@@ -109,5 +119,10 @@ class User extends Authenticatable
     public function isEmployerOf(user $novice)
     {
         return $this->novices->contains($novice);
+    }
+
+    public function turnIntoNovice()
+    {
+        $this->roles()->attach(Role::firstOrCreate(['name' => 'novice']));
     }
 }

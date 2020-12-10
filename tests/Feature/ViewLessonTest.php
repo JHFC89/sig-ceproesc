@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Lesson;
+use App\Models\CourseClass;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -25,10 +26,14 @@ class ViewLessonTest extends TestCase
             ->hasNovices(3)
             ->create([
                 'date'          => $date,
-                'class'         => '2021 - janeiro',
                 'discipline'    => 'administração',
                 'hourly_load'   => '123hr',
         ]);
+        $courseClass = CourseClass::factory()->create(['name' => '2020 - julho']);
+        $lesson->novices->each(function ($novice) use ($courseClass) {
+            $novice->turnIntoNovice();
+            $courseClass->subscribe($novice);
+        });
         extract($lesson->novices->all(), EXTR_PREFIX_ALL, 'novice');
 
         $response = $this->actingAs($instructor)->get('lessons/' . $lesson->id);
@@ -37,7 +42,6 @@ class ViewLessonTest extends TestCase
             ->assertOk()
             ->assertSee('John Doe')
             ->assertSee($date->format('d/m/Y'))
-            ->assertSee('2021 - janeiro')
             ->assertSee('administração')
             ->assertSee('123hr')
             ->assertDontSee('"presença"')
@@ -45,17 +49,25 @@ class ViewLessonTest extends TestCase
             ->assertDontSee('Nenhuma observação registrada')
             ->assertSee($novice_0->name)
             ->assertSee($novice_0->code)
+            ->assertSee($novice_0->class)
             ->assertSee($novice_1->name)
             ->assertSee($novice_1->code)
+            ->assertSee($novice_1->class)
             ->assertSee($novice_2->name)
-            ->assertSee($novice_2->code);
+            ->assertSee($novice_2->code)
+            ->assertSee($novice_2->class);
     }
 
     /** @test */
     public function instructor_can_view_a_registered_lesson_he_is_assigned_to()
     {
         $instructor = User::factory()->hasRoles(['name' => 'instructor'])->create();
+        $courseClass = CourseClass::factory()->create();
         $lesson = Lesson::factory()->notRegistered()->instructor($instructor)->hasNovices(3)->create();
+        $lesson->novices->each(function ($novice) use ($courseClass) {
+            $novice->turnIntoNovice();
+            $courseClass->subscribe($novice);
+        });
         extract($lesson->novices->all(), EXTR_PREFIX_ALL, 'novice');
         $lesson->registerFor($novice_0)->present()->observation('Test observation for novice_0')->complete();
         $lesson->registerFor($novice_1)->absent()->observation('Test observation for novice_1')->complete();
@@ -112,9 +124,11 @@ class ViewLessonTest extends TestCase
     /** @test */
     public function novice_can_view_a_not_registered_lesson_he_is_enrolled()
     {
+        $courseClass = CourseClass::factory()->create();
         $lesson = Lesson::factory()->hasNovices(1)->notRegistered()->create();
         $novice = $lesson->novices->first();
-        $novice->roles()->attach(Role::firstOrCreate(['name' => 'novice'])->id);
+        $novice->turnIntoNovice();
+        $courseClass->subscribe($novice);
         
         $response = $this->actingAs($novice)->get('lessons/' . $lesson->id);
 
@@ -123,7 +137,6 @@ class ViewLessonTest extends TestCase
             ->assertSee($novice->name)
             ->assertSee($lesson->instructor->name)
             ->assertSee($lesson->formatted_date)
-            ->assertSee($lesson->class)
             ->assertDontSee('observação')
             ->assertDontSee('presença')
             ->assertDontSee('registro');
@@ -134,7 +147,9 @@ class ViewLessonTest extends TestCase
     {
         $lesson = Lesson::factory()->hasNovices(1)->notRegistered()->create();
         $novice = $lesson->novices->first();
-        $novice->roles()->attach(Role::firstOrCreate(['name' => 'novice'])->id);
+        $novice->turnIntoNovice();
+        $courseClass = CourseClass::factory()->create();
+        $courseClass->subscribe($novice);
         $lesson->registerFor($novice)->present()->observation('Test Novice observation')->complete();
         $lesson->registered_at = now();
         $lesson->save();
@@ -164,8 +179,12 @@ class ViewLessonTest extends TestCase
     {
         $lesson = Lesson::factory()->hasNovices(2)->notRegistered()->create();
         $noviceA = $lesson->novices->first();
-        $noviceA->roles()->attach(Role::firstOrCreate(['name' => 'novice'])->id);
+        $noviceA->turnIntoNovice();
         $noviceB = $lesson->novices->last();
+        $noviceB->turnIntoNovice();
+        $courseClass = CourseClass::factory()->create();
+        $courseClass->subscribe($noviceA);
+        $courseClass->subscribe($noviceB);
         $lesson->registerFor($noviceA)->present()->observation('Test Novice A observation')->complete();
         $lesson->registerFor($noviceB)->absent()->observation('Test Novice B observation')->complete();
         $lesson->registered_at = now();
@@ -186,11 +205,13 @@ class ViewLessonTest extends TestCase
     /** @test */
     public function employer_can_view_his_novices_informations_for_a_not_registered_lesson_they_are_enrolled()
     {
+        $courseClass = CourseClass::factory()->create();
         $novices = User::factory()->hasRoles(1, ['name' => 'novice'])->count(3)->create();
         $employer = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
         $employer->novices()->saveMany($novices->all());
         $lesson = Lesson::factory()->notRegistered()->create();
-        $novices->each(function ($novice) use ($lesson) {
+        $novices->each(function ($novice) use ($lesson, $courseClass) {
+            $courseClass->subscribe($novice);
             $lesson->enroll($novice);
         });
         
@@ -209,12 +230,14 @@ class ViewLessonTest extends TestCase
     /** @test */
     public function employer_can_view_his_novices_informations_for_a_registered_lesson_they_are_enrolled()
     {
+        $courseClass = CourseClass::factory()->create();
         $novices = User::factory()->hasRoles(1, ['name' => 'novice'])->count(3)->create();
         $employer = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
         $employer->novices()->saveMany($novices->all());
         $lesson = Lesson::factory()->notRegistered()->create();
-        $novices->each(function ($novice) use ($lesson) {
+        $novices->each(function ($novice) use ($lesson, $courseClass) {
             $lesson->enroll($novice);
+            $courseClass->subscribe($novice);
         });
         $lesson->registerFor($novices[0])->present()->observation('Test observation for first novice')->complete();
         $lesson->registerFor($novices[1])->absent()->observation('Test observation for second novice')->complete();
@@ -240,6 +263,7 @@ class ViewLessonTest extends TestCase
     /** @test */
     public function employer_cannot_view_another_employer_novices_informations_for_a_lesson_he_has_novices_enrolled()
     {
+        $courseClass = CourseClass::factory()->create();
         $novicesForEmployerA = User::factory()->hasRoles(1, ['name' => 'novice'])->count(3)->create();
         $employerA = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
         $employerA->novices()->saveMany($novicesForEmployerA->all());
@@ -247,7 +271,8 @@ class ViewLessonTest extends TestCase
         $employerB = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
         $employerB->novices()->saveMany($novicesForEmployerB->all());
         $lesson = Lesson::factory()->notRegistered()->create();
-        collect([$novicesForEmployerA, $novicesForEmployerB])->flatten()->each(function ($novice) use ($lesson) {
+        collect([$novicesForEmployerA, $novicesForEmployerB])->flatten()->each(function ($novice) use ($lesson, $courseClass) {
+            $courseClass->subscribe($novice);
             $lesson->enroll($novice);
         });
         

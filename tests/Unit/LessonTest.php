@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Lesson;
+use App\Models\CourseClass;
 use App\Exceptions\LessonRegisteredException;
 use App\Exceptions\NoviceNotEnrolledException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -464,5 +465,28 @@ class LessonTest extends TestCase
         $result = Lesson::forNovice($novice)->get();
 
         $this->assertEquals($lessons->pluck('id')->toArray(), $result->pluck('id')->toArray());
+    }
+
+    /** @test */
+    public function get_related_course_classes()
+    {
+        $classA = CourseClass::factory()->create(['name' => 'janeiro - 2020']);
+        $classB = CourseClass::factory()->create(['name' => 'julho - 2020']);
+        $classC = CourseClass::factory()->create(['name' => 'janeiro - 2021']);
+        $novicesForClassA = User::factory()->hasRoles(1,['name' => 'novice'])->count(3)->create();
+        $novicesForClassB = User::factory()->hasRoles(1,['name' => 'novice'])->count(3)->create();
+        $lesson = Lesson::factory()->notRegistered()->create();
+        $novicesForClassA->each(function ($novice) use ($classA, $lesson) {
+            $classA->subscribe($novice);
+            $lesson->enroll($novice);
+        });
+        $novicesForClassB->each(function ($novice) use ($classB, $lesson) {
+            $classB->subscribe($novice);
+            $lesson->enroll($novice);
+        });
+
+        $result = $lesson->relatedCourseClasses();
+
+        $this->assertEquals(['janeiro - 2020', 'julho - 2020'], $result);
     }
 }
