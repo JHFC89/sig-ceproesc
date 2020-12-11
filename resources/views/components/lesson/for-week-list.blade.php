@@ -3,9 +3,9 @@
         if ($listForInstructor()) {
             $headerClasses = [
                 'date'          => 'col-span-2',
-                'class'         => 'col-span-2',
-                'discipline'    => 'col-span-2',
-                'registered'    => 'col-span-4',
+                'class'         => 'col-span-4',
+                'discipline'    => 'col-span-1',
+                'registered'    => 'col-span-3',
                 'actions'       => 'col-span-2',
             ];
         } else {
@@ -44,7 +44,7 @@
 
                 <x-card.list.table-body-item class="{{ $headerClasses['class'] }}">
                     <x-slot name="item">
-                        <span>{{ $lesson->class }}</span>
+                        <span>{{ $lesson->formatted_course_classes }}</span>
                     </x-slot>
                 </x-card.list.table-body-item>
 

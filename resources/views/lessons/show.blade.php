@@ -14,7 +14,7 @@
             @if(Auth::user()->isNovice())
                 <x-card.list.description-item label="turma" :description="Auth::user()->class"/>
             @else
-            <x-card.list.description-item label="turma" :description="implode(', ', $lesson->relatedCourseClasses())"/>
+            <x-card.list.description-item label="turma" :description="$lesson->formatted_course_classes"/>
             @endif
             <x-card.list.description-item label="disciplina" :description="$lesson->discipline"/>
             <x-card.list.description-item label="carga horária" :description="$lesson->hourly_load"/>

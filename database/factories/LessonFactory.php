@@ -26,7 +26,6 @@ class LessonFactory extends Factory
         return [
             'instructor_id' => User::factory()->hasRoles(1, ['name' => 'instructor']),
             'date'          => Carbon::parse('+2 weeks'),
-            'class'         => '2021 - janeiro',
             'discipline'    => 'fake discipline',
             'hourly_load'   => '123hr',
         ];

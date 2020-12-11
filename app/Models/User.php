@@ -49,7 +49,7 @@ class User extends Authenticatable
 
     public function getClassAttribute()
     {
-        return $this->courseClass->name;
+        return $this->courseClass ? $this->courseClass->name : null;
     }
 
     public function lessons()

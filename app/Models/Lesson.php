@@ -29,6 +29,17 @@ class Lesson extends Model
         return $this->date->format('d/m/Y');
     }
 
+    public function getFormattedCourseClassesAttribute()
+    {
+        $relatedCourseClasses = $this->relatedCourseClasses();
+
+        if ($relatedCourseClasses === null) {
+            return null;
+        }
+
+        return implode(' | ', $relatedCourseClasses);
+    }
+
     public function isRegistered()
     {
         return empty($this->registered_at) ? false : true;
@@ -183,7 +194,7 @@ class Lesson extends Model
     {
         $relatedCourseClasses = $this->novices->pluck('class')->unique();
 
-        return $relatedCourseClasses->values()->all();
+        return $relatedCourseClasses->contains(null) ? null : $relatedCourseClasses->values()->all();
     }
 
     public function novices()

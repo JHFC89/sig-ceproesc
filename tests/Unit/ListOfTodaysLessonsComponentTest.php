@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Lesson;
+use App\Models\CourseClass;
 use App\View\Components\Lesson\ForTodayList;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -45,24 +46,32 @@ class ListOfTodaysLessonsComponentTest extends TestCase
     /** @test */
     public function instructor_can_see_lessons_he_is_assigned_to()
     {
-        Lesson::factory()
+        $courseClassA = CourseClass::factory()->create(['name' => 'janeiro - 2020']);
+        $lessonA = Lesson::factory()
             ->forToday()
             ->notRegistered()
             ->hasNovices(3)
             ->instructor($this->instructor)
             ->create([
-                'class' => '2020 - janeiro',
                 'discipline' => 'fake discipline',
             ]);
-        Lesson::factory()
+        $lessonA->novices->each(function ($novice) use ($courseClassA) {
+            $novice->turnIntoNovice();
+            $courseClassA->subscribe($novice);
+        });
+        $courseClassB = CourseClass::factory()->create(['name' => 'julho - 2020']);
+        $lessonB = Lesson::factory()
             ->forToday()
             ->notRegistered()
             ->hasNovices(3)
             ->instructor($this->instructor)
             ->create([
-                'class' => '2020 - julho',
                 'discipline' => 'fakest discipline',
             ]);
+        $lessonB->novices->each(function ($novice) use ($courseClassB) {
+            $novice->turnIntoNovice();
+            $courseClassB->subscribe($novice);
+        });
 
         $component = $this->component(ForTodayList::class, ['title' => 'Today', 'user' => $this->instructor]);
 
@@ -70,9 +79,9 @@ class ListOfTodaysLessonsComponentTest extends TestCase
             ->assertSee('Today')
             ->assertSee(today()->format('d/m/Y'))
             ->assertSee('fake discipline')
-            ->assertSee('2020 - janeiro')
+            ->assertSee('janeiro - 2020')
             ->assertSee('fakest discipline')
-            ->assertSee('2020 - julho');
+            ->assertSee('julho - 2020');
     }
 
     /** @test */

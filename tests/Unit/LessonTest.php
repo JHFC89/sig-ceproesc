@@ -489,4 +489,27 @@ class LessonTest extends TestCase
 
         $this->assertEquals(['janeiro - 2020', 'julho - 2020'], $result);
     }
+    
+    /** @test */
+    public function get_formatted_related_course_classes()
+    {
+        $classA = CourseClass::factory()->create(['name' => 'janeiro - 2020']);
+        $classB = CourseClass::factory()->create(['name' => 'julho - 2020']);
+        $classC = CourseClass::factory()->create(['name' => 'janeiro - 2021']);
+        $novicesForClassA = User::factory()->hasRoles(1,['name' => 'novice'])->count(3)->create();
+        $novicesForClassB = User::factory()->hasRoles(1,['name' => 'novice'])->count(3)->create();
+        $lesson = Lesson::factory()->notRegistered()->create();
+        $novicesForClassA->each(function ($novice) use ($classA, $lesson) {
+            $classA->subscribe($novice);
+            $lesson->enroll($novice);
+        });
+        $novicesForClassB->each(function ($novice) use ($classB, $lesson) {
+            $classB->subscribe($novice);
+            $lesson->enroll($novice);
+        });
+
+        $result = $lesson->formatted_course_classes;
+
+        $this->assertEquals('janeiro - 2020 | julho - 2020', $result);
+    }
 }
