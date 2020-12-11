@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Lesson;
+use App\Models\CourseClass;
 use App\View\Components\Lesson\ForWeekList;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -151,6 +152,30 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
         $component = $this->component(ForWeekList::class, ['user' => $this->novice]);
 
         $component->assertDontSee(route('lessons.register.create', ['lesson' => $lesson]));
+    }
+
+    /** @test */
+    public function novice_can_see_only_his_course_class()
+    {
+        $courseClassA = CourseClass::factory()->create(['name' => 'class A']);
+        $noviceA = User::factory()->hasRoles(1, ['name' => 'novice'])->create();
+        $courseClassA->subscribe($noviceA);
+        $courseClassB = CourseClass::factory()->create(['name' => 'class B']);
+        $noviceB = User::factory()->hasRoles(1, ['name' => 'novice'])->create();
+        $courseClassB->subscribe($noviceB);
+        $lesson = Lesson::factory()->thisWeek()->notRegistered()->instructor($this->instructor)->create();
+        $lesson->enroll($noviceA);
+        $lesson->enroll($noviceB);
+        
+        $componentForNoviceA = $this->component(ForWeekList::class, ['user' => $noviceA]);
+        $componentForNoviceB = $this->component(ForWeekList::class, ['user' => $noviceB]);
+
+        $componentForNoviceA
+            ->assertSee('class A')
+            ->assertDontSee('class B');
+        $componentForNoviceB
+            ->assertSee('class B')
+            ->assertDontSee('class A');
     }
 
     /** @test */

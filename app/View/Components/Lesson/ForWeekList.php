@@ -53,6 +53,11 @@ class ForWeekList extends Component
         : false;
     }
 
+    public function showClasses(Lesson $lesson)
+    {
+        return $this->user->isNovice() ? $this->user->class : $lesson->formatted_course_classes;
+    }
+
     private function setLessons()
     {
         if ($this->user->isInstructor()) {
