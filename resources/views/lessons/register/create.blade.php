@@ -7,9 +7,9 @@
     <x-card.list.description-layout title="detalhes da aula">
         <x-slot name="items">
             <x-card.list.description-item label="data" :description="$lesson->formatted_date"/>
-            <x-card.list.description-item label="turma" :description="$lesson->class"/>
+            <x-card.list.description-item label="turma" :description="implode(', ', $lesson->relatedCourseClasses())"/>
             <x-card.list.description-item label="disciplina" :description="$lesson->discipline"/>
-                <x-card.list.description-item label="instrutor" :description="$lesson->instructor->name"/>
+            <x-card.list.description-item label="instrutor" :description="$lesson->instructor->name"/>
             <x-card.list.description-item label="carga horária" :description="$lesson->hourly_load"/>
         </x-slot>
     </x-card.list.description-layout>
@@ -30,7 +30,7 @@
                 <x-slot name="items">
                     <x-card.list.table-body-item class="flex items-center col-span-1">
                         <x-slot name="item">
-                            <span>123</span>
+                            <span>{{ $novice->code }}</span>
                         </x-slot>
                     </x-card.list.table-body-item>
 
@@ -42,7 +42,7 @@
 
                     <x-card.list.table-body-item class="flex items-center col-span-2">
                         <x-slot name="item">
-                            <span>2021 - janeiro</span>
+                            <span>{{ $novice->class }}</span>
                         </x-slot>
                     </x-card.list.table-body-item>
 

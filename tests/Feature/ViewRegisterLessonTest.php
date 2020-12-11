@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Lesson;
+use App\Models\CourseClass;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ViewRegisterLessonTest extends TestCase
@@ -20,24 +21,35 @@ class ViewRegisterLessonTest extends TestCase
 
         $this->lesson = Lesson::factory()->forToday()->notRegistered()->hasNovices(3)->create();
         $this->instructor = $this->lesson->instructor;
+        $this->courseClass = CourseClass::factory()->create();
+        $this->novices = $this->lesson->novices->map(function ($novice) {
+            $novice->turnIntoNovice();
+            $this->courseClass->subscribe($novice);
+            return $novice;
+        });
     }
 
     /** @test */
     public function an_instructor_can_view_a_lesson_available_to_registration_at_current_date()
     {
-        extract($this->lesson->novices->all(), EXTR_PREFIX_ALL, 'novice');
+        extract($this->novices->all(), EXTR_PREFIX_ALL, 'novice');
 
         $response = $this->actingAs($this->instructor)->get('lessons/register/create/' . $this->lesson->id);
 
         $response
             ->assertOk()
             ->assertViewHas('lesson', $this->lesson)
-            ->assertSee($this->lesson->class)
             ->assertSee($this->lesson->discipline)
             ->assertSee($this->lesson->hourly_load)
+            ->assertSee($novice_0->code)
             ->assertSee($novice_0->name)
+            ->assertSee($novice_0->class)
+            ->assertSee($novice_1->code)
             ->assertSee($novice_1->name)
-            ->assertSee($novice_2->name);
+            ->assertSee($novice_1->class)
+            ->assertSee($novice_2->code)
+            ->assertSee($novice_2->name)
+            ->assertSee($novice_2->class);
     }
 
     /** @test */
