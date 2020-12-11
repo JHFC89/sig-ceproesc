@@ -159,6 +159,30 @@ class ListOfTodaysLessonsComponentTest extends TestCase
     }
 
     /** @test */
+    public function novice_can_see_only_his_course_class()
+    {
+        $courseClassA = CourseClass::factory()->create(['name' => 'class A']);
+        $noviceA = User::factory()->hasRoles(1, ['name' => 'novice'])->create();
+        $courseClassA->subscribe($noviceA);
+        $courseClassB = CourseClass::factory()->create(['name' => 'class B']);
+        $noviceB = User::factory()->hasRoles(1, ['name' => 'novice'])->create();
+        $courseClassB->subscribe($noviceB);
+        $lesson = Lesson::factory()->forToday()->notRegistered()->instructor($this->instructor)->create();
+        $lesson->enroll($noviceA);
+        $lesson->enroll($noviceB);
+        
+        $componentForNoviceA = $this->component(ForTodayList::class, ['user' => $noviceA]);
+        $componentForNoviceB = $this->component(ForTodayList::class, ['user' => $noviceB]);
+
+        $componentForNoviceA
+            ->assertSee('class A')
+            ->assertDontSee('class B');
+        $componentForNoviceB
+            ->assertSee('class B')
+            ->assertDontSee('class A');
+    }
+
+    /** @test */
     public function employer_can_see_their_novices_classes()
     {
         $noviceA = User::factory()->hasRoles(1, ['name' => 'novice'])->make();

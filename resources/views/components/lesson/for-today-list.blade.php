@@ -37,7 +37,7 @@
 
                 <x-card.list.table-body-item class="{{ $headerClasses['class'] }}">
                     <x-slot name="item">
-                        <span>{{ $lesson->formatted_course_classes }}</span>
+                        <span>{{ $showClasses($lesson) }}</span>
                     </x-slot>
                 </x-card.list.table-body-item>
 

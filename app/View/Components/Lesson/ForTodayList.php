@@ -47,6 +47,11 @@ class ForTodayList extends Component
         return (! $lesson->isRegistered() && $this->user->isInstructor()) ? true : false;
     }
 
+    public function showClasses(Lesson $lesson)
+    {
+        return $this->user->isNovice() ? $this->user->class : $lesson->formatted_course_classes;
+    }
+
     private function setLessons()
     {
         if ($this->user->isInstructor()) {
