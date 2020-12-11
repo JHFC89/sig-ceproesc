@@ -10,7 +10,9 @@ class ForTodayList extends Component
     public $lessons;
 
     public $title;
-    
+
+    public $headerClasses;
+
     protected $user;
 
     /**
@@ -25,6 +27,8 @@ class ForTodayList extends Component
         $this->setLessons();
 
         $this->setTitle($title);
+
+        $this->setHeaderClasses();
     }
 
     /**
@@ -70,5 +74,50 @@ class ForTodayList extends Component
         } else {
             $this->title = $title;
         }
+    }
+    
+    private function setHeaderClasses()
+    {
+        if ($this->user->isInstructor()) {
+            return $this->headerClasses = $this->headerClassesForInstructor();
+        }
+
+        if ($this->user->isEmployer()) {
+            return $this->headerClasses = $this->headerClassesForEmployer();
+        }
+
+        return $this->headerClasses = $this->headerClassesForNovice();
+    }
+
+    private function headerClassesForInstructor()
+    {
+        return [
+            'class'         => 'col-span-5',
+            'discipline'    => 'col-span-1',
+            'registered'    => 'col-span-4',
+            'actions'       => 'col-span-2',
+        ];
+    }
+
+    private function headerClassesForEmployer()
+    {
+        return [
+            'class'         => 'col-span-4',
+            'discipline'    => 'col-span-2',
+            'instructor'    => 'col-span-2',
+            'registered'    => 'col-span-2',
+            'actions'       => 'col-span-2',
+        ];
+    }
+
+    private function headerClassesForNovice()
+    {
+        return [
+            'class'         => 'col-span-2',
+            'discipline'    => 'col-span-2',
+            'instructor'    => 'col-span-2',
+            'registered'    => 'col-span-4',
+            'actions'       => 'col-span-2',
+        ];
     }
 }

@@ -1,23 +1,4 @@
 <x-card.list.table-layout :title="$title">
-    @php
-        if ($listForInstructor()) {
-            $headerClasses = [
-                'class'         => 'col-span-5',
-                'discipline'    => 'col-span-1',
-                'registered'    => 'col-span-4',
-                'actions'       => 'col-span-2',
-            ];
-        } else {
-            $headerClasses = [
-                'class'         => 'col-span-2',
-                'discipline'    => 'col-span-2',
-                'instructor'    => 'col-span-2',
-                'registered'    => 'col-span-4',
-                'actions'       => 'col-span-2',
-            ];
-        }
-
-    @endphp
     <x-slot name="header">
         <x-card.list.table-header class="{{ $headerClasses['class'] }}" name="turma"/>
         <x-card.list.table-header class="{{ $headerClasses['discipline'] }}" name="disciplina"/>
