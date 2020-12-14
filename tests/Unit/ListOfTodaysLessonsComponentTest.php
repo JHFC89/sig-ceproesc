@@ -28,9 +28,9 @@ class ListOfTodaysLessonsComponentTest extends TestCase
         $this->employer = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
     }
 
-    protected function forTodayListComponent($title, $user)
+    protected function forTodayListComponent($user, $title = 'Today')
     {
-        return new ForTodayList($title, $user);
+        return new ForTodayList($user, $title);
     }
 
     protected function assertComponentHasLesson($component, $lesson)
@@ -121,7 +121,7 @@ class ListOfTodaysLessonsComponentTest extends TestCase
         $lesson = Lesson::factory()->forToday()->notRegistered()->instructor($this->instructor)->create();
         $lesson->enroll($this->novice);
 
-        $component = $this->forTodayListComponent('Today', $this->novice);
+        $component = $this->forTodayListComponent($this->novice);
 
         $this->assertComponentHasLesson($component, $lesson);
     }
@@ -131,7 +131,7 @@ class ListOfTodaysLessonsComponentTest extends TestCase
     {
         $lessonForAnotherNovice = Lesson::factory()->forToday()->notRegistered()->hasNovices(1)->instructor($this->instructor)->create();
 
-        $component = $this->forTodayListComponent('Today', $this->novice);
+        $component = $this->forTodayListComponent($this->novice);
 
         $this->assertComponentDoesNotHaveLesson($component, $lessonForAnotherNovice);
     }
@@ -192,7 +192,7 @@ class ListOfTodaysLessonsComponentTest extends TestCase
         $lesson->enroll($noviceA);
         $lesson->enroll($noviceB);
         
-        $component = $this->forTodayListComponent('Today', $this->employer);
+        $component = $this->forTodayListComponent($this->employer);
 
         $this->assertComponentHasLesson($component, $lesson);
     }
@@ -211,8 +211,8 @@ class ListOfTodaysLessonsComponentTest extends TestCase
         $lessonForNoviceB = Lesson::factory()->forToday()->notRegistered()->instructor($this->instructor)->create();
         $lessonForNoviceB->enroll($noviceB);
         
-        $componentForEmployerA = $this->forTodayListComponent('Today', $employerA);
-        $componentForEmployerB = $this->forTodayListComponent('Today', $employerB);
+        $componentForEmployerA = $this->forTodayListComponent($employerA);
+        $componentForEmployerB = $this->forTodayListComponent($employerB);
 
         $this->assertComponentHasLesson($componentForEmployerA, $lessonForNoviceA);
         $this->assertComponentDoesNotHaveLesson($componentForEmployerA, $lessonForNoviceB);
@@ -239,9 +239,9 @@ class ListOfTodaysLessonsComponentTest extends TestCase
         $lessonForAnotherDay = Lesson::factory()->notForToday()->notRegistered()->hasNovices(3)->instructor($this->instructor)->create(); 
         $lessonForAnotherDay->enroll($this->novice);
 
-        $componentForInstructor = $this->forTodayListComponent('Today', $this->instructor);
-        $componentForNovice = $this->forTodayListComponent('Today', $this->novice);
-        $componentForEmployer = $this->forTodayListComponent('Today', $this->employer);
+        $componentForInstructor = $this->forTodayListComponent($this->instructor);
+        $componentForNovice = $this->forTodayListComponent($this->novice);
+        $componentForEmployer = $this->forTodayListComponent($this->employer);
 
         $this->assertComponentDoesNotHaveLesson($componentForInstructor, $lessonForAnotherDay);
         $this->assertComponentDoesNotHaveLesson($componentForNovice, $lessonForAnotherDay);
@@ -254,5 +254,18 @@ class ListOfTodaysLessonsComponentTest extends TestCase
         $component = $this->component(ForTodayList::class, ['user' => $this->instructor]);
 
         $component->assertSee('Nenhuma aula para hoje');
+    }
+
+    /** @test */
+    public function can_hide_registered_field()
+    {
+        Lesson::factory()->forToday()->hasNovices(3)->instructor($this->instructor)->create();
+        
+        $component = $this->component(ForTodayList::class, [
+            'user' => $this->instructor,
+            'hideRegistered' => true,
+        ]);
+
+        $component->assertDontSee('registrada');
     }
 }

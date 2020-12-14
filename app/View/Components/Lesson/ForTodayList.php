@@ -13,6 +13,8 @@ class ForTodayList extends Component
 
     public $headerClasses;
 
+    public $hideRegistered;
+
     protected $user;
 
     /**
@@ -20,9 +22,11 @@ class ForTodayList extends Component
      *
      * @return void
      */
-    public function __construct($title = '', $user)
+    public function __construct($user, $title = '', $hideRegistered = false)
     {
         $this->user = $user;
+
+        $this->hideRegistered = $hideRegistered;
 
         $this->setLessons();
 
@@ -92,8 +96,8 @@ class ForTodayList extends Component
     private function headerClassesForInstructor()
     {
         return [
-            'class'         => 'col-span-5',
-            'discipline'    => 'col-span-1',
+            'class'         => $this->hideRegistered ? 'col-span-8' : 'col-span-5',
+            'discipline'    => $this->hideRegistered ? 'col-span-2' : 'col-span-1',
             'registered'    => 'col-span-4',
             'actions'       => 'col-span-2',
         ];
@@ -102,22 +106,23 @@ class ForTodayList extends Component
     private function headerClassesForEmployer()
     {
         return [
-            'class'         => 'col-span-4',
+            'class'         => $this->hideRegistered ? 'col-span-7' : 'col-span-4',
             'discipline'    => 'col-span-2',
             'instructor'    => 'col-span-2',
             'registered'    => 'col-span-2',
             'actions'       => 'col-span-2',
+            'actions'       => $this->hideRegistered ? 'col-span-1' : 'col-span-2',
         ];
     }
 
     private function headerClassesForNovice()
     {
         return [
-            'class'         => 'col-span-2',
-            'discipline'    => 'col-span-2',
-            'instructor'    => 'col-span-2',
+            'class'         => $this->hideRegistered ? 'col-span-3' : 'col-span-2',
+            'discipline'    => $this->hideRegistered ? 'col-span-3' : 'col-span-2',
+            'instructor'    => $this->hideRegistered ? 'col-span-3' : 'col-span-2',
             'registered'    => 'col-span-4',
-            'actions'       => 'col-span-2',
+            'actions'       => $this->hideRegistered ? 'col-span-3' : 'col-span-2',
         ];
     }
 }

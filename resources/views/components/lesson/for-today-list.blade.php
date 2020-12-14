@@ -5,7 +5,9 @@
         @unless ($listForInstructor())
         <x-card.list.table-header class="{{ $headerClasses['instructor'] }}" name="instrutor"/>
         @endunless
+        @unless ($hideRegistered)
         <x-card.list.table-header class="{{ $headerClasses['registered'] }} text-center" name="registrada"/>
+        @endunless
         <x-card.list.table-header class="{{ $headerClasses['actions'] }}" name=""/>
     </x-slot>
 
@@ -36,6 +38,7 @@
                 </x-card.list.table-body-item>
                 @endunless
 
+                @unless ($hideRegistered)
                 <x-card.list.table-body-item class="{{ $headerClasses['registered'] }}">
                     <x-slot name="item">
                         <div class="flex items-center justify-center h-full">
@@ -43,6 +46,7 @@
                         </div>
                     </x-slot>
                 </x-card.list.table-body-item>
+                @endunless
 
                 <x-card.list.table-body-item class="{{ $headerClasses['actions'] }}">
                     <x-slot name="item">
