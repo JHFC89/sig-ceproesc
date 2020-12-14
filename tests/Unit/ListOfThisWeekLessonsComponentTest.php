@@ -47,6 +47,7 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     /** @test */
     public function lessons_are_show_in_ascending_order_relative_to_their_date()
     {
+        $this->travelTo(now()->startOfWeek()->addDay(1));
         $thirdLesson = Lesson::factory()->instructor($this->instructor)->create(['date' => Carbon::parse('tomorrow')]);
         $firstLesson = Lesson::factory()->instructor($this->instructor)->create(['date' => Carbon::parse('yesterday')]);
         $secondLesson = Lesson::factory()->instructor($this->instructor)->create(['date' => Carbon::parse('today')]);
@@ -63,6 +64,8 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
         $this->assertEquals($lessons->pluck('id'), $componentForInstructor->lessons->pluck('id'));
         $this->assertEquals($lessons->pluck('id'), $componentForNovice->lessons->pluck('id'));
         $this->assertEquals($lessons->pluck('id'), $componentForEmployer->lessons->pluck('id'));
+
+        $this->travelBack();
     }
 
     /** @test */
