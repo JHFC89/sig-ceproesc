@@ -230,7 +230,6 @@ class Lesson extends Model
 
     public function scopeWeek($query)
     {
-        Lesson::whereBetween('date', [now()->startOfWeek(), now()->endOfWeek()])->get()->count();
         return $query->whereBetween('date', [now()->startOfWeek(), now()->endOfWeek()]);
     }
 
