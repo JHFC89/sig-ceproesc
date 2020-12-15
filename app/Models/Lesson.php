@@ -45,6 +45,11 @@ class Lesson extends Model
         return empty($this->registered_at) ? false : true;
     }
 
+    public function isExpired()
+    {
+        return ($this->date->diffInSeconds(now()) > ((60 * 60) * 24) && ! $this->isRegistered());
+    }
+
     public function isForToday()
     {
         return ($this->date->format('d/m/Y') == now()->format('d/m/Y')) ? true : false;

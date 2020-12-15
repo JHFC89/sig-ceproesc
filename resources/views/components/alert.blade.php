@@ -1,0 +1,20 @@
+@props(['type', 'message', 'actionText' => false, 'actionLink' => false])
+
+@php
+    switch ($type) {
+        case 'warning':
+            $colorClasses = 'bg-red-500 text-red-100';
+            $actionClasses = 'hover:text-red-300';
+            break;
+    }
+@endphp
+
+<div class="px-4 py-6 w-full rounded-md font-medium flex items-center {{ $colorClasses }}">
+    @if($type == 'warning')
+    <span><x-icons.error class="w-6 h-6"/></span>
+    @endif
+    <span class="ml-2">{{ $message }}</span>
+    @if($actionText)
+    <a class="ml-2 font-bold underline {{ $actionClasses }}" href="{{ $actionLink }}">{{ $actionText }}</a>
+    @endif
+</div>

@@ -44,7 +44,11 @@
                 <x-card.list.table-body-item class="{{ $headerClasses['registered'] }}">
                     <x-slot name="item">
                         <div class="flex items-center justify-center h-full">
+                            @if($lesson->isExpired())
+                            <span class="inline-block px-2 py-1 text-sm font-medium leading-none text-red-700 bg-red-100 rounded-md">vencida</span>
+                            @else
                             <x-icons.active class="w-2 h-2" :active="$lesson->isRegistered()"/>
+                            @endif
                         </div>
                     </x-slot>
                 </x-card.list.table-body-item>

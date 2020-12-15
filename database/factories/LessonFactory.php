@@ -50,6 +50,15 @@ class LessonFactory extends Factory
         });
     }
 
+    public function expired()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'date' => Carbon::now()->subDay()->subSecond(),
+            ];
+        });
+    }
+
     public function forToday()
     {
         return $this->state(function (array $attributes) {

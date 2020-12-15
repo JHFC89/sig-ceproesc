@@ -15,32 +15,52 @@ class ViewLessonTest extends TestCase
 {
     use RefreshDatabase;
 
+    private $instructor;
+
+    private $courseClass;
+
+    private $notRegisteredLesson;
+
+    protected function setUp():void
+    {
+        parent::setUp();
+
+        $this->instructor = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
+
+        $this->courseClass = CourseClass::factory()->create(['name' => '2020 - julho']);
+
+        $this->notRegisteredLesson = Lesson::factory()->notRegistered()->forToday()->instructor($this->instructor)->hasNovices(3)->create();
+
+        $this->novices = $this->notRegisteredLesson->novices->each(function ($novice) {
+            $novice->turnIntoNovice();
+            $this->courseClass->subscribe($novice);
+        });
+    }
+
     /** @test */
     public function instructor_can_view_a_not_registered_lesson_he_is_assigned_to()
     {
         $date = Carbon::now();
-        $instructor = User::factory()->hasRoles(1, ['name' => 'instructor'])->create(['name' => 'John Doe']);
         $lesson = Lesson::factory()
             ->notRegistered()
-            ->instructor($instructor)
+            ->instructor($this->instructor)
             ->hasNovices(3)
             ->create([
                 'date'          => $date,
                 'discipline'    => 'administração',
                 'hourly_load'   => '123hr',
         ]);
-        $courseClass = CourseClass::factory()->create(['name' => '2020 - julho']);
-        $lesson->novices->each(function ($novice) use ($courseClass) {
+        $lesson->novices->each(function ($novice) {
             $novice->turnIntoNovice();
-            $courseClass->subscribe($novice);
+            $this->courseClass->subscribe($novice);
         });
         extract($lesson->novices->all(), EXTR_PREFIX_ALL, 'novice');
 
-        $response = $this->actingAs($instructor)->get('lessons/' . $lesson->id);
+        $response = $this->actingAs($this->instructor)->get('lessons/' . $lesson->id);
 
         $response
             ->assertOk()
-            ->assertSee('John Doe')
+            ->assertSee($this->instructor->name)
             ->assertSee($date->format('d/m/Y'))
             ->assertSee('administração')
             ->assertSee('123hr')
@@ -61,43 +81,66 @@ class ViewLessonTest extends TestCase
     /** @test */
     public function instructor_can_view_a_registered_lesson_he_is_assigned_to()
     {
-        $instructor = User::factory()->hasRoles(['name' => 'instructor'])->create();
-        $courseClass = CourseClass::factory()->create();
-        $lesson = Lesson::factory()->notRegistered()->instructor($instructor)->hasNovices(3)->create();
-        $lesson->novices->each(function ($novice) use ($courseClass) {
-            $novice->turnIntoNovice();
-            $courseClass->subscribe($novice);
-        });
-        extract($lesson->novices->all(), EXTR_PREFIX_ALL, 'novice');
-        $lesson->registerFor($novice_0)->present()->observation('Test observation for novice_0')->complete();
-        $lesson->registerFor($novice_1)->absent()->observation('Test observation for novice_1')->complete();
-        $lesson->registerFor($novice_2)->present()->complete();
-        $lesson->registered_at = now();
-        $lesson->save();
+        $this->notRegisteredLesson
+             ->registerFor($this->novices[0])
+             ->present()
+             ->observation('Test observation for novice_0')
+             ->complete();
+        $this->notRegisteredLesson
+             ->registerFor($this->novices[1])
+             ->absent()
+             ->observation('Test observation for novice_1')
+             ->complete();
+        $this->notRegisteredLesson
+             ->registerFor($this->novices[2])
+             ->present()
+             ->complete();
+        $this->notRegisteredLesson->registered_at = now();
+        $this->notRegisteredLesson->save();
 
-        $response = $this->actingAs($instructor)->get('lessons/' . $lesson->id);
+        $response = $this->actingAs($this->instructor)->get('lessons/' . $this->notRegisteredLesson->id);
 
         $response
             ->assertOk()
-            ->assertSee($instructor->name)
-            ->assertSee($lesson->formatted_date)
+            ->assertSee($this->instructor->name)
+            ->assertSee($this->notRegisteredLesson->formatted_date)
             ->assertSee('presença')
             ->assertSee('observação')
             ->assertSee('Test observation for novice_0')
             ->assertSee('Test observation for novice_1')
             ->assertSee('Nenhuma observação registrada');
-
     }
 
     /** @test */
     public function instructor_cannot_view_a_lesson_he_is_not_assigned_to()
     {
-        $instructor = User::factory()->hasRoles(['name' => 'instructor'])->create();
         $lessonForAnotherInstructor = Lesson::factory()->notRegistered()->hasNovices(3)->create();
         
-        $response = $this->actingAs($instructor)->get('lessons/' . $lessonForAnotherInstructor->id);
+        $response = $this->actingAs($this->instructor)->get('lessons/' . $lessonForAnotherInstructor->id);
 
         $response->assertNotFound();
+    }
+
+    /** @test */
+    public function instructor_will_see_a_warning_when_a_lesson_register_deadline_is_expired()
+    {
+        $this->travel(25)->hours();
+
+        $response = $this->actingAs($this->instructor)->get('lessons/' . $this->notRegisteredLesson->id);
+
+        $response
+            ->assertOk()
+            ->assertSee('Prazo para registro dessa aula vencido');
+    }
+
+    /** @test */
+    public function instructor_will_not_see_a_warning_when_a_lesson_register_deadline_is_not_expired()
+    {
+        $response = $this->actingAs($this->instructor)->get('lessons/' . $this->notRegisteredLesson->id);
+
+        $response
+            ->assertOk()
+            ->assertDontSee('Prazo para registro dessa aula vencido');
     }
 
     /** @test */
@@ -139,7 +182,7 @@ class ViewLessonTest extends TestCase
             ->assertSee($lesson->formatted_date)
             ->assertDontSee('observação')
             ->assertDontSee('presença')
-            ->assertDontSee('registro');
+            ->assertDontSee('label="registro"');
     }
 
     /** @test */

@@ -81,6 +81,23 @@ class LessonTest extends TestCase
     }
 
     /** @test */
+    public function can_check_if_its_expired()
+    {
+        $expiredDate = Carbon::now()->subHours(24)->subSecond();
+        $expiredLesson = Lesson::factory()->notRegistered()->create(['date' => $expiredDate]);
+        $notExpiredLesson = Lesson::factory()->notRegistered()->create(['date' => Carbon::now()]);
+        $registeredLesson = Lesson::factory()->create(['registered_at' => $expiredDate]);
+
+        $resultForExpiredLesson = $expiredLesson->isExpired();
+        $resultForNotExpiredLesson = $notExpiredLesson->isExpired();
+        $resultForRegisteredLesson = $registeredLesson->isExpired();
+        
+        $this->assertTrue($resultForExpiredLesson);
+        $this->assertFalse($resultForNotExpiredLesson);
+        $this->assertFalse($resultForRegisteredLesson);
+    }
+
+    /** @test */
     public function the_date_is_saved_as_utc_timezone()
     {
         $this->markTestSkipped();

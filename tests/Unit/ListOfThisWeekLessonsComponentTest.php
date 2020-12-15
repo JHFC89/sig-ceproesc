@@ -115,6 +115,26 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     }
 
     /** @test */
+    public function instructor_will_see_a_warning_when_a_lesson_register_deadline_is_expired()
+    {
+        $experiredLesson = Lesson::factory()->expired()->instructor($this->instructor)->create();
+
+        $component = $this->component(ForWeekList::class, ['title' => 'Week', 'user' => $this->instructor]);
+        
+        $component->assertSee('vencida');
+    }
+
+    /** @test */
+    public function instructor_will_not_see_a_warning_when_a_lesson_register_deadline_is_not_expired()
+    {
+        $lesson = Lesson::factory()->forToday()->notRegistered()->instructor($this->instructor)->create();
+
+        $component = $this->component(ForWeekList::class, ['title' => 'Week', 'user' => $this->instructor]);
+        
+        $component->assertDontSee('vencida');
+    }
+
+    /** @test */
     public function novice_can_see_lessons_he_is_enrolled_to()
     {
         $lesson = Lesson::factory()->thisWeek()->notRegistered()->instructor($this->instructor)->create();

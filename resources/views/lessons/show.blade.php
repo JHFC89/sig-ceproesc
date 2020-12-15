@@ -4,6 +4,10 @@
 
 @section('content')
 
+    @if($lesson->isExpired())
+        <x-alert type="warning" message="Prazo para registro dessa aula vencido."/> 
+    @endif
+
     <x-card.list.description-layout title="detalhes da aula">
         <x-slot name="items">
             @if(Auth::user()->isNovice())
