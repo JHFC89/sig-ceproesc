@@ -135,6 +135,26 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     }
 
     /** @test */
+    public function instructor_can_see_a_link_to_request_permission_to_register_a_expired_lesson()
+    {
+        $experiredLesson = Lesson::factory()->expired()->instructor($this->instructor)->create();
+
+        $component = $this->component(ForWeekList::class, ['title' => 'Week', 'user' => $this->instructor]);
+        
+        $component->assertSee(route('lessons.request.create', ['lesson' => $experiredLesson]));
+    }
+
+    /** @test */
+    public function instructor_cannot_see_a_link_to_request_permission_to_register_a_not_expired_lesson()
+    {
+        $lesson = Lesson::factory()->forToday()->notRegistered()->instructor($this->instructor)->create();
+
+        $component = $this->component(ForWeekList::class, ['title' => 'Week', 'user' => $this->instructor]);
+        
+        $component->assertDontSee(route('lessons.request.create', ['lesson' => $lesson]));
+    }
+
+    /** @test */
     public function novice_can_see_lessons_he_is_enrolled_to()
     {
         $lesson = Lesson::factory()->thisWeek()->notRegistered()->instructor($this->instructor)->create();

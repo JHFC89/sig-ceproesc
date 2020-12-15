@@ -61,6 +61,11 @@
                                 <x-icons.register-lesson class="w-6"/>
                             </a>
                             @endif
+                            @if($lesson->isExpired())
+                            <a href="{{ route('lessons.request.create', ['lesson' => $lesson]) }}" class="text-red-300 hover:text-red-400">
+                                <x-icons.exclamation class="w-6"/>
+                            </a>
+                            @endif
                             <a href="{{ route('lessons.show', ['lesson' => $lesson]) }}" class="text-gray-300 hover:text-blue-300">
                                 <x-icons.see class="w-6"/>
                             </a>

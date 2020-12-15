@@ -144,6 +144,30 @@ class ViewLessonTest extends TestCase
     }
 
     /** @test */
+    public function instructor_can_see_a_link_to_request_permission_to_register_a_expired_lesson()
+    {
+        $this->travel(25)->hours();
+
+        $response = $this->actingAs($this->instructor)->get('lessons/' . $this->notRegisteredLesson->id);
+
+        $response
+            ->assertOk()
+            ->assertSee('Solicitar liberação da aula')
+            ->assertSee(route('lessons.request.create', ['lesson' => $this->notRegisteredLesson]));
+    }
+
+    /** @test */
+    public function instructor_cannot_see_a_link_to_request_permission_to_register_a_not_expired_lesson()
+    {
+        $response = $this->actingAs($this->instructor)->get('lessons/' . $this->notRegisteredLesson->id);
+
+        $response
+            ->assertOk()
+            ->assertDontSee('Solicitar liberação da aula')
+            ->assertDontSee(route('lessons.request.create', ['lesson' => $this->notRegisteredLesson]));
+    }
+
+    /** @test */
     public function guest_cannot_view_any_lesson()
     {
         $lesson = Lesson::factory()->hasNovices(2)->create();

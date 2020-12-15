@@ -5,7 +5,7 @@
 @section('content')
 
     @if($lesson->isExpired())
-        <x-alert type="warning" message="Prazo para registro dessa aula vencido."/> 
+        <x-alert type="warning" message="Prazo para registro dessa aula vencido." actionText="Solicitar liberação da aula." :actionLink="route('lessons.request.create', ['lesson' => $lesson])"/>
     @endif
 
     <x-card.list.description-layout title="detalhes da aula">
