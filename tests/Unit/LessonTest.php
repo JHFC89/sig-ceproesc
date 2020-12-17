@@ -101,6 +101,27 @@ class LessonTest extends TestCase
     }
 
     /** @test */
+    public function can_check_it_has_an_open_request()
+    {
+        $lesson = Lesson::factory()->expired()->create();
+        $lesson->requests()->create(['justification' => 'test justification']);
+
+        $result = $lesson->hasOpenRequest();
+
+        $this->assertTrue($result);
+    }
+
+    /** @test */
+    public function can_check_it_does_not_have_an_open_request()
+    {
+        $lesson = Lesson::factory()->expired()->create();
+
+        $result = $lesson->hasOpenRequest();
+
+        $this->assertFalse($result);
+    }
+
+    /** @test */
     public function the_date_is_saved_as_utc_timezone()
     {
         $this->markTestSkipped();

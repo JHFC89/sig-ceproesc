@@ -62,7 +62,7 @@
                             </a>
                             @endif
                             @if($lesson->isExpired())
-                            <a href="{{ route('lessons.request.create', ['lesson' => $lesson]) }}" class="text-red-300 hover:text-red-400">
+                            <a href="{{ route('lessons.requests.create', ['lesson' => $lesson]) }}" class="text-red-300 hover:text-red-400">
                                 <x-icons.exclamation class="w-6"/>
                             </a>
                             @endif

@@ -153,7 +153,7 @@ class ViewLessonTest extends TestCase
         $response
             ->assertOk()
             ->assertSee('Solicitar liberação da aula')
-            ->assertSee(route('lessons.request.create', ['lesson' => $this->notRegisteredLesson]));
+            ->assertSee(route('lessons.requests.create', ['lesson' => $this->notRegisteredLesson]));
     }
 
     /** @test */
@@ -164,7 +164,7 @@ class ViewLessonTest extends TestCase
         $response
             ->assertOk()
             ->assertDontSee('Solicitar liberação da aula')
-            ->assertDontSee(route('lessons.request.create', ['lesson' => $this->notRegisteredLesson]));
+            ->assertDontSee(route('lessons.requests.create', ['lesson' => $this->notRegisteredLesson]));
     }
 
     /** @test */

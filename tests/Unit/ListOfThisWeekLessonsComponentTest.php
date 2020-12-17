@@ -141,7 +141,7 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
 
         $component = $this->component(ForWeekList::class, ['title' => 'Week', 'user' => $this->instructor]);
         
-        $component->assertSee(route('lessons.request.create', ['lesson' => $experiredLesson]));
+        $component->assertSee(route('lessons.requests.create', ['lesson' => $experiredLesson]));
     }
 
     /** @test */
@@ -151,7 +151,7 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
 
         $component = $this->component(ForWeekList::class, ['title' => 'Week', 'user' => $this->instructor]);
         
-        $component->assertDontSee(route('lessons.request.create', ['lesson' => $lesson]));
+        $component->assertDontSee(route('lessons.requests.create', ['lesson' => $lesson]));
     }
 
     /** @test */

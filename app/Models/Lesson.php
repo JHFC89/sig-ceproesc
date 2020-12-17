@@ -206,11 +206,21 @@ class Lesson extends Model
         return $relatedCourseClasses->contains(null) ? null : $relatedCourseClasses->values()->all();
     }
 
+    public function hasOpenRequest()
+    {
+        return $this->requests()->count() > 0;
+    }
+
     public function novices()
     {
         return $this->belongsToMany(User::class)
                     ->as('presence')
                     ->withPivot('present', 'observation');
+    }
+
+    public function requests()
+    {
+        return $this->hasMany(RegisterLessonRequest::class);
     }
 
     public function instructor()
@@ -255,5 +265,14 @@ class Lesson extends Model
     public function scopeForNovice($query, User $novice)
     {
         return $query->enrolled($novice->id);
+    }
+
+    public function setTestData()
+    {
+        $courseClass = CourseClass::factory()->create();
+        $this->novices->each(function ($novice) use ($courseClass) {
+            $novice->turnIntoNovice();
+            $courseClass->subscribe($novice);
+        });
     }
 }
