@@ -47,6 +47,10 @@ class Lesson extends Model
 
     public function isExpired()
     {
+        if ($this->date->greaterThan(now())) {
+            return false;
+        }
+
         return ($this->date->diffInSeconds(now()) > ((60 * 60) * 24) && ! $this->isRegistered());
     }
 

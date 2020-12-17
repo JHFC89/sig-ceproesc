@@ -85,15 +85,18 @@ class LessonTest extends TestCase
     {
         $expiredDate = Carbon::now()->subHours(24)->subSecond();
         $expiredLesson = Lesson::factory()->notRegistered()->create(['date' => $expiredDate]);
-        $notExpiredLesson = Lesson::factory()->notRegistered()->create(['date' => Carbon::now()]);
+        $notExpiredLessonForNow = Lesson::factory()->notRegistered()->create(['date' => Carbon::now()]);
+        $notExpiredLessonForFuture = Lesson::factory()->notRegistered()->create(['date' => Carbon::parse('+2 weeks')]);
         $registeredLesson = Lesson::factory()->create(['registered_at' => $expiredDate]);
 
         $resultForExpiredLesson = $expiredLesson->isExpired();
-        $resultForNotExpiredLesson = $notExpiredLesson->isExpired();
+        $resultForNotExpiredLessonForNow = $notExpiredLessonForNow->isExpired();
+        $resultForNotExpiredLessonForFuture = $notExpiredLessonForFuture->isExpired();
         $resultForRegisteredLesson = $registeredLesson->isExpired();
         
         $this->assertTrue($resultForExpiredLesson);
-        $this->assertFalse($resultForNotExpiredLesson);
+        $this->assertFalse($resultForNotExpiredLessonForNow);
+        $this->assertFalse($resultForNotExpiredLessonForFuture);
         $this->assertFalse($resultForRegisteredLesson);
     }
 
