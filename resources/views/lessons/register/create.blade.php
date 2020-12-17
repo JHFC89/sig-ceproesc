@@ -132,13 +132,13 @@
             <div x-show="message.show" class="block mr-auto"><span x-text="message.content"></span></div>
             <button 
                 @click.prevent="saveDraft()" 
-                class="px-4 py-2 text-sm font-medium leading-none text-teal-100 capitalize bg-teal-500 hover:bg-teal-600 hover:text-white rounded-md shadown"
+                class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown"
             >
                 salvar
             </button>
             <button 
                 @click.prevent="register()" 
-                class="px-4 py-2 text-sm font-medium leading-none text-teal-100 capitalize bg-teal-500 hover:bg-teal-600 hover:text-white rounded-md shadown"
+                class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown"
             >
                 registrar
             </button>
