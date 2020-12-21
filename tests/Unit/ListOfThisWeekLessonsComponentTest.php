@@ -109,7 +109,7 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
 
         $component = $this->component(ForWeekList::class, ['user' => $this->instructor]);
 
-        $component->assertSee(route('lessons.register.create', ['lesson' => $lesson]));
+        $component->assertSee(route('lessons.registers.create', ['lesson' => $lesson]));
     }
 
     /** @test */
@@ -119,7 +119,7 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
 
         $component = $this->component(ForWeekList::class, ['user' => $this->instructor]);
 
-        $component->assertDontSee(route('lessons.register.create', ['lesson' => $lesson]));
+        $component->assertDontSee(route('lessons.registers.create', ['lesson' => $lesson]));
     }
 
     /** @test */
@@ -194,7 +194,7 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
 
         $component = $this->component(ForWeekList::class, ['user' => $this->instructor]);
 
-        $component->assertDontSee(route('lessons.register.create', ['lesson' => $openRequestLesson]));
+        $component->assertDontSee(route('lessons.registers.create', ['lesson' => $openRequestLesson]));
     }
 
     /** @test */
@@ -237,7 +237,7 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
 
         $component = $this->component(ForWeekList::class, ['user' => $this->novice]);
 
-        $component->assertDontSee(route('lessons.register.create', ['lesson' => $lesson]));
+        $component->assertDontSee(route('lessons.registers.create', ['lesson' => $lesson]));
     }
 
     /** @test */
@@ -311,7 +311,7 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
 
         $component = $this->component(ForWeekList::class, ['user' => $this->employer]);
 
-        $component->assertDontSee(route('lessons.register.create', ['lesson' => $lesson]));
+        $component->assertDontSee(route('lessons.registers.create', ['lesson' => $lesson]));
     }
 
     /** @test */

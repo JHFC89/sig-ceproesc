@@ -112,7 +112,7 @@ class ListOfTodaysLessonsComponentTest extends TestCase
 
         $component = $this->component(ForTodayList::class, ['user' => $this->instructor]);
 
-        $component->assertSee(route('lessons.register.create', ['lesson' => $lesson]));
+        $component->assertSee(route('lessons.registers.create', ['lesson' => $lesson]));
     }
 
     /** @test */
@@ -155,7 +155,7 @@ class ListOfTodaysLessonsComponentTest extends TestCase
 
         $component = $this->component(ForTodayList::class, ['user' => $this->novice]);
 
-        $component->assertDontSee(route('lessons.register.create', ['lesson' => $lesson]));
+        $component->assertDontSee(route('lessons.registers.create', ['lesson' => $lesson]));
     }
 
     /** @test */
@@ -229,7 +229,7 @@ class ListOfTodaysLessonsComponentTest extends TestCase
 
         $component = $this->component(ForTodayList::class, ['user' => $this->employer]);
 
-        $component->assertDontSee(route('lessons.register.create', ['lesson' => $lesson]));
+        $component->assertDontSee(route('lessons.registers.create', ['lesson' => $lesson]));
     }
 
     /** @test */

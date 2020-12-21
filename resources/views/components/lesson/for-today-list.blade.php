@@ -52,7 +52,7 @@
                     <x-slot name="item">
                         <div class="flex justify-end space-x-2">
                             @if($showRegisterButton($lesson))
-                            <a href="{{ route('lessons.register.create', ['lesson' => $lesson]) }}" class="text-gray-300 hover:text-blue-300">
+                            <a href="{{ route('lessons.registers.create', ['lesson' => $lesson]) }}" class="text-gray-300 hover:text-blue-300">
                                 <x-icons.register-lesson class="w-6"/>
                             </a>
                             @endif

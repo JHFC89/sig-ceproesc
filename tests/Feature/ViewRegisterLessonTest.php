@@ -34,7 +34,7 @@ class ViewRegisterLessonTest extends TestCase
     {
         extract($this->novices->all(), EXTR_PREFIX_ALL, 'novice');
 
-        $response = $this->actingAs($this->instructor)->get('lessons/register/create/' . $this->lesson->id);
+        $response = $this->actingAs($this->instructor)->get(route('lessons.registers.create', ['lesson' => $this->lesson]));
 
         $response
             ->assertOk()
@@ -55,7 +55,7 @@ class ViewRegisterLessonTest extends TestCase
     /** @test */
     public function a_guest_cannot_view_the_registation_page()
     {
-        $response = $this->get('lessons/register/create/' . $this->lesson->id);
+        $response = $this->get(route('lessons.registers.create', ['lesson' => $this->lesson]));
 
         $response
             ->assertStatus(302)
@@ -67,7 +67,7 @@ class ViewRegisterLessonTest extends TestCase
     {
         $notInstructor = User::factory()->create();
 
-        $response = $this->actingAs($notInstructor)->get('lessons/register/create/' . $this->lesson->id);
+        $response = $this->actingAs($notInstructor)->get(route('lessons.registers.create', ['lesson' => $this->lesson]));
 
         $response->assertUnauthorized();
     }
@@ -78,7 +78,7 @@ class ViewRegisterLessonTest extends TestCase
         $lessonForAnotherInstructor = Lesson::factory()->forToday()->hasNovices(3)->create();
         $this->assertNotEquals($lessonForAnotherInstructor->instructor->id, $this->instructor->id);
 
-        $response = $this->actingAs($this->instructor)->get('lessons/register/create/' . $lessonForAnotherInstructor->id);
+        $response = $this->actingAs($this->instructor)->get(route('lessons.registers.create', ['lesson' => $lessonForAnotherInstructor]));
 
         $response->assertUnauthorized();
     }
@@ -88,7 +88,7 @@ class ViewRegisterLessonTest extends TestCase
     {
         $lesson = Lesson::factory()->notForToday()->notRegistered()->create([]);
 
-        $response = $this->actingAs($lesson->instructor)->get('lessons/register/create/' . $lesson->id);
+        $response = $this->actingAs($lesson->instructor)->get(route('lessons.registers.create', ['lesson' => $lesson]));
 
         $response->assertNotFound();
     }
@@ -98,7 +98,7 @@ class ViewRegisterLessonTest extends TestCase
     {
         $lesson = Lesson::factory()->forToday()->registered()->create([]);
 
-        $response = $this->actingAs($lesson->instructor)->get('lessons/register/create/' . $lesson->id);
+        $response = $this->actingAs($lesson->instructor)->get(route('lessons.registers.create', ['lesson' => $lesson]));
 
         $response->assertNotFound();
     }
@@ -108,7 +108,7 @@ class ViewRegisterLessonTest extends TestCase
     {
         $lesson = Lesson::factory()->draft()->forToday()->create([]);
 
-        $response = $this->actingAs($lesson->instructor)->get('lessons/register/create/' . $lesson->id);
+        $response = $this->actingAs($lesson->instructor)->get(route('lessons.registers.create', ['lesson' => $lesson]));
 
         $response
             ->assertOk()

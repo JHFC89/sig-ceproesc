@@ -17,6 +17,7 @@ class ViewLessonListingTest extends TestCase
     /** @test */
     public function showing_to_an_instructor_a_list_of_lessons_to_register_today()
     {
+        $this->withoutExceptionHandling();
         $instructor = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
         $lesson = Lesson::factory()->forToday()->notRegistered()->hasNovices(3)->instructor($instructor)->create();
 

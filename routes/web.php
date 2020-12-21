@@ -23,8 +23,8 @@ Route::view('/mockups/lessons/create', 'mockups.lessons.create');
 Route::middleware(['auth'])->group(function () {
     Route::get('/lessons/today', ForTodayLessonListController::class)->name('lessons.today');
     Route::get('/lessons/week', ForWeekLessonListController::class)->name('lessons.week');
-    Route::get('/lessons/register/create/{lesson}', [LessonRegisterController::class, 'create'])
-        ->name('lessons.register.create');
+    Route::get('/lessons/{lesson}/registers/create', [LessonRegisterController::class, 'create'])
+        ->name('lessons.registers.create');
     Route::get('/lessons/{lesson}/requests/create', [LessonRequestController::class, 'create'])->name('lessons.requests.create');
     Route::post('/lessons/{lesson}/requests', [LessonRequestController::class, 'store'])->name('lessons.requests.store');
     Route::get('/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
