@@ -7,6 +7,15 @@ use App\Models\Lesson;
 
 class LessonRequestController extends Controller
 {
+    public function show(RegisterLessonRequest $request)
+    {
+        abort_unless(request()->user()->isInstructor(), 404);
+
+        abort_unless($request->isForInstructor(request()->user()), 401);
+
+        return view('requests.show', compact('request'));
+    }
+
     public function create(Lesson $lesson)
     {
         abort_unless(request()->user()->isInstructor(), 404);
@@ -32,8 +41,8 @@ class LessonRequestController extends Controller
             'justification' => 'required|string',
         ]);
 
-        RegisterLessonRequest::for($lesson, $validatedData['justification']);
+        $request = RegisterLessonRequest::for($lesson, $validatedData['justification']);
 
-        return view('lessons.requests.show');
+        return view('requests.show', compact('request'));
     }
 }

@@ -104,7 +104,7 @@ class RequestPermissionToRegisterExpiredLessonTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertViewIs('lessons.requests.show');
+            ->assertViewIs('requests.show');
         $this->assertEquals(1, RegisterLessonRequest::count());
         $this->assertEquals($this->lesson->id, RegisterLessonRequest::first()->lesson->id);
         $this->assertEquals('Test Request Justification', RegisterLessonRequest::first()->justification);
