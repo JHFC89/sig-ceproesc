@@ -62,6 +62,16 @@ class ForWeekList extends Component
         return $this->user->isNovice() ? $this->user->class : $lesson->formatted_course_classes;
     }
 
+    public function showExpiredWarning(Lesson $lesson)
+    {
+        return $lesson->isExpired() && ! $lesson->hasOpenRequest();
+    }
+
+    public function showOpenRequestWarning(Lesson $lesson)
+    {
+        return $lesson->hasOpenRequest();
+    }
+
     private function setLessons()
     {
         if ($this->user->isInstructor()) {

@@ -20,7 +20,6 @@ use App\Http\Controllers\ForTodayLessonListController;
 
 Route::view('/mockups/lessons/create', 'mockups.lessons.create');
 
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/lessons/today', ForTodayLessonListController::class)->name('lessons.today');
     Route::get('/lessons/week', ForWeekLessonListController::class)->name('lessons.week');

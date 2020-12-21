@@ -6,6 +6,10 @@
             $colorClasses = 'bg-red-500 text-red-100';
             $actionClasses = 'hover:text-red-300';
             break;
+        case 'attention':
+            $colorClasses = 'bg-yellow-200 text-yellow-700';
+            $actionClasses = 'hover:text-yellow-500';
+            break;
     }
 @endphp
 

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Lesson;
 use App\Models\CourseClass;
+use App\Models\RegisterLessonRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -144,6 +145,20 @@ class ViewLessonTest extends TestCase
     }
 
     /** @test */
+    public function instructor_will_see_a_warning_when_a_lesson_has_an_open_request_to_register()
+    {
+        $this->travel(25)->hours();
+        RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
+
+        $response = $this->actingAs($this->instructor)->get('lessons/' . $this->notRegisteredLesson->id);
+
+        $response
+            ->assertOk()
+            ->assertSee('Aula com pedido de liberação para registro em aberto')
+            ->assertDontSee('Prazo para registro dessa aula vencido');
+    }
+
+    /** @test */
     public function instructor_can_see_a_link_to_request_permission_to_register_a_expired_lesson()
     {
         $this->travel(25)->hours();
@@ -153,7 +168,8 @@ class ViewLessonTest extends TestCase
         $response
             ->assertOk()
             ->assertSee('Solicitar liberação da aula')
-            ->assertSee(route('lessons.requests.create', ['lesson' => $this->notRegisteredLesson]));
+            ->assertSee(route('lessons.requests.create', ['lesson' => $this->notRegisteredLesson]))
+            ->assertDontSee(route('lessons.register.create', ['lesson' => $this->notRegisteredLesson]));
     }
 
     /** @test */
