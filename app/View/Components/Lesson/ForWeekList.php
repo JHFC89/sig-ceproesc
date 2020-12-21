@@ -11,7 +11,7 @@ class ForWeekList extends Component
 
     public $title;
 
-    public $headerClasses;
+    public $columnSize;
 
     protected $user;
 
@@ -28,7 +28,7 @@ class ForWeekList extends Component
 
         $this->setTitle($title);
 
-        $this->setHeaderClasses();
+        $this->setColumnsSizes();
     }
 
     /**
@@ -92,20 +92,20 @@ class ForWeekList extends Component
         }
     }
 
-    private function setHeaderClasses()
+    private function setColumnsSizes()
     {
         if ($this->user->isInstructor()) {
-            return $this->headerClasses = $this->headerClassesForInstructor();
+            return $this->columnSize = $this->columnSizeForInstructor();
         }
 
         if ($this->user->isEmployer()) {
-            return $this->headerClasses = $this->headerClassesForEmployer();
+            return $this->columnSize = $this->columnSizeForEmployer();
         }
 
-        return $this->headerClasses = $this->headerClassesForNovice();
+        return $this->columnSize = $this->columnSizeForNovice();
     }
 
-    private function headerClassesForInstructor()
+    private function columnSizeForInstructor()
     {
         return [
             'date'          => 'col-span-2',
@@ -116,7 +116,7 @@ class ForWeekList extends Component
         ];
     }
 
-    private function headerClassesForEmployer()
+    private function columnSizeForEmployer()
     {
         return [
             'date'          => 'col-span-2',
@@ -128,7 +128,7 @@ class ForWeekList extends Component
         ];
     }
 
-    private function headerClassesForNovice()
+    private function columnSizeForNovice()
     {
         return [
             'date'          => 'col-span-2',

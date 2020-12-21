@@ -1,14 +1,14 @@
 <x-card.list.table-layout :title="$title">
     <x-slot name="header">
-        <x-card.list.table-header class="{{ $headerClasses['class'] }}" name="turma"/>
-        <x-card.list.table-header class="{{ $headerClasses['discipline'] }}" name="disciplina"/>
+        <x-card.list.table-header class="{{ $columnSize['class'] }}" name="turma"/>
+        <x-card.list.table-header class="{{ $columnSize['discipline'] }}" name="disciplina"/>
         @unless ($listForInstructor())
-        <x-card.list.table-header class="{{ $headerClasses['instructor'] }}" name="instrutor"/>
+        <x-card.list.table-header class="{{ $columnSize['instructor'] }}" name="instrutor"/>
         @endunless
         @unless ($hideRegistered)
-        <x-card.list.table-header class="{{ $headerClasses['registered'] }} text-center" name="registrada"/>
+        <x-card.list.table-header class="{{ $columnSize['registered'] }} text-center" name="registrada"/>
         @endunless
-        <x-card.list.table-header class="{{ $headerClasses['actions'] }}" name=""/>
+        <x-card.list.table-header class="{{ $columnSize['actions'] }}" name=""/>
     </x-slot>
 
     <x-slot name="body">
@@ -18,20 +18,20 @@
 
                 <time class="hidden" datetime="{{ $lesson->formatted_date }}"></time>
 
-                <x-card.list.table-body-item class="{{ $headerClasses['class'] }}">
+                <x-card.list.table-body-item class="{{ $columnSize['class'] }}">
                     <x-slot name="item">
                         <span>{{ $showClasses($lesson) }}</span>
                     </x-slot>
                 </x-card.list.table-body-item>
 
-                <x-card.list.table-body-item class="{{ $headerClasses['discipline'] }}">
+                <x-card.list.table-body-item class="{{ $columnSize['discipline'] }}">
                     <x-slot name="item">
                         <span>{{ $lesson->discipline }}</span>
                     </x-slot>
                 </x-card.list.table-body-item>
 
                 @unless($listForInstructor())
-                <x-card.list.table-body-item class="{{ $headerClasses['instructor'] }}">
+                <x-card.list.table-body-item class="{{ $columnSize['instructor'] }}">
                     <x-slot name="item">
                         <span>{{ $lesson->instructor->name }}</span>
                     </x-slot>
@@ -39,7 +39,7 @@
                 @endunless
 
                 @unless ($hideRegistered)
-                <x-card.list.table-body-item class="{{ $headerClasses['registered'] }}">
+                <x-card.list.table-body-item class="{{ $columnSize['registered'] }}">
                     <x-slot name="item">
                         <div class="flex items-center justify-center h-full">
                             <x-icons.active class="w-2 h-2" :active="$lesson->isRegistered()"/>
@@ -48,7 +48,7 @@
                 </x-card.list.table-body-item>
                 @endunless
 
-                <x-card.list.table-body-item class="{{ $headerClasses['actions'] }}">
+                <x-card.list.table-body-item class="{{ $columnSize['actions'] }}">
                     <x-slot name="item">
                         <div class="flex justify-end space-x-2">
                             @if($showRegisterButton($lesson))

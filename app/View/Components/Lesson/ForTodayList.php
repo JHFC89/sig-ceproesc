@@ -11,7 +11,7 @@ class ForTodayList extends Component
 
     public $title;
 
-    public $headerClasses;
+    public $columnSize;
 
     public $hideRegistered;
 
@@ -32,7 +32,7 @@ class ForTodayList extends Component
 
         $this->setTitle($title);
 
-        $this->setHeaderClasses();
+        $this->setColumnsSizes();
     }
 
     /**
@@ -80,20 +80,20 @@ class ForTodayList extends Component
         }
     }
     
-    private function setHeaderClasses()
+    private function setColumnsSizes()
     {
         if ($this->user->isInstructor()) {
-            return $this->headerClasses = $this->headerClassesForInstructor();
+            return $this->columnSize = $this->columnSizeForInstructor();
         }
 
         if ($this->user->isEmployer()) {
-            return $this->headerClasses = $this->headerClassesForEmployer();
+            return $this->columnSize = $this->columnSizeForEmployer();
         }
 
-        return $this->headerClasses = $this->headerClassesForNovice();
+        return $this->columnSize = $this->columnSizeForNovice();
     }
 
-    private function headerClassesForInstructor()
+    private function columnSizeForInstructor()
     {
         return [
             'class'         => $this->hideRegistered ? 'col-span-8' : 'col-span-5',
@@ -103,7 +103,7 @@ class ForTodayList extends Component
         ];
     }
 
-    private function headerClassesForEmployer()
+    private function columnSizeForEmployer()
     {
         return [
             'class'         => $this->hideRegistered ? 'col-span-7' : 'col-span-4',
@@ -115,7 +115,7 @@ class ForTodayList extends Component
         ];
     }
 
-    private function headerClassesForNovice()
+    private function columnSizeForNovice()
     {
         return [
             'class'         => $this->hideRegistered ? 'col-span-3' : 'col-span-2',
