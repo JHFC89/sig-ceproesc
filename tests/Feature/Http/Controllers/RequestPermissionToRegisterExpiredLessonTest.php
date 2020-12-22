@@ -62,7 +62,7 @@ class RequestPermissionToRegisterExpiredLessonTest extends TestCase
 
         $response = $this->actingAs($notAnInstructor)->get(route('lessons.requests.create', ['lesson' => $this->lesson]));
 
-        $response->assertNotFound();
+        $response->assertUnauthorized();
     }
 
     /** @test */
@@ -82,7 +82,7 @@ class RequestPermissionToRegisterExpiredLessonTest extends TestCase
         
         $response = $this->actingAs($lessonNotExpired->instructor)->get(route('lessons.requests.create', ['lesson' => $lessonNotExpired]));
 
-        $response->assertNotFound();
+        $response->assertUnauthorized();
     }
 
     /** @test */
@@ -92,7 +92,7 @@ class RequestPermissionToRegisterExpiredLessonTest extends TestCase
 
         $response = $this->actingAs($this->instructor)->get(route('lessons.requests.create', ['lesson' => $this->lesson]));
         
-        $response->assertNotFound();
+        $response->assertUnauthorized();
     }
 
     /** @test */
@@ -136,6 +136,17 @@ class RequestPermissionToRegisterExpiredLessonTest extends TestCase
         $instructorForAnotherLesson = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
 
         $response = $this->actingAs($instructorForAnotherLesson)->post(route('lessons.requests.store', ['lesson' => $this->lesson]), $this->data);
+
+        $response->assertUnauthorized();
+        $this->assertEquals(0, RegisterLessonRequest::count());
+    }
+
+    /** @test */
+    public function cannot_create_a_request_for_a_lesson_that_is_not_expired()
+    {
+        $lessonNotExpired = Lesson::factory()->forToday()->instructor($this->instructor)->create();
+
+        $response = $this->actingAs($this->instructor)->post(route('lessons.requests.store', ['lesson' => $lessonNotExpired]), $this->data);
 
         $response->assertUnauthorized();
         $this->assertEquals(0, RegisterLessonRequest::count());

@@ -34,6 +34,7 @@ class ViewRequestToRegisterExpiredLessonTest extends TestCase
     /** @test */
     public function view_a_request_to_register_an_expired_lesson()
     {
+        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->instructor)->get(route('requests.show', ['request' => $this->request]));
 
         $response
@@ -60,7 +61,7 @@ class ViewRequestToRegisterExpiredLessonTest extends TestCase
     {
         $response = $this->actingAs(User::factory()->create())->get(route('requests.show', ['request' => $this->request]));
 
-        $response->assertNotFound();
+        $response->assertUnauthorized();
     }
 
     /** @test */

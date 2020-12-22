@@ -52,7 +52,7 @@ class ForTodayList extends Component
 
     public function showRegisterButton(Lesson $lesson)
     {
-        return (! $lesson->isRegistered() && $this->user->isInstructor()) ? true : false;
+        return $this->user->can('createRegister', $lesson);
     }
 
     public function showClasses(Lesson $lesson)

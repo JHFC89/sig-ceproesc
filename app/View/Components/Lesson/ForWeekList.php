@@ -48,13 +48,7 @@ class ForWeekList extends Component
 
     public function showRegisterButton(Lesson $lesson)
     {
-        return (
-            ! $lesson->isRegistered() 
-            && $lesson->isForToday()
-            && $this->user->isInstructor()
-        ) 
-        ? true 
-        : false;
+        return $this->user->can('createRegister', $lesson);
     }
 
     public function showClasses(Lesson $lesson)
@@ -64,7 +58,7 @@ class ForWeekList extends Component
 
     public function showExpiredWarning(Lesson $lesson)
     {
-        return $lesson->isExpired() && ! $lesson->hasOpenRequest();
+        return $this->user->can('createForLesson', [RegisterLessonRequest::class, $lesson]);
     }
 
     public function showOpenRequestWarning(Lesson $lesson)

@@ -72,6 +72,7 @@ class RegisterLessonTest extends TestCase
     /** @test */
     public function a_lesson_cannot_be_registered_by_an_user_thats_not_an_instructor()
     {
+        $this->withoutExceptionHandling();
         $userNotInstructor = User::factory()->create();
         $lesson = Lesson::factory()->forToday()->hasNovices(2)->create(['instructor_id' => $this->instructor->id]);
         $data = $this->data()->lesson($lesson)->get();
@@ -146,7 +147,6 @@ class RegisterLessonTest extends TestCase
     /** @test */
     public function registering_a_draft_lesson()
     {
-        $this->withoutExceptionHandling();
         $lesson = Lesson::factory()->forToday()->hasNovices(1)->draft()->create(['instructor_id' => $this->instructor->id]);
         $novice = $lesson->novices->first();
         
