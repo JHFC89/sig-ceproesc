@@ -38,6 +38,10 @@ class LessonPolicy
             return true;
         }
 
+        if ($user->isCoordinator()) {
+            return true;
+        }
+
         return false;
     }
 

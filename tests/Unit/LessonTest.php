@@ -122,6 +122,17 @@ class LessonTest extends TestCase
     }
 
     /** @test */
+    public function get_open_request()
+    {
+        $lesson = Lesson::factory()->expired()->create();
+        $request = $lesson->requests()->create(['justification' => 'test justification']);
+
+        $result = $lesson->openRequest();
+
+        $this->assertEquals($request->id, $result->id);
+    }
+
+    /** @test */
     public function the_date_is_saved_as_utc_timezone()
     {
         $this->markTestSkipped();

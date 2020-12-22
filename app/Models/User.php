@@ -111,6 +111,13 @@ class User extends Authenticatable
         });
     }
 
+    public function isCoordinator()
+    {
+        return $this->roles->contains(function ($role) {
+            return $role->name == 'coordinator';
+        });
+    }
+
     public function hasNoRole()
     {
         return $this->roles->isEmpty();

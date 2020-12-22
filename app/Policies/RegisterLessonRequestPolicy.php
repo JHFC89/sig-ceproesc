@@ -13,7 +13,8 @@ class RegisterLessonRequestPolicy
 
     public function view(User $user, RegisterLessonRequest $request)
     {
-        return $user->isInstructor() && $request->isForInstructor($user);
+        return ($user->isInstructor() && $request->isForInstructor($user)) 
+            || $user->isCoordinator();
     }
 
     public function createForLesson(User $user, Lesson $lesson)

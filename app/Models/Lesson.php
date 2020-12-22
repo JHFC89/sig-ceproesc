@@ -211,6 +211,11 @@ class Lesson extends Model
         return $this->requests()->count() > 0;
     }
 
+    public function openRequest()
+    {
+        return $this->requests->first();
+    }
+
     public function novices()
     {
         return $this->belongsToMany(User::class)

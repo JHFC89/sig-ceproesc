@@ -184,6 +184,36 @@ class ViewLessonTest extends TestCase
     }
 
     /** @test */
+    public function instructor_can_see_a_link_to_view_an_open_request_for_the_lesson()
+    {
+        $this->travel(25)->hours();
+        $request = RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
+
+        $response = $this->actingAs($this->instructor)->get('lessons/' . $this->notRegisteredLesson->id);
+
+        $response
+            ->assertOk()
+            ->assertSee('Ver solicitação')
+            ->assertSee(route('requests.show', ['request' => $request]));
+    }
+
+    /** @test */
+    public function coordinator_will_see_a_warning_and_link_to_view_an_open_request_to_register()
+    {
+        $this->travel(25)->hours();
+        $request = RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
+        $coordinator = User::factory()->hasRoles(1, ['name' => 'coordinator'])->create();
+
+        $response = $this->actingAs($coordinator)->get(route('lessons.show', ['lesson' => $this->notRegisteredLesson]));
+
+        $response
+            ->assertOk()
+            ->assertSee('Aula com pedido de liberação para registro em aberto')
+            ->assertSee('Ver solicitação')
+            ->assertSee(route('requests.show', ['request' => $request]));
+    }
+
+    /** @test */
     public function guest_cannot_view_any_lesson()
     {
         $lesson = Lesson::factory()->hasNovices(2)->create();
@@ -286,6 +316,35 @@ class ViewLessonTest extends TestCase
     }
 
     /** @test */
+    public function novice_cannot_view_warning_and_link_to_request_to_expired_lesson()
+    {
+        $this->travel(25)->hours();
+
+        $response = $this->actingAs($this->novices->first())->get(route('lessons.show', ['lesson' => $this->notRegisteredLesson]));
+
+        $response
+            ->assertOk()
+            ->assertDontSee('Prazo para registro dessa aula vencido')
+            ->assertDontSee('Solicitar liberação da aula')
+            ->assertDontSee(route('lessons.requests.create', ['lesson' => $this->notRegisteredLesson]));
+    }
+
+    /** @test */
+    public function novice_cannot_view_warning_and_link_to_view_an_open_request()
+    {
+        $this->travel(25)->hours();
+        $request = RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
+
+        $response = $this->actingAs($this->novices->first())->get(route('lessons.show', ['lesson' => $this->notRegisteredLesson]));
+
+        $response
+            ->assertOk()
+            ->assertDontSee('Aula com pedido de liberação para registro em aberto')
+            ->assertDontSee('Ver solicitação')
+            ->assertDontSee(route('requests.show', ['request' => $request]));
+    }
+
+    /** @test */
     public function employer_can_view_his_novices_informations_for_a_not_registered_lesson_they_are_enrolled()
     {
         $courseClass = CourseClass::factory()->create();
@@ -381,4 +440,29 @@ class ViewLessonTest extends TestCase
 
         $response->assertNotFound();
     }
+
+    /** @test */
+    public function employer_cannot_view_warning_and_link_to_view_an_open_request()
+    {
+        $this->travel(25)->hours();
+        $courseClass = CourseClass::factory()->create();
+        $novices = User::factory()->hasRoles(1, ['name' => 'novice'])->count(3)->create();
+        $employer = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
+        $employer->novices()->saveMany($novices->all());
+        $lesson = Lesson::factory()->notRegistered()->create();
+        $novices->each(function ($novice) use ($lesson, $courseClass) {
+            $courseClass->subscribe($novice);
+            $lesson->enroll($novice);
+        });
+        $request = RegisterLessonRequest::for($lesson, 'Fake Justification');
+
+        $response = $this->actingAs($employer)->get(route('lessons.show', ['lesson' => $lesson]));
+
+        $response
+            ->assertOk()
+            ->assertDontSee('Aula com pedido de liberação para registro em aberto')
+            ->assertDontSee('Ver solicitação')
+            ->assertDontSee(route('requests.show', ['request' => $request]));
+    }
+
 }

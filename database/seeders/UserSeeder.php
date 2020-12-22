@@ -86,5 +86,14 @@ class UserSeeder extends Seeder
             ]);
 
         $employer->novices()->saveMany([$noviceA, $noviceB]);
+
+        // coordinator
+        $coordinator = User::factory()
+            ->hasRoles(1, ['name' => 'coordinator'])
+            ->create([
+                'name' => 'Coordenador 1',
+                'email' => 'coordenador@sig.com.br',
+                'password' => Hash::make('asdf'),
+            ]);
     }
 }

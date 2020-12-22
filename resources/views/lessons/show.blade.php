@@ -4,19 +4,21 @@
 
 @section('content')
 
-    @if($lesson->isExpired() && !$lesson->hasOpenRequest())
+    @can('createForLesson', [App\Models\RegisterLessonRequest::class, $lesson])
         <x-alert 
             type="warning" 
             message="Prazo para registro dessa aula vencido." 
             actionText="Solicitar liberação da aula." 
             :actionLink="route('lessons.requests.create', ['lesson' => $lesson])"
         />
-    @elseif($lesson->hasOpenRequest())
+    @elsecan('view', $lesson->openRequest())
         <x-alert 
             type="attention" 
             message="Aula com pedido de liberação para registro em aberto." 
+            actionText="Ver solicitação." 
+            :actionLink="route('requests.show', ['request' => $lesson->openRequest()])"
         />
-    @endif
+    @endcan
 
     <x-card.list.description-layout title="detalhes da aula">
         <x-slot name="items">
