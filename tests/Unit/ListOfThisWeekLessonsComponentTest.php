@@ -265,6 +265,17 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     }
 
     /** @test */
+    public function novice_cannot_see_link_to_request_to_register_an_expired_lesson()
+    {
+        $experiredLesson = Lesson::factory()->expired()->instructor($this->instructor)->create();
+        $experiredLesson->enroll($this->novice);
+
+        $component = $this->component(ForWeekList::class, ['user' => $this->novice]);
+
+        $component->assertDontSee(route('lessons.requests.create', ['lesson' => $experiredLesson]));
+    }
+
+    /** @test */
     public function employer_can_see_their_novices_classes()
     {
         $noviceA = User::factory()->hasRoles(1, ['name' => 'novice'])->make();
@@ -312,6 +323,18 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
         $component = $this->component(ForWeekList::class, ['user' => $this->employer]);
 
         $component->assertDontSee(route('lessons.registers.create', ['lesson' => $lesson]));
+    }
+
+    /** @test */
+    public function employer_cannot_see_link_to_request_to_register_an_expired_lesson()
+    {
+        $this->employer->novices()->save($this->novice);
+        $experiredLesson = Lesson::factory()->expired()->instructor($this->instructor)->create();
+        $experiredLesson->enroll($this->novice);
+
+        $component = $this->component(ForWeekList::class, ['user' => $this->employer]);
+
+        $component->assertDontSee(route('lessons.requests.create', ['lesson' => $experiredLesson]));
     }
 
     /** @test */
