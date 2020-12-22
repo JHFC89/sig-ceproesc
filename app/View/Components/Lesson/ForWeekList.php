@@ -56,7 +56,7 @@ class ForWeekList extends Component
         return $this->user->isNovice() ? $this->user->class : $lesson->formatted_course_classes;
     }
 
-    public function showExpiredWarning(Lesson $lesson)
+    public function showRequestButton(Lesson $lesson)
     {
         return $this->user->can('createForLesson', [RegisterLessonRequest::class, $lesson]);
     }

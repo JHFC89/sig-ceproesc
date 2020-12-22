@@ -44,7 +44,7 @@
                 <x-card.list.table-body-item class="{{ $columnSize['registered'] }}">
                     <x-slot name="item">
                         <div class="flex items-center justify-center h-full">
-                            @if($showExpiredWarning($lesson))
+                            @if($showRequestButton($lesson))
                             <span class="inline-block px-2 py-1 text-sm font-medium leading-none text-red-700 bg-red-100 rounded-md">vencida</span>
                             @elseif($showOpenRequestWarning($lesson))
                             <span class="inline-block px-2 py-1 text-sm font-medium leading-none text-yellow-700 bg-yellow-100 rounded-md">em análise</span>
@@ -63,7 +63,7 @@
                                 <x-icons.register-lesson class="w-6"/>
                             </a>
                             @endif
-                            @if($showExpiredWarning($lesson))
+                            @if($showRequestButton($lesson))
                             <a href="{{ route('lessons.requests.create', ['lesson' => $lesson]) }}" class="text-red-300 hover:text-red-400">
                                 <x-icons.exclamation class="w-6"/>
                             </a>
