@@ -32,5 +32,10 @@ class RegisterLessonRequestPolicy
             && $lesson->isExpired()
             && !$lesson->hasOpenRequest();
     }
+
+    public function update(User $user, RegisterLessonRequest $request)
+    {
+        return $user->isCoordinator() && ! $request->isReleased();
+    }
 }
 

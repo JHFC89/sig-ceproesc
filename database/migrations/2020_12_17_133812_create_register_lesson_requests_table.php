@@ -17,6 +17,7 @@ class CreateRegisterLessonRequestsTable extends Migration
             $table->id();
             $table->foreignId('lesson_id');
             $table->text('justification');
+            $table->dateTime('released_at')->nullable();
             $table->timestamps();
         });
     }

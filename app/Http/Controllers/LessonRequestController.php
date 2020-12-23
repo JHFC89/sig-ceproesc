@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RegisterLessonRequest;
 use App\Models\Lesson;
+use App\Models\RegisterLessonRequest;
 
 class LessonRequestController extends Controller
 {
@@ -30,6 +30,17 @@ class LessonRequestController extends Controller
         ]);
 
         $request = RegisterLessonRequest::for($lesson, $validatedData['justification']);
+
+        return view('requests.show', compact('request'));
+    }
+
+    public function update(RegisterLessonRequest $request)
+    {
+        abort_if(request()->user()->cannot('update', $request), 401);
+
+        $request->release();
+
+        session()->flash('status', 'Aula liberada para registro com sucesso!');
 
         return view('requests.show', compact('request'));
     }

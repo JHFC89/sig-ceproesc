@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Exceptions\RequestAlreadyReleasedException;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class RegisterLessonRequest extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
+
+    protected $dates = ['released_at'];
 
     public function getFormattedDateAttribute()
     {
@@ -31,6 +34,18 @@ class RegisterLessonRequest extends Model
     public function isForInstructor(User $instructor)
     {
         return $this->instructor->id === $instructor->id;
+    }
+
+    public function release()
+    {
+        throw_if($this->fresh()->isReleased(), RequestAlreadyReleasedException::class, 'Trying to release a request already released');
+        $this->released_at = now();
+        $this->save();
+    }
+
+    public function isReleased()
+    {
+        return $this->released_at ? true : false;
     }
 
     public function lesson()

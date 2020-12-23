@@ -2,6 +2,10 @@
 
 @php
     switch ($type) {
+        case 'success':
+            $colorClasses = 'bg-green-500 text-green-100';
+            $actionClasses = 'hover:text-green-300';
+            break;
         case 'warning':
             $colorClasses = 'bg-red-500 text-red-100';
             $actionClasses = 'hover:text-red-300';
@@ -14,7 +18,9 @@
 @endphp
 
 <div class="px-4 py-6 w-full rounded-md font-medium flex items-center {{ $colorClasses }}">
-    @if($type == 'warning')
+    @if($type == 'success')
+    <span><x-icons.check class="w-6 h-6"/></span>
+    @elseif($type == 'warning')
     <span><x-icons.error class="w-6 h-6"/></span>
     @endif
     <span class="ml-2">{{ $message }}</span>

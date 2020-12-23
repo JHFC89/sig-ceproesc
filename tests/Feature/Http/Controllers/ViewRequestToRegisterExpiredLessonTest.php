@@ -34,7 +34,6 @@ class ViewRequestToRegisterExpiredLessonTest extends TestCase
     /** @test */
     public function view_a_request_to_register_an_expired_lesson()
     {
-        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->instructor)->get(route('requests.show', ['request' => $this->request]));
 
         $response
@@ -46,6 +45,43 @@ class ViewRequestToRegisterExpiredLessonTest extends TestCase
             ->assertSee($this->request->justification)
             ->assertSee($this->request->lesson->formatted_date)
             ->assertSee($this->request->lesson->relatedCourseClasses());
+    }
+
+    /** @test */
+    public function coordinator_can_view_an_open_request_with_a_link_to_release_it()
+    {
+        $coordinator = User::factory()->hasRoles(1, ['name' => 'coordinator'])->create();
+
+        $response = $this->actingAs($coordinator)->get(route('requests.show', ['request' => $this->request]));
+
+        $response
+            ->assertOk()
+            ->assertSee(route('requests.update', ['request' => $this->request]));
+    }
+
+    /** @test */
+    public function coordinator_cannot_view_the_link_to_release_when_the_request_is_already_released()
+    {
+        $coordinator = User::factory()->hasRoles(1, ['name' => 'coordinator'])->create();
+        $this->request->release();
+
+        $response = $this->actingAs($coordinator)->get(route('requests.show', ['request' => $this->request]));
+
+        $response
+            ->assertOk()
+            ->assertDontSee(route('requests.update', ['request' => $this->request]));
+    }
+
+    /** @test */
+    public function instructor_cannot_view_the_link_to_release_a_request()
+    {
+        $this->request->release();
+
+        $response = $this->actingAs($this->instructor)->get(route('requests.show', ['request' => $this->request]));
+
+        $response
+            ->assertOk()
+            ->assertDontSee(route('requests.update', ['request' => $this->request]));
     }
 
     /** @test */

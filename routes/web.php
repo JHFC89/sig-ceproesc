@@ -29,6 +29,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/lessons/{lesson}/requests', [LessonRequestController::class, 'store'])->name('lessons.requests.store');
     Route::get('/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
     Route::get('/requests/{request}', [LessonRequestController::class, 'show'])->name('requests.show');
+    Route::patch('/requests/{request}', [LessonRequestController::class, 'update'])->name('requests.update');
 });
 
 Route::get('/dashboard', function () {
