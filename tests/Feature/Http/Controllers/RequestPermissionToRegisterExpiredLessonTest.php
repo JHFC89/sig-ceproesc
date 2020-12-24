@@ -96,7 +96,18 @@ class RequestPermissionToRegisterExpiredLessonTest extends TestCase
     }
 
     /** @test */
-    public function an_request_to_register_an_expired_lesson_can_be_created()
+    public function cannot_view_the_request_page_for_a_lesson_that_has_a_pending_request()
+    {
+        $request = $this->lesson->requests()->create(['justification' => 'test justification']);
+        $request->release();
+
+        $response = $this->actingAs($this->instructor)->get(route('lessons.requests.create', ['lesson' => $this->lesson]));
+        
+        $response->assertUnauthorized();
+    }
+
+    /** @test */
+    public function a_request_to_register_an_expired_lesson_can_be_created()
     {
         $data = ['justification' => 'Test Request Justification'];
 
@@ -162,6 +173,17 @@ class RequestPermissionToRegisterExpiredLessonTest extends TestCase
         $response->assertUnauthorized();
         $this->assertEquals(1, RegisterLessonRequest::count());
         $this->assertEquals('Open Request Justification', RegisterLessonRequest::first()->justification);
+    }
+
+    /** @test */
+    public function cannot_create_a_request_for_a_lesson_that_has_a_pending_request()
+    {
+        $request = $this->lesson->requests()->create(['justification' => 'Open Request Justification']);
+        $request->release();
+
+        $response = $this->actingAs($this->instructor)->post(route('lessons.requests.store', ['lesson' => $this->lesson]), $this->data);
+
+        $response->assertUnauthorized();
     }
 
     /** @test */

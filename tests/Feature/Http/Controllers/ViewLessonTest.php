@@ -18,6 +18,8 @@ class ViewLessonTest extends TestCase
 
     private $instructor;
 
+    private $coordinator;
+
     private $courseClass;
 
     private $notRegisteredLesson;
@@ -27,6 +29,8 @@ class ViewLessonTest extends TestCase
         parent::setUp();
 
         $this->instructor = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
+
+        $this->coordinator = User::factory()->hasRoles(1, ['name' => 'coordinator'])->create();
 
         $this->courseClass = CourseClass::factory()->create(['name' => '2020 - julho']);
 
@@ -123,7 +127,7 @@ class ViewLessonTest extends TestCase
     }
 
     /** @test */
-    public function instructor_will_see_a_warning_when_a_lesson_register_deadline_is_expired()
+    public function instructor_should_see_a_warning_when_a_lesson_register_deadline_is_expired()
     {
         $this->travel(25)->hours();
 
@@ -135,7 +139,7 @@ class ViewLessonTest extends TestCase
     }
 
     /** @test */
-    public function instructor_will_not_see_a_warning_when_a_lesson_register_deadline_is_not_expired()
+    public function instructor_should_not_see_a_warning_when_a_lesson_register_deadline_is_not_expired()
     {
         $response = $this->actingAs($this->instructor)->get('lessons/' . $this->notRegisteredLesson->id);
 
@@ -145,7 +149,7 @@ class ViewLessonTest extends TestCase
     }
 
     /** @test */
-    public function instructor_will_see_a_warning_when_a_lesson_has_an_open_request_to_register()
+    public function instructor_should_see_a_warning_when_a_lesson_has_an_open_request_to_register()
     {
         $this->travel(25)->hours();
         RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
@@ -198,19 +202,76 @@ class ViewLessonTest extends TestCase
     }
 
     /** @test */
-    public function coordinator_will_see_a_warning_and_link_to_view_an_open_request_to_register()
+    public function instructor_should_see_a_warning_that_an_expired_lesson_is_released_to_register()
     {
         $this->travel(25)->hours();
         $request = RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
-        $coordinator = User::factory()->hasRoles(1, ['name' => 'coordinator'])->create();
+        $request->release();
 
-        $response = $this->actingAs($coordinator)->get(route('lessons.show', ['lesson' => $this->notRegisteredLesson]));
+        $response = $this->actingAs($this->instructor)->get(route('lessons.show', ['lesson' => $this->notRegisteredLesson]));
+
+        $response
+            ->assertOk()
+            ->assertSee('Aula vencida liberada para registro');
+    }
+
+    /** @test */
+    public function instructor_should_see_a_link_to_register_an_expired_lesson_released_to_register()
+    {
+        $this->travel(25)->hours();
+        $request = RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
+        $request->release();
+
+        $response = $this->actingAs($this->instructor)->get(route('lessons.show', ['lesson' => $this->notRegisteredLesson]));
+
+        $response
+            ->assertOk()
+            ->assertSee('Registrar')
+            ->assertSee(route('lessons.registers.create', ['lesson' => $this->notRegisteredLesson]));
+    }
+
+    /** @test */
+    public function coordinator_should_see_a_warning_and_link_to_view_an_open_request_to_register()
+    {
+        $this->travel(25)->hours();
+        $request = RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
+
+        $response = $this->actingAs($this->coordinator)->get(route('lessons.show', ['lesson' => $this->notRegisteredLesson]));
 
         $response
             ->assertOk()
             ->assertSee('Aula com pedido de liberação para registro em aberto')
             ->assertSee('Ver solicitação')
             ->assertSee(route('requests.show', ['request' => $request]));
+    }
+
+    /** @test */
+    public function coordinator_should_see_a_warning_that_an_expired_lesson_is_released_to_register()
+    {
+        $this->travel(25)->hours();
+        $request = RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
+        $request->release();
+
+        $response = $this->actingAs($this->coordinator)->get(route('lessons.show', ['lesson' => $this->notRegisteredLesson]));
+
+        $response
+            ->assertOk()
+            ->assertSee('Aula vencida liberada para registro');
+    }
+
+    /** @test */
+    public function coordinator_cannot_see_a_link_to_register_an_expired_lesson_released_to_register()
+    {
+        $this->travel(25)->hours();
+        $request = RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
+        $request->release();
+
+        $response = $this->actingAs($this->coordinator)->get(route('lessons.show', ['lesson' => $this->notRegisteredLesson]));
+
+        $response
+            ->assertOk()
+            ->assertDontSee('Registrar')
+            ->assertDontSee(route('lessons.registers.create', ['lesson' => $this->notRegisteredLesson]));
     }
 
     /** @test */

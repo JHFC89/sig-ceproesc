@@ -22,7 +22,8 @@ class RegisterLessonRequestPolicy
         return $user->isInstructor() 
             && $lesson->isForInstructor($user)
             && $lesson->isExpired()
-            && !$lesson->hasOpenRequest();
+            && !$lesson->hasOpenRequest()
+            && !$lesson->hasPendingRequest();
     }
 
     public function storeForLesson(User $user, Lesson $lesson)
@@ -30,12 +31,13 @@ class RegisterLessonRequestPolicy
         return $user->isInstructor() 
             && $lesson->isForInstructor($user)
             && $lesson->isExpired()
-            && !$lesson->hasOpenRequest();
+            && !$lesson->hasOpenRequest()
+            && !$lesson->hasPendingRequest();
     }
 
     public function update(User $user, RegisterLessonRequest $request)
     {
-        return $user->isCoordinator() && ! $request->isReleased();
+        return $user->isCoordinator() && !$request->isReleased();
     }
 }
 

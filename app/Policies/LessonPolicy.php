@@ -126,6 +126,6 @@ class LessonPolicy
             ? 'Lesson is not available to draft at this date' 
             : 'Lesson is not available to register at this date';
 
-        return ! $lesson->isForToday();
+        return !$lesson->isForToday() && !$lesson->hasPendingRequest();
     }
 }

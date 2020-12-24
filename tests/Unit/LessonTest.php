@@ -103,8 +103,7 @@ class LessonTest extends TestCase
     /** @test */
     public function can_check_it_has_an_open_request()
     {
-        $lesson = Lesson::factory()->expired()->create();
-        $lesson->requests()->create(['justification' => 'test justification']);
+        $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
 
         $result = $lesson->hasOpenRequest();
 
@@ -122,6 +121,17 @@ class LessonTest extends TestCase
     }
 
     /** @test */
+    public function a_lesson_with_a_released_request_does_not_have_an_open_request()
+    {
+        $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
+        $lesson->openRequest()->release();
+
+        $result = $lesson->hasOpenRequest();
+
+        $this->assertFalse($result);
+    }
+
+    /** @test */
     public function get_open_request()
     {
         $lesson = Lesson::factory()->expired()->create();
@@ -130,6 +140,40 @@ class LessonTest extends TestCase
         $result = $lesson->openRequest();
 
         $this->assertEquals($request->id, $result->id);
+    }
+
+    /** @test */
+    public function can_check_it_has_a_pending_request()
+    {
+        $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
+        $lesson->openRequest()->release();
+
+        $result = $lesson->hasPendingRequest();
+
+        $this->assertTrue($result);
+    }
+
+    /** @test */
+    public function can_check_it_does_not_have_a_pending_request_when_has_an_open_request()
+    {
+        $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
+        $lesson->openRequest();
+
+        $result = $lesson->hasPendingRequest();
+
+        $this->assertFalse($result);
+    }
+
+    /** @test */
+    public function can_check_it_does_not_have_a_pending_request_when_registered()
+    {
+        $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
+        $lesson->openRequest()->release();
+        $lesson->register();
+
+        $result = $lesson->hasPendingRequest();
+
+        $this->assertFalse($result);
     }
 
     /** @test */

@@ -12,12 +12,21 @@
             :actionLink="route('lessons.requests.create', ['lesson' => $lesson])"
         />
     @elsecan('view', $lesson->openRequest())
+        @if($lesson->hasPendingRequest())
+        <x-alert 
+            type="success" 
+            message="Aula vencida liberada para registro." 
+            actionText="{{ Auth::user()->can('createRegister', $lesson) ? 'Registrar' : '' }}" 
+            :actionLink="Auth::user()->can('createRegister', $lesson) ? route('lessons.registers.create', ['lesson' => $lesson]) : ''"
+        />
+        @else
         <x-alert 
             type="attention" 
             message="Aula com pedido de liberação para registro em aberto." 
             actionText="Ver solicitação." 
             :actionLink="route('requests.show', ['request' => $lesson->openRequest()])"
         />
+        @endif
     @endcan
 
     <x-card.list.description-layout title="detalhes da aula">

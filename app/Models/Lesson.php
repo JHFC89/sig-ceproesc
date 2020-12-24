@@ -42,7 +42,7 @@ class Lesson extends Model
 
     public function isRegistered()
     {
-        return empty($this->registered_at) ? false : true;
+        return !empty($this->registered_at);
     }
 
     public function isExpired()
@@ -208,12 +208,18 @@ class Lesson extends Model
 
     public function hasOpenRequest()
     {
-        return $this->requests()->count() > 0;
+        return $this->requests()->whereNull('released_at')->count() > 0;
     }
 
     public function openRequest()
     {
         return $this->requests->first();
+    }
+
+    public function hasPendingRequest()
+    {
+        return $this->requests()->whereNotNull('released_at')->count() > 0
+            && ! $this->isRegistered();
     }
 
     public function novices()
