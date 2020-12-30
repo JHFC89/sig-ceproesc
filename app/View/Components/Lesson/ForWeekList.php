@@ -63,7 +63,12 @@ class ForWeekList extends Component
 
     public function showOpenRequestWarning(Lesson $lesson)
     {
-        return $lesson->hasOpenRequest();
+        return $lesson->hasOpenRequest() && $this->user->isInstructor();
+    }
+
+    public function showPendingRequestWarning(Lesson $lesson)
+    {
+        return $lesson->hasPendingRequest() && $this->user->can('createRegister', $lesson);
     }
 
     private function setLessons()

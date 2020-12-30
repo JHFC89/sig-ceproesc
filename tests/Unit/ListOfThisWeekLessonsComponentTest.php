@@ -198,6 +198,19 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     }
 
     /** @test */
+    public function instructor_will_see_a_warning_when_a_lesson_has_a_pending_request_to_register()
+    {
+        $lesson = Lesson::factory()->expired()->instructor($this->instructor)->hasRequests(1)->create();
+        $lesson->openRequest()->release();
+
+        $component = $this->component(ForWeekList::class, ['title' => 'Week', 'user' => $this->instructor]);
+        
+        $component
+            ->assertSee('liberada')
+            ->assertDontSee('em análise');
+    }
+
+    /** @test */
     public function novice_can_see_lessons_he_is_enrolled_to()
     {
         $lesson = Lesson::factory()->thisWeek()->notRegistered()->instructor($this->instructor)->create();
@@ -276,6 +289,30 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     }
 
     /** @test */
+    public function novice_cannot_see_a_warning_when_a_lesson_has_an_open_request_to_register()
+    {
+        $openRequestLesson = Lesson::factory()->expired()->instructor($this->instructor)->create();
+        $openRequestLesson->enroll($this->novice);
+        RegisterLessonRequest::for($openRequestLesson, 'Fake Justification');
+
+        $component = $this->component(ForWeekList::class, ['title' => 'Week', 'user' => $this->novice]);
+        
+        $component->assertDontSee('em análise');
+    }
+
+    /** @test */
+    public function novice_cannot_see_a_warning_when_a_lesson_has_a_pending_request_to_register()
+    {
+        $lesson = Lesson::factory()->expired()->instructor($this->instructor)->hasRequests(1)->create();
+        $lesson->enroll($this->novice);
+        $lesson->openRequest()->release();
+
+        $component = $this->component(ForWeekList::class, ['title' => 'Week', 'user' => $this->novice]);
+        
+        $component->assertDontSee('liberada');
+    }
+
+    /** @test */
     public function employer_can_see_their_novices_classes()
     {
         $noviceA = User::factory()->hasRoles(1, ['name' => 'novice'])->make();
@@ -335,6 +372,19 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
         $component = $this->component(ForWeekList::class, ['user' => $this->employer]);
 
         $component->assertDontSee(route('lessons.requests.create', ['lesson' => $experiredLesson]));
+    }
+
+    /** @test */
+    public function employer_cannot_see_a_warning_when_a_lesson_has_a_pending_request_to_register()
+    {
+        $this->employer->novices()->save($this->novice);
+        $lesson = Lesson::factory()->expired()->instructor($this->instructor)->hasRequests(1)->create();
+        $lesson->enroll($this->novice);
+        $lesson->openRequest()->release();
+
+        $component = $this->component(ForWeekList::class, ['title' => 'Week', 'user' => $this->employer]);
+        
+        $component->assertDontSee('liberada');
     }
 
     /** @test */

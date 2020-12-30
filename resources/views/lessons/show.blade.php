@@ -19,7 +19,7 @@
             actionText="{{ Auth::user()->can('createRegister', $lesson) ? 'Registrar' : '' }}" 
             :actionLink="Auth::user()->can('createRegister', $lesson) ? route('lessons.registers.create', ['lesson' => $lesson]) : ''"
         />
-        @else
+        @elseif($lesson->hasOpenRequest())
         <x-alert 
             type="attention" 
             message="Aula com pedido de liberação para registro em aberto." 

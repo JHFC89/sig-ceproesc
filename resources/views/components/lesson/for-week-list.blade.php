@@ -48,6 +48,8 @@
                             <span class="inline-block px-2 py-1 text-sm font-medium leading-none text-red-700 bg-red-100 rounded-md">vencida</span>
                             @elseif($showOpenRequestWarning($lesson))
                             <span class="inline-block px-2 py-1 text-sm font-medium leading-none text-yellow-700 bg-yellow-100 rounded-md">em análise</span>
+                            @elseif($showPendingRequestWarning($lesson))
+                            <span class="inline-block px-2 py-1 text-sm font-medium leading-none text-green-700 bg-green-100 rounded-md">liberada</span>
                             @else
                             <x-icons.active class="w-2 h-2" :active="$lesson->isRegistered()"/>
                             @endif
