@@ -54,8 +54,7 @@ class LessonRegisterController extends Controller
             abort(403, $exception->getMessage());
         }
 
-        $lesson->registered_at = now();
-        $lesson->save();
+        $lesson->register();
 
         return response('', 201);
     }

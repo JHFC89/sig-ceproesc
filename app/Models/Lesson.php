@@ -190,8 +190,11 @@ class Lesson extends Model
     public function register()
     {
         $this->registered_at = now();
+        $this->save();
 
-        return $this->save();
+        if ($this->hasPendingRequest()) {
+            $this->pendingRequest()->solve($this);
+        }
     }
 
     public function hasNovicesForEmployer(user $employer)
@@ -213,13 +216,22 @@ class Lesson extends Model
 
     public function openRequest()
     {
-        return $this->requests->first();
+        return $this->requests()->whereNull('released_at')->first();
     }
 
     public function hasPendingRequest()
     {
-        return $this->requests()->whereNotNull('released_at')->count() > 0
-            && ! $this->isRegistered();
+        return $this->requests()->whereNotNull('released_at')->whereNull('solved_at')->count() > 0;
+    }
+
+    public function pendingRequest()
+    {
+        return $this->requests()->whereNotNull('released_at')->whereNull('solved_at')->first();
+    }
+
+    public function hasSolvedRequest()
+    {
+        return $this->requests()->whereNotNull('released_at')->whereNotNull('solved_at')->count() > 0;
     }
 
     public function novices()

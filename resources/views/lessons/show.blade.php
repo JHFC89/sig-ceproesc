@@ -11,7 +11,7 @@
             actionText="Solicitar liberação da aula." 
             :actionLink="route('lessons.requests.create', ['lesson' => $lesson])"
         />
-    @elsecan('view', $lesson->openRequest())
+    @elsecan('view', $lesson->requests->first())
         @if($lesson->hasPendingRequest())
         <x-alert 
             type="success" 

@@ -246,7 +246,7 @@ class ViewLessonTest extends TestCase
     }
 
     /** @test */
-    public function coordinator_should_see_a_warning_that_an_expired_lesson_is_released_to_register()
+    public function coordinator_should_see_a_warning_that_an_expired_lesson_has_a_pending_request()
     {
         $this->travel(25)->hours();
         $request = RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');

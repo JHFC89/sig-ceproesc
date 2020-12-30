@@ -58,6 +58,16 @@ trait LessonTestData
             public function get(){
                 return $this->data;
             }
+
+            public function novices($novices)
+            {
+                $presenceList = $novices->pluck('id')->flip()->map(function ($item, $key) {
+                    return ['presence' => 1];
+                });
+                $this->change('presenceList', $presenceList);
+
+                return $this;
+            }
         };
     }
 }

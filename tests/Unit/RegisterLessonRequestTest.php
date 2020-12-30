@@ -6,6 +6,9 @@ use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\Lesson;
 use App\Models\RegisterLessonRequest;
+use App\Exceptions\NotExpectedLessonException;
+use App\Exceptions\RequestNotReleasedException;
+use App\Exceptions\LessonNotRegisteredException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Exceptions\RequestAlreadyReleasedException;
 
@@ -103,5 +106,97 @@ class RegisterLessonRequestTest extends TestCase
         }
 
         $this->fail('Trying to released a lesson already released should throw an exception');
+    }
+
+    /** @test */
+    public function can_be_solved()
+    {
+        $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
+        $request = $lesson->openRequest();
+        $request->release();
+        $lesson->register();
+
+        $request->solve($lesson);
+
+        $this->assertEquals($lesson->registered_at, $request->fresh()->solved_at);
+    }
+
+    /** @test */
+    public function cannot_solve_a_request_that_is_not_released()
+    {
+        $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
+        $request = $lesson->openRequest();
+        $lesson->register();
+
+        try {
+            $request->solve($lesson);
+        } catch (RequestNotReleasedException $exception) {
+            $this->assertTrue(true);
+            return;
+        }
+
+        $this->fail('Trying to solve a request that is not released should throw an exception');
+    }
+
+    /** @test */
+    public function cannot_solve_a_request_if_it_does_not_belong_to_the_given_lesson()
+    {
+        $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
+        $request = $lesson->openRequest();
+        $request->release();
+        $otherLesson = Lesson::factory()->expired()->hasRequests(1)->create();
+
+        try {
+            $request->solve($otherLesson);
+        } catch (NotExpectedLessonException $exception) {
+            $this->assertTrue(true);
+            return;
+        }
+
+        $this->fail('Trying to solve a request that does not belong to the given lesson should throw an exception');
+    }
+
+    /** @test */
+    public function cannot_be_solved_if_lesson_is_not_registered()
+    {
+        $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
+        $request = $lesson->openRequest();
+        $request->release();
+
+        try {
+            $request->solve($lesson);
+        } catch (LessonNotRegisteredException $exception) {
+            $this->assertTrue(true);
+            return;
+        }
+
+        $this->fail('Trying to solve a request which lesson is not registered should throw an exception');
+    }
+
+    /** @test */
+    public function can_check_request_is_solved()
+    {
+        $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
+        $request = $lesson->openRequest();
+        $request->release();
+        $lesson->register();
+        $request->solve($lesson);
+
+        $result = $request->isSolved();
+
+        $this->assertTrue($result);
+    }
+
+    /** @test */
+    public function can_check_request_is_not_solved()
+    {
+        $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
+        $request = $lesson->openRequest();
+        $request->release();
+        $lesson->register();
+
+        $result = $request->isSolved();
+
+        $this->assertFalse($result);
     }
 }

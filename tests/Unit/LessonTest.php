@@ -165,15 +165,56 @@ class LessonTest extends TestCase
     }
 
     /** @test */
-    public function can_check_it_does_not_have_a_pending_request_when_registered()
+    public function get_pending_request()
     {
         $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
-        $lesson->openRequest()->release();
+        $request = $lesson->openRequest();
+        $request->release();
+
+        $result = $lesson->pendingRequest();
+
+        $this->assertEquals($request->id, $result->id);
+    }
+
+    /** @test */
+    public function can_check_it_does_not_have_a_pending_request_when_solved()
+    {
+        $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
+        $request = $lesson->openRequest();
+        $request->release();
         $lesson->register();
+        $request->solve($lesson);
 
         $result = $lesson->hasPendingRequest();
 
         $this->assertFalse($result);
+    }
+
+    /** @test */
+    public function can_check_it_has_a_solved_request()
+    {
+        $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
+        $request = $lesson->openRequest();
+        $request->release();
+        $lesson->register();
+        $request->solve($lesson);
+
+        $result = $lesson->hasSolvedRequest();
+
+        $this->assertTrue($result);
+    }
+
+    /** @test */
+    public function solve_any_pending_request_when_registering()
+    {
+        $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
+        $request = $lesson->openRequest();
+        $request->release();
+        $lesson->register();
+
+        $result = $request->fresh()->isSolved();
+
+        $this->assertTrue($result);
     }
 
     /** @test */
