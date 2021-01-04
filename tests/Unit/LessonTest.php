@@ -19,7 +19,7 @@ class LessonTest extends TestCase
     public function can_get_the_formatted_date()
     {
         $lesson = Lesson::factory()->make([
-            'date' => Carbon::parse('2020, 11/02'),
+            'date' => Carbon::parse('2020/11/02'),
         ]);
 
         $date = $lesson->formatted_date;
