@@ -80,7 +80,8 @@ class ViewLessonTest extends TestCase
             ->assertSee($novice_1->class)
             ->assertSee($novice_2->name)
             ->assertSee($novice_2->code)
-            ->assertSee($novice_2->class);
+            ->assertSee($novice_2->class)
+            ->assertDontSee(route('lessons.requests.create', ['lesson' => $lesson]));
     }
 
     /** @test */
@@ -113,7 +114,8 @@ class ViewLessonTest extends TestCase
             ->assertSee('observação')
             ->assertSee('Test observation for novice_0')
             ->assertSee('Test observation for novice_1')
-            ->assertSee('Nenhuma observação registrada');
+            ->assertSee('Nenhuma observação registrada')
+            ->assertSee(route('lessons.requests.create', ['lesson' => $this->notRegisteredLesson]));
     }
 
     /** @test */
@@ -228,6 +230,36 @@ class ViewLessonTest extends TestCase
             ->assertOk()
             ->assertSee('Registrar')
             ->assertSee(route('lessons.registers.create', ['lesson' => $this->notRegisteredLesson]));
+    }
+
+    /** @test */
+    public function instructor_is_the_only_who_can_see_the_rectification_button()
+    {
+        $lesson = Lesson::factory()->registered()->instructor($this->instructor)->hasNovices(1)->create();
+        $lesson->setTestData();
+        $employer = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
+        $employer->novices()->save($lesson->novices->first());
+        
+        $responseForInstructor = $this->actingAs($this->instructor)->get(route('lessons.show', ['lesson' => $lesson]));
+        $responseForNovice = $this->actingAs($lesson->novices->first())->get(route('lessons.show', ['lesson' => $lesson]));
+        $responseForEmployer = $this->actingAs($employer)->get(route('lessons.show', ['lesson' => $lesson]));
+        $responseForCoordinator = $this->actingAs($this->coordinator)->get(route('lessons.show', ['lesson' => $lesson]));
+
+        $responseForInstructor
+            ->assertOk()
+            ->assertSee(route('lessons.requests.create', ['lesson' => $lesson]));
+
+        $responseForNovice
+            ->assertOk()
+            ->assertDontSee(route('lessons.requests.create', ['lesson' => $lesson]));
+
+        $responseForEmployer
+            ->assertOk()
+            ->assertDontSee(route('lessons.requests.create', ['lesson' => $lesson]));
+
+        $responseForCoordinator
+            ->assertOk()
+            ->assertDontSee(route('lessons.requests.create', ['lesson' => $lesson]));
     }
 
     /** @test */
@@ -505,12 +537,11 @@ class ViewLessonTest extends TestCase
     /** @test */
     public function employer_cannot_view_warning_and_link_to_view_an_open_request()
     {
-        $this->travel(25)->hours();
         $courseClass = CourseClass::factory()->create();
         $novices = User::factory()->hasRoles(1, ['name' => 'novice'])->count(3)->create();
         $employer = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
         $employer->novices()->saveMany($novices->all());
-        $lesson = Lesson::factory()->notRegistered()->create();
+        $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
         $novices->each(function ($novice) use ($lesson, $courseClass) {
             $courseClass->subscribe($novice);
             $lesson->enroll($novice);
@@ -525,5 +556,4 @@ class ViewLessonTest extends TestCase
             ->assertDontSee('Ver solicitação')
             ->assertDontSee(route('requests.show', ['request' => $request]));
     }
-
 }

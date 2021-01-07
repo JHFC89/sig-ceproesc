@@ -14,7 +14,7 @@
     </x-card.list.description-layout>
 
     <x-card.form-layout 
-        title="solicitação de liberação de aula vencida" 
+        :title="$requestType == 'rectification' ? 'solicitação de retificação de aula registrada' : 'solicitação de liberação de aula vencida'" 
         :action="route('lessons.requests.store', ['lesson' => $lesson])"
         method="POST"
     >
@@ -27,7 +27,7 @@
                         class="block w-full form-textarea @error('justification') border-red-500 @enderror" 
                         name="justification" 
                         rows="4"
-                        placeholder="Digite aqui a justificativa do atraso para registrar a aula"
+                        placeholder="{{ $requestType == 'rectification' ? 'Digite aqui a justificativa para retificar a aula' : 'Digite aqui a justificativa do atraso para registrar a aula' }}"
                     ></textarea>
                     @error('justification')
                     <span class="block text-sm text-red-500">{{ $message }}</span>

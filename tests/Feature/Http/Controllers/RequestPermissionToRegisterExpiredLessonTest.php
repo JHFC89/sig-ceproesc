@@ -44,6 +44,8 @@ class RequestPermissionToRegisterExpiredLessonTest extends TestCase
             ->assertSee($this->lesson->formatted_course_classes)
             ->assertSee($this->lesson->discipline)
             ->assertSee($this->lesson->hourly_load)
+            ->assertSee('solicitação de liberação de aula vencida')
+            ->assertSee('Digite aqui a justificativa do atraso para registrar a aula')
             ->assertSee(route('lessons.requests.store', ['lesson' => $this->lesson]));
     }
 
@@ -105,6 +107,8 @@ class RequestPermissionToRegisterExpiredLessonTest extends TestCase
         
         $response->assertUnauthorized();
     }
+
+    //storing
 
     /** @test */
     public function a_request_to_register_an_expired_lesson_can_be_created()

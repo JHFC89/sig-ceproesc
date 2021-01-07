@@ -29,9 +29,11 @@ class RegisterLessonRequest extends Model
 
     static public function for(Lesson $lesson, string $justification)
     {
-        return $lesson->requests()->create([
-            'justification' => $justification,
-        ]);
+        if ($lesson->isExpired()) {
+            return $lesson->requests()->create([
+                'justification' => $justification,
+            ]);
+        }
     }
 
     public function isForInstructor(User $instructor)

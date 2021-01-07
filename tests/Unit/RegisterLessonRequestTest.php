@@ -19,7 +19,7 @@ class RegisterLessonRequestTest extends TestCase
     /** @test */
     public function create_a_request_for_a_lesson()
     {
-        $lesson = Lesson::factory()->create();
+        $lesson = Lesson::factory()->expired()->create();
 
         $request = RegisterLessonRequest::for($lesson, 'Test Justification');
 
@@ -29,9 +29,19 @@ class RegisterLessonRequestTest extends TestCase
     }
 
     /** @test */
-    public function can_check_instructor_requester()
+    public function cannot_create_request_for_a_lesson_that_is_not_expired()
     {
         $lesson = Lesson::factory()->create();
+
+        $request = RegisterLessonRequest::for($lesson, 'Test Justification');
+
+        $this->assertEquals(0, RegisterLessonRequest::count());
+    }
+
+    /** @test */
+    public function can_check_instructor_requester()
+    {
+        $lesson = Lesson::factory()->expired()->create();
         $request = RegisterLessonRequest::for($lesson, 'Test Justification');
         $requester = $request->lesson->instructor;
         $notRequester = \App\Models\User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
@@ -46,7 +56,7 @@ class RegisterLessonRequestTest extends TestCase
     /** @test */
     public function get_requester()
     {
-        $lesson = Lesson::factory()->create();
+        $lesson = Lesson::factory()->expired()->create();
         $request = RegisterLessonRequest::for($lesson, 'Test Justification');
         
         $result = $request->instructor;
