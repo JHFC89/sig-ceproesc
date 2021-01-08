@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRectifyLessonRequestsTable extends Migration
+class CreateLessonRequestsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateRectifyLessonRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('rectify_lesson_requests', function (Blueprint $table) {
+        Schema::create('lesson_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('lesson_id');
             $table->text('justification');
+            $table->boolean('rectification')->default(true);
             $table->dateTime('released_at')->nullable();
             $table->dateTime('solved_at')->nullable();
             $table->timestamps();
@@ -30,6 +31,6 @@ class CreateRectifyLessonRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rectify_lesson_requests');
+        Schema::dropIfExists('lesson_requests');
     }
 }

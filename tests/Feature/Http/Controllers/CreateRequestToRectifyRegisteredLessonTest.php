@@ -82,7 +82,7 @@ class CreateRequestToRectifyRegisteredLessonTest extends TestCase
     /** @test */
     public function cannot_view_the_request_page_for_a_lesson_that_has_an_open_request()
     {
-        $this->lesson->rectifications()->create(['justification' => 'test justification']);
+        $this->lesson->requests()->create(['justification' => 'test justification']);
 
         $response = $this->actingAs($this->instructor)->get(route('lessons.requests.create', ['lesson' => $this->lesson]));
         
@@ -92,7 +92,7 @@ class CreateRequestToRectifyRegisteredLessonTest extends TestCase
     /** @test */
     public function cannot_view_the_request_page_for_a_lesson_that_has_a_pending_request()
     {
-        $request = $this->lesson->rectifications()->create(['justification' => 'test justification']);
+        $request = $this->lesson->requests()->create(['justification' => 'test justification']);
         $request->release();
 
         $response = $this->actingAs($this->instructor)->get(route('lessons.requests.create', ['lesson' => $this->lesson]));

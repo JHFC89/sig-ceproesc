@@ -28,6 +28,7 @@ class CreateRequestToRegisterExpiredLessonTest extends TestCase
     /** @test */
     public function instructor_can_view_the_page_to_request_to_register_an_expired_lesson()
     {
+        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->lesson->instructor)->get(route('lessons.requests.create', ['lesson' => $this->lesson]));
 
         $response

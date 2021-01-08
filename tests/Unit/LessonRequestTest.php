@@ -5,63 +5,59 @@ namespace Tests\Unit;
 use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\Lesson;
-use App\Models\RegisterLessonRequest;
+use App\Models\LessonRequest;
 use App\Exceptions\NotExpectedLessonException;
 use App\Exceptions\RequestNotReleasedException;
 use App\Exceptions\LessonNotRegisteredException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Exceptions\RequestAlreadyReleasedException;
 
-class RegisterLessonRequestTest extends TestCase
+class LessonRequestTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function create_a_request_for_a_lesson()
+    public function create_a_expiration_request_for_a_lesson()
     {
         $lesson = Lesson::factory()->expired()->create();
 
-        $request = RegisterLessonRequest::for($lesson, 'Test Justification');
+        $request = LessonRequest::for($lesson, 'Test Justification');
 
-        $this->assertEquals(1, RegisterLessonRequest::count());
+        $this->assertEquals(1, LessonRequest::count());
         $this->assertEquals($lesson->id, $request->lesson->id);
         $this->assertEquals('Test Justification', $request->justification);
     }
 
     /** @test */
-    public function cannot_create_request_for_a_lesson_that_is_not_expired()
+    public function create_a_rectification_request_for_a_lesson()
+    {
+        $lesson = Lesson::factory()->registered()->create();
+
+        $request = LessonRequest::for($lesson, 'Test Justification');
+
+        $this->assertEquals(1, LessonRequest::count());
+        $this->assertEquals($lesson->id, $request->lesson->id);
+        $this->assertEquals('Test Justification', $request->justification);
+    }
+
+    /** @test */
+    public function cannot_create_expiration_request_for_a_lesson_that_is_not_expired()
     {
         $lesson = Lesson::factory()->create();
 
-        $request = RegisterLessonRequest::for($lesson, 'Test Justification');
+        $request = LessonRequest::for($lesson, 'Test Justification');
 
-        $this->assertEquals(0, RegisterLessonRequest::count());
+        $this->assertEquals(0, LessonRequest::count());
     }
 
     /** @test */
-    public function can_check_instructor_requester()
+    public function cannot_create_a_rectification_request_for_a_lesson_that_is_not_registered()
     {
-        $lesson = Lesson::factory()->expired()->create();
-        $request = RegisterLessonRequest::for($lesson, 'Test Justification');
-        $requester = $request->lesson->instructor;
-        $notRequester = \App\Models\User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
+        $lesson = Lesson::factory()->notRegistered()->create();
 
-        $resultForRequester = $request->isForInstructor($requester);
-        $resultForNotRequester = $request->isForInstructor($notRequester);
-        
-        $this->assertTrue($resultForRequester);
-        $this->assertFalse($resultForNotRequester);
-    }
+        $request = LessonRequest::for($lesson, 'Test Justification');
 
-    /** @test */
-    public function get_requester()
-    {
-        $lesson = Lesson::factory()->expired()->create();
-        $request = RegisterLessonRequest::for($lesson, 'Test Justification');
-        
-        $result = $request->instructor;
-
-        $this->assertEquals($lesson->instructor->id, $result->id);
+        $this->assertEquals(0, LessonRequest::count());
     }
 
     /** @test */
@@ -79,7 +75,21 @@ class RegisterLessonRequestTest extends TestCase
     }
 
     /** @test */
-    public function can_check_request_is_released()
+    public function release_registered_lesson_to_rectification()
+    {
+        $lesson = Lesson::factory()->registered()->hasRequests(1)->create();
+        $request = $lesson->openRequest();
+
+        $request->release();
+
+        $request->refresh();
+        $this->assertNotNull($request->released_at);
+        $this->assertInstanceOf(Carbon::class, $request->released_at);
+        $this->assertEquals(now()->format('d-m-Y'), $request->released_at->format('d-m-Y'));
+    }
+
+    /** @test */
+    public function can_check_expiration_request_is_released()
     {
         $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
         $request = $lesson->openRequest();
@@ -91,7 +101,19 @@ class RegisterLessonRequestTest extends TestCase
     }
 
     /** @test */
-    public function can_check_request_is_not_released()
+    public function can_check_rectification_request_is_released()
+    {
+        $lesson = Lesson::factory()->registered()->hasRequests(1)->create();
+        $request = $lesson->openRequest();
+        $request->release();
+
+        $result = $request->isReleased();
+
+        $this->assertTrue($result);
+    }
+
+    /** @test */
+    public function can_check_expiration_request_is_not_released()
     {
         $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
         $request = $lesson->openRequest();
@@ -102,9 +124,26 @@ class RegisterLessonRequestTest extends TestCase
     }
 
     /** @test */
-    public function releasing_a_lesson_already_released_should_throw_an_exception()
+    public function releasing_an_expired_lesson_already_released_should_throw_an_exception()
     {
         $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
+        $request = $lesson->openRequest();
+        $request->release();
+
+        try {
+            $request->release();
+        } catch (RequestAlreadyReleasedException $exception) {
+            $this->assertTrue(true);
+            return;
+        }
+
+        $this->fail('Trying to released a lesson already released should throw an exception');
+    }
+
+    /** @test */
+    public function releasing_a_lesson_already_released_to_rectify_should_throw_an_exception()
+    {
+        $lesson = Lesson::factory()->registered()->hasRequests(1)->create();
         $request = $lesson->openRequest();
         $request->release();
 
@@ -208,5 +247,31 @@ class RegisterLessonRequestTest extends TestCase
         $result = $request->isSolved();
 
         $this->assertFalse($result);
+    }
+
+    /** @test */
+    public function get_requester()
+    {
+        $lesson = Lesson::factory()->expired()->create();
+        $request = LessonRequest::for($lesson, 'Test Justification');
+        
+        $result = $request->instructor;
+
+        $this->assertEquals($lesson->instructor->id, $result->id);
+    }
+
+    /** @test */
+    public function can_check_instructor_requester()
+    {
+        $lesson = Lesson::factory()->expired()->create();
+        $request = LessonRequest::for($lesson, 'Test Justification');
+        $requester = $request->lesson->instructor;
+        $notRequester = \App\Models\User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
+
+        $resultForRequester = $request->isForInstructor($requester);
+        $resultForNotRequester = $request->isForInstructor($notRequester);
+        
+        $this->assertTrue($resultForRequester);
+        $this->assertFalse($resultForNotRequester);
     }
 }

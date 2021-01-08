@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Lesson;
 use App\Models\RectifyLessonRequest;
 use App\Models\RegisterLessonRequest;
+use App\Models\LessonRequest;
 
 class LessonRequestController extends Controller
 {
-    public function show(RegisterLessonRequest $request)
+    public function show(LessonRequest $request)
     {
         abort_if(request()->user()->cannot('view', $request), 401);
 
@@ -17,40 +18,27 @@ class LessonRequestController extends Controller
 
     public function create(Lesson $lesson)
     {
-        if ($lesson->isRegistered()) {
-            abort_if(request()->user()->cannot('createForLesson', [RectifyLessonRequest::class, $lesson]), 401);
-            $requestType = 'rectification';
+        abort_if(request()->user()->cannot('createForLesson', [LessonRequest::class, $lesson]), 401);
 
-        } else {
-            abort_if(request()->user()->cannot('createForLesson', [RegisterLessonRequest::class, $lesson]), 401);
-            $requestType = 'expiration';
-        }
+        $requestType = LessonRequest::availableRequestTypeForLesson($lesson);
 
         return view('lessons.requests.create', compact('lesson', 'requestType'));
     }
 
     public function store(Lesson $lesson)
     {
-        if ($lesson->isRegistered()) {
-            abort_if(request()->user()->cannot('storeForLesson', [RectifyLessonRequest::class, $lesson]), 401);
-        } else {
-            abort_if(request()->user()->cannot('storeForLesson', [RegisterLessonRequest::class, $lesson]), 401);
-        }
+        abort_if(request()->user()->cannot('storeForLesson', [LessonRequest::class, $lesson]), 401);
 
         $validatedData = request()->validate([
             'justification' => 'required|string',
         ]);
 
-        if ($lesson->isRegistered()) {
-            $request = RectifyLessonRequest::for($lesson, $validatedData['justification']);
-        } else {
-            $request = RegisterLessonRequest::for($lesson, $validatedData['justification']);
-        }
+        $request = LessonRequest::for($lesson, $validatedData['justification']);
 
         return view('requests.show', compact('request'));
     }
 
-    public function update(RegisterLessonRequest $request)
+    public function update(LessonRequest $request)
     {
         abort_if(request()->user()->cannot('update', $request), 401);
 

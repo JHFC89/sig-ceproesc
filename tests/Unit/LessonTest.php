@@ -113,7 +113,7 @@ class LessonTest extends TestCase
     /** @test */
     public function can_check_it_has_an_open_request_to_rectify()
     {
-        $lesson = Lesson::factory()->registered()->hasRectifications(1)->create();
+        $lesson = Lesson::factory()->registered()->hasRequests(1)->create();
 
         $result = $lesson->hasOpenRequest();
 
@@ -156,7 +156,7 @@ class LessonTest extends TestCase
     public function get_open_request_to_rectify()
     {
         $lesson = Lesson::factory()->registered()->create();
-        $request = $lesson->rectifications()->create(['justification' => 'test justification']);
+        $request = $lesson->requests()->create(['justification' => 'test justification']);
 
         $result = $lesson->openRequest();
 
@@ -177,7 +177,7 @@ class LessonTest extends TestCase
     /** @test */
     public function can_check_it_has_a_pending_request_to_rectify()
     {
-        $lesson = Lesson::factory()->registered()->hasRectifications(1)->create();
+        $lesson = Lesson::factory()->registered()->hasRequests(1)->create();
         $lesson->openRequest()->release();
 
         $result = $lesson->hasPendingRequest();
@@ -199,7 +199,7 @@ class LessonTest extends TestCase
     /** @test */
     public function can_check_it_does_not_have_a_pending_request_when_has_an_open_request_to_rectify()
     {
-        $lesson = Lesson::factory()->registered()->hasRectifications(1)->create();
+        $lesson = Lesson::factory()->registered()->hasRequests(1)->create();
         $lesson->openRequest();
 
         $result = $lesson->hasPendingRequest();

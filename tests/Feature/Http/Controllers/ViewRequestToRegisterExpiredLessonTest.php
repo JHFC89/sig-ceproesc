@@ -5,7 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Lesson;
-use App\Models\RegisterLessonRequest;
+use App\Models\LessonRequest;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -26,7 +26,7 @@ class ViewRequestToRegisterExpiredLessonTest extends TestCase
         $this->lesson = Lesson::factory()->expired()->hasNovices(3)->create();
         $this->lesson->setTestData();
 
-        $this->request = RegisterLessonRequest::for($this->lesson, 'Test Justification'); 
+        $this->request = LessonRequest::for($this->lesson, 'Test Justification'); 
 
         $this->instructor = $this->lesson->instructor;
     }
@@ -34,6 +34,7 @@ class ViewRequestToRegisterExpiredLessonTest extends TestCase
     /** @test */
     public function view_a_request_to_register_an_expired_lesson()
     {
+        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->instructor)->get(route('requests.show', ['request' => $this->request]));
 
         $response

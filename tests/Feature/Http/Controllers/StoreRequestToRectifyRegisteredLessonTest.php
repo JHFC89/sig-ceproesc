@@ -5,7 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Lesson;
-use App\Models\RectifyLessonRequest;
+use App\Models\LessonRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class StoreRequestToRectifyRegisteredLessonTest extends TestCase
@@ -35,9 +35,10 @@ class StoreRequestToRectifyRegisteredLessonTest extends TestCase
         $response
             ->assertOk()
             ->assertViewIs('requests.show');
-        $this->assertEquals(1, RectifyLessonRequest::count());
-        $this->assertEquals($this->lesson->id, RectifyLessonRequest::first()->lesson->id);
-        $this->assertEquals('Test Request Justification', RectifyLessonRequest::first()->justification);
+        $this->assertEquals(1, LessonRequest::count());
+        $this->assertEquals($this->lesson->id, LessonRequest::first()->lesson->id);
+        $this->assertEquals('Test Request Justification', LessonRequest::first()->justification);
+        $this->assertTrue(LessonRequest::first()->isRectification());
     }
 
     /** @test */
@@ -46,7 +47,7 @@ class StoreRequestToRectifyRegisteredLessonTest extends TestCase
         $response = $this->post(route('lessons.requests.store', ['lesson' => $this->lesson]), $this->data);
 
         $response->assertRedirect(route('login'));
-        $this->assertEquals(0, RectifyLessonRequest::count());
+        $this->assertEquals(0, LessonRequest::count());
     }
 
     /** @test */
@@ -57,7 +58,7 @@ class StoreRequestToRectifyRegisteredLessonTest extends TestCase
         $response = $this->actingAs($notAnInstructor)->post(route('lessons.requests.store', ['lesson' => $this->lesson]), $this->data);
 
         $response->assertUnauthorized();
-        $this->assertEquals(0, RectifyLessonRequest::count());
+        $this->assertEquals(0, LessonRequest::count());
     }
 
     /** @test */
@@ -68,7 +69,7 @@ class StoreRequestToRectifyRegisteredLessonTest extends TestCase
         $response = $this->actingAs($instructorForAnotherLesson)->post(route('lessons.requests.store', ['lesson' => $this->lesson]), $this->data);
 
         $response->assertUnauthorized();
-        $this->assertEquals(0, RectifyLessonRequest::count());
+        $this->assertEquals(0, LessonRequest::count());
     }
 
     /** @test */
@@ -79,25 +80,25 @@ class StoreRequestToRectifyRegisteredLessonTest extends TestCase
         $response = $this->actingAs($this->instructor)->post(route('lessons.requests.store', ['lesson' => $lessonNotRegistered]), $this->data);
 
         $response->assertUnauthorized();
-        $this->assertEquals(0, RectifyLessonRequest::count());
+        $this->assertEquals(0, LessonRequest::count());
     }
 
     /** @test */
     public function cannot_create_a_request_to_rectify_a_lesson_that_has_an_open_request()
     {
-        $this->lesson->rectifications()->create(['justification' => 'Open Request Justification']);
+        $this->lesson->requests()->create(['justification' => 'Open Request Justification']);
 
         $response = $this->actingAs($this->instructor)->post(route('lessons.requests.store', ['lesson' => $this->lesson]), $this->data);
 
         $response->assertUnauthorized();
-        $this->assertEquals(1, RectifyLessonRequest::count());
-        $this->assertEquals('Open Request Justification', RectifyLessonRequest::first()->justification);
+        $this->assertEquals(1, LessonRequest::count());
+        $this->assertEquals('Open Request Justification', LessonRequest::first()->justification);
     }
 
     /** @test */
     public function cannot_create_a_request_to_rectify_for_a_lesson_that_has_a_pending_request()
     {
-        $request = $this->lesson->rectifications()->create(['justification' => 'Open Request Justification']);
+        $request = $this->lesson->requests()->create(['justification' => 'Open Request Justification']);
         $request->release();
 
         $response = $this->actingAs($this->instructor)->post(route('lessons.requests.store', ['lesson' => $this->lesson]), $this->data);

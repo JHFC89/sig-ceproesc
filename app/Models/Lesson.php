@@ -211,28 +211,16 @@ class Lesson extends Model
 
     public function hasOpenRequest()
     {
-        if ($this->isRegistered()) {
-            return $this->rectifications()->whereNull('released_at')->count() > 0;
-        }
-
         return $this->requests()->whereNull('released_at')->count() > 0;
     }
 
     public function openRequest()
     {
-        if ($this->isRegistered()) {
-            return $this->rectifications()->whereNull('released_at')->first();
-        }
-
         return $this->requests()->whereNull('released_at')->first();
     }
 
     public function hasPendingRequest($notRegisteringNow = true)
     {
-        if ($this->isRegistered() && $notRegisteringNow) {
-            return $this->rectifications()->whereNotNull('released_at')->whereNull('solved_at')->count() > 0;
-        }
-
         return $this->requests()->whereNotNull('released_at')->whereNull('solved_at')->count() > 0;
     }
 
@@ -255,12 +243,7 @@ class Lesson extends Model
 
     public function requests()
     {
-        return $this->hasMany(RegisterLessonRequest::class);
-    }
-
-    public function rectifications()
-    {
-        return $this->hasMany(RectifyLessonRequest::class);
+        return $this->hasMany(LessonRequest::class);
     }
 
     public function instructor()

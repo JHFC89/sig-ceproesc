@@ -5,7 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Lesson;
-use App\Models\RegisterLessonRequest;
+use App\Models\LessonRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class StoreRequestToRegisterExpiredLessonTest extends TestCase
@@ -33,6 +33,7 @@ class StoreRequestToRegisterExpiredLessonTest extends TestCase
     /** @test */
     public function a_request_to_register_an_expired_lesson_can_be_created()
     {
+        $this->withoutExceptionHandling();
         $data = ['justification' => 'Test Request Justification'];
 
         $response = $this->actingAs($this->instructor)->post(route('lessons.requests.store', ['lesson' => $this->lesson]), $data);
@@ -40,9 +41,10 @@ class StoreRequestToRegisterExpiredLessonTest extends TestCase
         $response
             ->assertOk()
             ->assertViewIs('requests.show');
-        $this->assertEquals(1, RegisterLessonRequest::count());
-        $this->assertEquals($this->lesson->id, RegisterLessonRequest::first()->lesson->id);
-        $this->assertEquals('Test Request Justification', RegisterLessonRequest::first()->justification);
+        $this->assertEquals(1, LessonRequest::count());
+        $this->assertEquals($this->lesson->id, LessonRequest::first()->lesson->id);
+        $this->assertEquals('Test Request Justification', LessonRequest::first()->justification);
+        $this->assertFalse(LessonRequest::first()->isRectification());
     }
 
     /** @test */
@@ -51,7 +53,7 @@ class StoreRequestToRegisterExpiredLessonTest extends TestCase
         $response = $this->post(route('lessons.requests.store', ['lesson' => $this->lesson]), $this->data);
 
         $response->assertRedirect(route('login'));
-        $this->assertEquals(0, RegisterLessonRequest::count());
+        $this->assertEquals(0, LessonRequest::count());
     }
 
     /** @test */
@@ -62,7 +64,7 @@ class StoreRequestToRegisterExpiredLessonTest extends TestCase
         $response = $this->actingAs($notAnInstructor)->post(route('lessons.requests.store', ['lesson' => $this->lesson]), $this->data);
 
         $response->assertUnauthorized();
-        $this->assertEquals(0, RegisterLessonRequest::count());
+        $this->assertEquals(0, LessonRequest::count());
     }
 
     /** @test */
@@ -73,7 +75,7 @@ class StoreRequestToRegisterExpiredLessonTest extends TestCase
         $response = $this->actingAs($instructorForAnotherLesson)->post(route('lessons.requests.store', ['lesson' => $this->lesson]), $this->data);
 
         $response->assertUnauthorized();
-        $this->assertEquals(0, RegisterLessonRequest::count());
+        $this->assertEquals(0, LessonRequest::count());
     }
 
     /** @test */
@@ -84,7 +86,7 @@ class StoreRequestToRegisterExpiredLessonTest extends TestCase
         $response = $this->actingAs($this->instructor)->post(route('lessons.requests.store', ['lesson' => $lessonNotExpired]), $this->data);
 
         $response->assertUnauthorized();
-        $this->assertEquals(0, RegisterLessonRequest::count());
+        $this->assertEquals(0, LessonRequest::count());
     }
 
     /** @test */
@@ -95,8 +97,8 @@ class StoreRequestToRegisterExpiredLessonTest extends TestCase
         $response = $this->actingAs($this->instructor)->post(route('lessons.requests.store', ['lesson' => $this->lesson]), $this->data);
 
         $response->assertUnauthorized();
-        $this->assertEquals(1, RegisterLessonRequest::count());
-        $this->assertEquals('Open Request Justification', RegisterLessonRequest::first()->justification);
+        $this->assertEquals(1, LessonRequest::count());
+        $this->assertEquals('Open Request Justification', LessonRequest::first()->justification);
     }
 
     /** @test */

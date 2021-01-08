@@ -5,7 +5,6 @@ namespace Tests\Feature\Http\Controllers;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Lesson;
-use App\Models\RegisterLessonRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ReleasingExpiredLessonTest extends TestCase
