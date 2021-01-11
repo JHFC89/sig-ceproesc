@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Lesson;
 use App\Models\CourseClass;
-use App\Models\RegisterLessonRequest;
+use App\Models\LessonRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -154,7 +154,7 @@ class ViewLessonTest extends TestCase
     public function instructor_should_see_a_warning_when_a_lesson_has_an_open_request_to_register()
     {
         $this->travel(25)->hours();
-        RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
+        LessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
 
         $response = $this->actingAs($this->instructor)->get('lessons/' . $this->notRegisteredLesson->id);
 
@@ -193,7 +193,7 @@ class ViewLessonTest extends TestCase
     public function instructor_can_see_a_link_to_view_an_open_request_for_the_lesson()
     {
         $this->travel(25)->hours();
-        $request = RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
+        $request = LessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
 
         $response = $this->actingAs($this->instructor)->get('lessons/' . $this->notRegisteredLesson->id);
 
@@ -207,7 +207,7 @@ class ViewLessonTest extends TestCase
     public function instructor_should_see_a_warning_that_an_expired_lesson_is_released_to_register()
     {
         $this->travel(25)->hours();
-        $request = RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
+        $request = LessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
         $request->release();
 
         $response = $this->actingAs($this->instructor)->get(route('lessons.show', ['lesson' => $this->notRegisteredLesson]));
@@ -221,7 +221,7 @@ class ViewLessonTest extends TestCase
     public function instructor_should_see_a_link_to_register_an_expired_lesson_released_to_register()
     {
         $this->travel(25)->hours();
-        $request = RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
+        $request = LessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
         $request->release();
 
         $response = $this->actingAs($this->instructor)->get(route('lessons.show', ['lesson' => $this->notRegisteredLesson]));
@@ -266,7 +266,7 @@ class ViewLessonTest extends TestCase
     public function coordinator_should_see_a_warning_and_link_to_view_an_open_request_to_register()
     {
         $this->travel(25)->hours();
-        $request = RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
+        $request = LessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
 
         $response = $this->actingAs($this->coordinator)->get(route('lessons.show', ['lesson' => $this->notRegisteredLesson]));
 
@@ -281,7 +281,7 @@ class ViewLessonTest extends TestCase
     public function coordinator_should_see_a_warning_that_an_expired_lesson_has_a_pending_request()
     {
         $this->travel(25)->hours();
-        $request = RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
+        $request = LessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
         $request->release();
 
         $response = $this->actingAs($this->coordinator)->get(route('lessons.show', ['lesson' => $this->notRegisteredLesson]));
@@ -295,7 +295,7 @@ class ViewLessonTest extends TestCase
     public function coordinator_cannot_see_a_link_to_register_an_expired_lesson_released_to_register()
     {
         $this->travel(25)->hours();
-        $request = RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
+        $request = LessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
         $request->release();
 
         $response = $this->actingAs($this->coordinator)->get(route('lessons.show', ['lesson' => $this->notRegisteredLesson]));
@@ -426,7 +426,7 @@ class ViewLessonTest extends TestCase
     public function novice_cannot_view_warning_and_link_to_view_an_open_request()
     {
         $this->travel(25)->hours();
-        $request = RegisterLessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
+        $request = LessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
 
         $response = $this->actingAs($this->novices->first())->get(route('lessons.show', ['lesson' => $this->notRegisteredLesson]));
 
@@ -546,7 +546,7 @@ class ViewLessonTest extends TestCase
             $courseClass->subscribe($novice);
             $lesson->enroll($novice);
         });
-        $request = RegisterLessonRequest::for($lesson, 'Fake Justification');
+        $request = LessonRequest::for($lesson, 'Fake Justification');
 
         $response = $this->actingAs($employer)->get(route('lessons.show', ['lesson' => $lesson]));
 
