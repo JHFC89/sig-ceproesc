@@ -7,7 +7,7 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Lesson;
 use App\Models\CourseClass;
-use App\Models\RegisterLessonRequest;
+use App\Models\LessonRequest;
 use App\View\Components\Lesson\ForWeekList;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -146,7 +146,7 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     public function instructor_will_see_a_warning_when_a_lesson_has_an_open_request_to_register()
     {
         $openRequestLesson = Lesson::factory()->expired()->instructor($this->instructor)->create();
-        RegisterLessonRequest::for($openRequestLesson, 'Fake Justification');
+        LessonRequest::for($openRequestLesson, 'Fake Justification');
 
         $component = $this->component(ForWeekList::class, ['title' => 'Week', 'user' => $this->instructor]);
         
@@ -179,7 +179,7 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     public function instructor_cannot_see_a_link_to_request_permission_to_register_a_lesson_with_an_open_request()
     {
         $openRequestLesson = Lesson::factory()->expired()->instructor($this->instructor)->create();
-        RegisterLessonRequest::for($openRequestLesson, 'Fake Justification');
+        LessonRequest::for($openRequestLesson, 'Fake Justification');
 
         $component = $this->component(ForWeekList::class, ['title' => 'Week', 'user' => $this->instructor]);
         
@@ -190,7 +190,7 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     public function instructor_cannot_see_link_to_register_a_lesson_with_an_open_request()
     {
         $openRequestLesson = Lesson::factory()->expired()->instructor($this->instructor)->create();
-        RegisterLessonRequest::for($openRequestLesson, 'Fake Justification');
+        LessonRequest::for($openRequestLesson, 'Fake Justification');
 
         $component = $this->component(ForWeekList::class, ['user' => $this->instructor]);
 
@@ -293,7 +293,7 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     {
         $openRequestLesson = Lesson::factory()->expired()->instructor($this->instructor)->create();
         $openRequestLesson->enroll($this->novice);
-        RegisterLessonRequest::for($openRequestLesson, 'Fake Justification');
+        LessonRequest::for($openRequestLesson, 'Fake Justification');
 
         $component = $this->component(ForWeekList::class, ['title' => 'Week', 'user' => $this->novice]);
         

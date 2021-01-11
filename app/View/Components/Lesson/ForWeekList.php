@@ -58,7 +58,7 @@ class ForWeekList extends Component
 
     public function showRequestButton(Lesson $lesson)
     {
-        return $this->user->can('createForLesson', [RegisterLessonRequest::class, $lesson]);
+        return $this->user->can('createForLesson', [LessonRequest::class, $lesson]);
     }
 
     public function showOpenRequestWarning(Lesson $lesson)

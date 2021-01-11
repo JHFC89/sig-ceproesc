@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lesson;
-use App\Models\RectifyLessonRequest;
-use App\Models\RegisterLessonRequest;
 use App\Models\LessonRequest;
 
 class LessonRequestController extends Controller

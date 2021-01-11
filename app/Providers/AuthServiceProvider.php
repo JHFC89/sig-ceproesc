@@ -5,8 +5,8 @@ namespace App\Providers;
 use App\Models\Lesson;
 use App\Policies\LessonPolicy;
 use Illuminate\Support\Facades\Gate;
-use App\Models\RegisterLessonRequest;
-use App\Policies\RegisterLessonRequestPolicy;
+use App\Models\LessonRequest;
+use App\Policies\LessonRequestPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -18,7 +18,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
-        RegisterLessonRequest::class => RegisterLessonRequestPolicy::class,
+        LessonRequest::class => LessonRequestPolicy::class,
         Lesson::class => LessonPolicy::class,
     ];
 
