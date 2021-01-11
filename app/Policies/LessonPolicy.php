@@ -117,7 +117,7 @@ class LessonPolicy
     {
         $this->message = 'Lesson already registered';
 
-        return $lesson->isRegistered();
+        return $lesson->isRegistered() && !$lesson->hasPendingRequest();
     }
 
     private function lessonNotAvailable(Lesson $lesson)

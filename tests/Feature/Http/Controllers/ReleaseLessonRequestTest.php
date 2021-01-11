@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\Lesson;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ReleasingExpiredLessonTest extends TestCase
+class ReleaseLessonRequestTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -21,13 +21,13 @@ class ReleasingExpiredLessonTest extends TestCase
     {
         parent::setUp();
 
-        $this->lesson = Lesson::factory()->expired()->hasRequests(1)->create();
+        $this->lesson = Lesson::factory()->expired()->hasRequests(1, ['rectification' => false])->create();
         $this->request = $this->lesson->openRequest();
         $this->coordinator = User::factory()->hasRoles(1, ['name' => 'coordinator'])->create();
     }
 
     /** @test */
-    public function releasing_a_request_for_an_expired_lesson()
+    public function releasing_a_request_to_register_an_expired_lesson()
     {
         $request = $this->lesson->openRequest();
 
@@ -39,6 +39,24 @@ class ReleasingExpiredLessonTest extends TestCase
             ->assertViewIs('requests.show')
             ->assertSessionHas('status', 'Aula liberada para registro com sucesso!')
             ->assertSee('Aula liberada para registro com sucesso!');
+        $this->assertNotNull($request->released_at);
+        $this->assertEquals(now()->format('d-m-Y'), $request->released_at->format('d-m-Y'));
+    }
+
+    /** @test */
+    public function releasing_a_request_to_rectify_a_registered_lesson()
+    {
+        $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
+        $request = $lesson->openRequest();
+
+        $response = $this->actingAs($this->coordinator)->patch(route('requests.update', ['request' => $request]));
+        $request->refresh();
+
+        $response
+            ->assertOk()
+            ->assertViewIs('requests.show')
+            ->assertSessionHas('status', 'Aula liberada para retificação com sucesso!')
+            ->assertSee('Aula liberada para retificação com sucesso!');
         $this->assertNotNull($request->released_at);
         $this->assertEquals(now()->format('d-m-Y'), $request->released_at->format('d-m-Y'));
     }

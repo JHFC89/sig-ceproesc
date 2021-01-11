@@ -151,7 +151,7 @@ class ViewLessonTest extends TestCase
     }
 
     /** @test */
-    public function instructor_should_see_a_warning_when_a_lesson_has_an_open_request_to_register()
+    public function instructor_should_see_a_warning_when_an_expired_lesson_has_an_open_request_to_register()
     {
         $this->travel(25)->hours();
         LessonRequest::for($this->notRegisteredLesson, 'Fake Justification');
@@ -162,6 +162,18 @@ class ViewLessonTest extends TestCase
             ->assertOk()
             ->assertSee('Aula com pedido de liberação para registro em aberto')
             ->assertDontSee('Prazo para registro dessa aula vencido');
+    }
+
+    /** @test */
+    public function instructor_should_see_a_warning_when_a_registered_lesson_has_an_open_request_to_rectify()
+    {
+        $registeredLesson = Lesson::factory()->registered()->instructor($this->instructor)->hasRequests(1)->hasNovices(3)->create();
+
+        $response = $this->actingAs($this->instructor)->get(route('lessons.show', ['lesson' => $registeredLesson]));
+
+        $response
+            ->assertOk()
+            ->assertSee('Aula com pedido de retificação em aberto');
     }
 
     /** @test */
@@ -218,6 +230,20 @@ class ViewLessonTest extends TestCase
     }
 
     /** @test */
+    public function instructor_should_see_a_warning_that_a_rectification_is_released_to_register()
+    {
+        $lesson = Lesson::factory()->registered()->instructor($this->instructor)->hasRequests(1)->create();
+        $request = LessonRequest::for($lesson, 'Fake Justification');
+        $request->release();
+
+        $response = $this->actingAs($this->instructor)->get(route('lessons.show', ['lesson' => $lesson]));
+
+        $response
+            ->assertOk()
+            ->assertSee('Aula liberada para retificação');
+    }
+
+    /** @test */
     public function instructor_should_see_a_link_to_register_an_expired_lesson_released_to_register()
     {
         $this->travel(25)->hours();
@@ -230,6 +256,20 @@ class ViewLessonTest extends TestCase
             ->assertOk()
             ->assertSee('Registrar')
             ->assertSee(route('lessons.registers.create', ['lesson' => $this->notRegisteredLesson]));
+    }
+
+    /** @test */
+    public function instructor_should_see_a_link_to_rectify_a_registered_lesson_released_to_register()
+    {
+        $lesson = Lesson::factory()->registered()->instructor($this->instructor)->hasRequests(1)->create();
+        $lesson->openRequest()->release();
+
+        $response = $this->actingAs($this->instructor)->get(route('lessons.show', ['lesson' => $lesson]));
+
+        $response
+            ->assertOk()
+            ->assertSee('Registrar')
+            ->assertSee(route('lessons.registers.create', ['lesson' => $lesson]));
     }
 
     /** @test */
@@ -258,6 +298,33 @@ class ViewLessonTest extends TestCase
             ->assertDontSee(route('lessons.requests.create', ['lesson' => $lesson]));
 
         $responseForCoordinator
+            ->assertOk()
+            ->assertDontSee(route('lessons.requests.create', ['lesson' => $lesson]));
+    }
+
+    /** @test */
+    public function instructor_cannot_see_the_rectification_button_when_there_is_an_open_request()
+    {
+        $lesson = Lesson::factory()->registered()->hasRequests(1)->instructor($this->instructor)->hasNovices(1)->create();
+        $lesson->setTestData();
+        
+        $response = $this->actingAs($this->instructor)->get(route('lessons.show', ['lesson' => $lesson]));
+
+        $response
+            ->assertOk()
+            ->assertDontSee(route('lessons.requests.create', ['lesson' => $lesson]));
+    }
+
+    /** @test */
+    public function instructor_cannot_see_the_rectification_button_when_there_is_a_pending_request()
+    {
+        $lesson = Lesson::factory()->registered()->hasRequests(1)->instructor($this->instructor)->hasNovices(1)->create();
+        $lesson->setTestData();
+        $lesson->openRequest()->release();
+        
+        $response = $this->actingAs($this->instructor)->get(route('lessons.show', ['lesson' => $lesson]));
+
+        $response
             ->assertOk()
             ->assertDontSee(route('lessons.requests.create', ['lesson' => $lesson]));
     }

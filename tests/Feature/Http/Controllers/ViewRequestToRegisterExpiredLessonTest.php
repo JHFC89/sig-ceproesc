@@ -34,7 +34,6 @@ class ViewRequestToRegisterExpiredLessonTest extends TestCase
     /** @test */
     public function view_a_request_to_register_an_expired_lesson()
     {
-        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->instructor)->get(route('requests.show', ['request' => $this->request]));
 
         $response
@@ -46,6 +45,26 @@ class ViewRequestToRegisterExpiredLessonTest extends TestCase
             ->assertSee($this->request->justification)
             ->assertSee($this->request->lesson->formatted_date)
             ->assertSee($this->request->lesson->relatedCourseClasses());
+    }
+
+    /** @test */
+    public function view_a_request_to_rectify_registered_lesson()
+    {
+        $lesson = Lesson::factory()->registered()->hasNovices(3)->create();
+        $lesson->setTestData();
+        $request = LessonRequest::for($lesson, 'Test Justification'); 
+
+        $response = $this->actingAs($lesson->instructor)->get(route('requests.show', ['request' => $request]));
+
+        $response
+            ->assertOk()
+            ->assertViewIs('requests.show')
+            ->assertSee($request->id)
+            ->assertSee($request->created_at->format('d/m/Y'))
+            ->assertSee($request->lesson->instructor->name)
+            ->assertSee($request->justification)
+            ->assertSee($request->lesson->formatted_date)
+            ->assertSee($request->lesson->relatedCourseClasses());
     }
 
     /** @test */

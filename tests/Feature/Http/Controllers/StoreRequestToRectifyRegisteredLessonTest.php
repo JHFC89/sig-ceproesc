@@ -27,7 +27,6 @@ class StoreRequestToRectifyRegisteredLessonTest extends TestCase
     /** @test */
     public function a_request_to_rectify_a_lesson_can_be_created()
     {
-        $this->withoutExceptionHandling();
         $data = ['justification' => 'Test Request Justification'];
 
         $response = $this->actingAs($this->instructor)->post(route('lessons.requests.store', ['lesson' => $this->lesson]), $data);

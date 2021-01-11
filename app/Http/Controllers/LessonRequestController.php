@@ -44,7 +44,11 @@ class LessonRequestController extends Controller
 
         $request->release();
 
-        session()->flash('status', 'Aula liberada para registro com sucesso!');
+        if ($request->isRectification()) {
+            session()->flash('status', 'Aula liberada para retificação com sucesso!');
+        } else {
+            session()->flash('status', 'Aula liberada para registro com sucesso!');
+        }
 
         return view('requests.show', compact('request'));
     }

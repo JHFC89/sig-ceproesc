@@ -4,25 +4,27 @@
 
 @section('content')
 
-    @can('createForLesson', [App\Models\RegisterLessonRequest::class, $lesson])
+    @can('createForLesson', [App\Models\LessonRequest::class, $lesson])
+        @if($lesson->isExpired())
         <x-alert 
             type="warning" 
             message="Prazo para registro dessa aula vencido." 
             actionText="Solicitar liberação da aula." 
             :actionLink="route('lessons.requests.create', ['lesson' => $lesson])"
         />
+        @endif
     @elsecan('view', $lesson->requests->first())
         @if($lesson->hasPendingRequest())
         <x-alert 
             type="success" 
-            message="Aula vencida liberada para registro." 
+            :message="$lesson->isRegistered() ? 'Aula liberada para retificação.' : 'Aula vencida liberada para registro.'" 
             actionText="{{ Auth::user()->can('createRegister', $lesson) ? 'Registrar' : '' }}" 
             :actionLink="Auth::user()->can('createRegister', $lesson) ? route('lessons.registers.create', ['lesson' => $lesson]) : ''"
         />
         @elseif($lesson->hasOpenRequest())
         <x-alert 
             type="attention" 
-            message="Aula com pedido de liberação para registro em aberto." 
+            :message="$lesson->openRequest()->isRectification() ? 'Aula com pedido de retificação em aberto.' : 'Aula com pedido de liberação para registro em aberto.'" 
             actionText="Ver solicitação." 
             :actionLink="route('requests.show', ['request' => $lesson->openRequest()])"
         />
@@ -117,10 +119,10 @@
     </x-card.list.table-layout>
     @endif
 
-    @if($lesson->isRegistered() && Auth::user()->isInstructor())
+    @can('createForLesson', [App\Models\LessonRequest::class, $lesson])
     <div class="flex justify-end">
         <a href="{{ route('lessons.requests.create', ['lesson' => $lesson]) }}" class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown">retificar registro</a>
     </div>
-    @endif
+    @endcan
 
 @endsection
