@@ -595,6 +595,29 @@ class LessonTest extends TestCase
     }
 
     /** @test */
+    public function can_update_the_register_of_a_registered_lesson_when_there_is_a_peding_rectification_request()
+    {
+        $lesson = Lesson::factory()->notRegistered()->hasNovices(1)->hasRequests(1)->create();
+        $novice = $lesson->novices->first();
+        $lesson->registerFor($novice)->present()->observation('test observation for a novice')->complete();
+        $lesson->register = 'original register';
+        $lesson->register();
+        $lesson->openRequest()->release();
+        $originalRegisterDate = $lesson->registered_at;
+
+        $this->travel(5)->minutes();
+        $lesson->registerFor($novice)->absent()->observation('update observation for novice')->complete();
+        $lesson->register = 'updated register';
+        $lesson->register();
+
+        $lesson->refresh();
+        $this->assertTrue($lesson->isAbsent($novice));
+        $this->assertEquals('update observation for novice', $lesson->observationFor($novice));
+        $this->assertEquals('updated register', $lesson->register);
+        $this->assertEquals($originalRegisterDate, $lesson->registered_at);
+    }
+
+    /** @test */
     public function get_an_observation_registered_for_a_novice()
     {
         $lesson = Lesson::factory()->notRegistered()->hasNovices(1)->create();

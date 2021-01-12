@@ -101,8 +101,8 @@ class Lesson extends Model
             'Trying to register presence to a novice that is not enrolled to this lesson.'
         );
 
-        throw_unless(
-            (! $this->isRegistered()),
+        throw_if(
+            ($this->isRegistered() && !$this->hasPendingRequest()),
             LessonRegisteredException::class,
             'Trying to register a lesson that is already registered.'
         );
@@ -189,11 +189,13 @@ class Lesson extends Model
 
     public function register()
     {
-        $this->registered_at = now();
-        $this->save();
-
-        if ($this->hasPendingRequest(false)) {
+        if ($this->hasPendingRequest()) {
+            $this->registered_at = $this->registered_at ?: now();
+            $this->save();
             $this->pendingRequest()->solve($this);
+        } else {
+            $this->registered_at = now();
+            $this->save();
         }
     }
 
@@ -219,7 +221,7 @@ class Lesson extends Model
         return $this->requests()->whereNull('released_at')->first();
     }
 
-    public function hasPendingRequest($notRegisteringNow = true)
+    public function hasPendingRequest()
     {
         return $this->requests()->whereNotNull('released_at')->whereNull('solved_at')->count() > 0;
     }
