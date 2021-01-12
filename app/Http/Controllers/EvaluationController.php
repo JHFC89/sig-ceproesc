@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Lesson;
+use Illuminate\Http\Request;
+
+class EvaluationController extends Controller
+{
+    public function store(Lesson $lesson)
+    {
+        abort_unless(auth()->user()->isInstructor(), 401);
+
+        $data = request()->validate([
+            'label' => 'required|string',
+            'description' => 'required|string',
+        ]);
+
+        $lesson->evaluation()->create($data);
+
+        return view('evaluations.show');
+    }
+}

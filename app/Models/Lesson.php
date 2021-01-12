@@ -253,6 +253,11 @@ class Lesson extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function evaluation()
+    {
+        return $this->hasOne(Evaluation::class);
+    }
+
     public function scopeEnrolled($query, int $noviceId)
     {
         return $query->whereHas('novices', function (builder $query) use ($noviceId) {

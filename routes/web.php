@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LessonController;
+use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\LessonRequestController;
 use App\Http\Controllers\LessonRegisterController;
 use App\Http\Controllers\ForWeekLessonListController;
@@ -30,6 +31,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
     Route::get('/requests/{request}', [LessonRequestController::class, 'show'])->name('requests.show');
     Route::patch('/requests/{request}', [LessonRequestController::class, 'update'])->name('requests.update');
+   
+    Route::post('/lessons/{lesson}/evaluations', [EvaluationController::class, 'store'])->name('lessons.evaluations.store');
 });
 
 Route::get('/dashboard', function () {
