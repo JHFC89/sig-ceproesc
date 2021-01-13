@@ -9,7 +9,7 @@ class EvaluationController extends Controller
 {
     public function store(Lesson $lesson)
     {
-        abort_unless(auth()->user()->isInstructor(), 401);
+        abort_unless(auth()->user()->isInstructor() && $lesson->isForInstructor(auth()->user()), 401);
 
         $data = request()->validate([
             'label' => 'required|string',

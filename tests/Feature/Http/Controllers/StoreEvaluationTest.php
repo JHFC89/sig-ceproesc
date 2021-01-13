@@ -22,14 +22,14 @@ class StoreEvaluationTest extends TestCase
     {
         parent::setUp();
 
-        $this->lesson = Lesson::factory()->create();
+        $this->instructor = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
+
+        $this->lesson = Lesson::factory()->instructor($this->instructor)->create();
 
         $this->data = [
             'label' => 'test evaluation',
             'description' => 'test description',
         ];
-
-        $this->instructor = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
     }
 
     /** @test */
@@ -45,6 +45,17 @@ class StoreEvaluationTest extends TestCase
         $this->assertEquals('test evaluation', $evaluation->label);
         $this->assertEquals('test description', $evaluation->description);
         $this->assertEquals($this->lesson->id, $evaluation->lesson->id);
+    }
+
+    /** @test */
+    public function only_the_instructor_for_the_lesson_can_store_an_evaluation_for_it()
+    {
+        $instructorForAnotherLesson = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
+
+        $response = $this->actingAs($instructorForAnotherLesson)->post(route('lessons.evaluations.store', ['lesson' => $this->lesson]), $this->data);
+
+        $response->assertUnauthorized();
+        $this->assertEquals(0, Evaluation::count());
     }
 
     /** @test */
