@@ -101,6 +101,26 @@ class LessonTest extends TestCase
     }
 
     /** @test */
+    public function can_check_if_it_has_an_evaluation()
+    {
+        $lesson = Lesson::factory()->hasEvaluation(1)->create();
+
+        $result = $lesson->hasEvaluation();
+
+        $this->assertTrue($result);
+    }
+
+    /** @test */
+    public function can_check_if_it_does_not_have_an_evaluation()
+    {
+        $lesson = Lesson::factory()->create();
+
+        $result = $lesson->hasEvaluation();
+
+        $this->assertFalse($result);
+    }
+
+    /** @test */
     public function can_check_it_has_an_open_request_to_register()
     {
         $lesson = Lesson::factory()->expired()->hasRequests(1)->create();

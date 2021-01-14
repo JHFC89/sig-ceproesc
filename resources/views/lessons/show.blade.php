@@ -39,7 +39,7 @@
             <x-card.list.description-item label="instrutor" :description="$lesson->instructor->name"/>
             <x-card.list.description-item label="data" :description="$lesson->formatted_date"/>
             @if(Auth::user()->isNovice())
-                <x-card.list.description-item label="turma" :description="Auth::user()->class"/>
+            <x-card.list.description-item label="turma" :description="Auth::user()->class"/>
             @else
             <x-card.list.description-item label="turma" :description="$lesson->formatted_course_classes"/>
             @endif
@@ -51,6 +51,9 @@
             @endif
             @if($lesson->isRegistered())
             <x-card.list.description-item type="text" label="registro" :description="$lesson->register"/>
+            @endif
+            @if(Auth::user()->can('createForLesson', [App\Models\Evaluation::class, $lesson]))
+            <x-card.list.description-item type="link" :href="route('lessons.evaluations.create', ['lesson' => $lesson])" label="atividade avaliativa" description="criar"/>
             @endif
         </x-slot>
     </x-card.list.description-layout>

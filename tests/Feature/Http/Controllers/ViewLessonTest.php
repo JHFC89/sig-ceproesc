@@ -129,6 +129,55 @@ class ViewLessonTest extends TestCase
     }
 
     /** @test */
+    public function instructor_can_see_a_link_to_create_an_evaluation_for_the_lesson_that_does_not_have_one()
+    {
+        $lesson = Lesson::factory()->instructor($this->instructor)->hasNovices(3)->create();
+
+        $response = $this->actingAs($this->instructor)->get(route('lessons.show', ['lesson' => $lesson]));
+
+        $response
+            ->assertOk()
+            ->assertSee(route('lessons.evaluations.create', ['lesson' => $lesson]));
+    }
+
+    /** @test */
+    public function instructor_cannot_see_a_link_to_create_an_evaluation_for_the_lesson_that_already_have_one()
+    {
+        $lesson = Lesson::factory()->hasEvaluation(1)->instructor($this->instructor)->hasNovices(3)->create();
+
+        $response = $this->actingAs($this->instructor)->get(route('lessons.show', ['lesson' => $lesson]));;
+
+        $response
+            ->assertOk()
+            ->assertDontSee(route('lessons.evaluations.create', ['lesson' => $lesson]));
+    }
+
+    /** @test */
+    public function only_instructor_can_see_the_link_to_create_an_evaluation()
+    {
+        $lesson = Lesson::factory()->instructor($this->instructor)->hasNovices(3)->create();
+        $lesson->setTestData();
+        $novice = $lesson->novices->first();
+        $employer = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
+        $employer->novices()->save($novice);
+
+
+        $coordinatorResponse = $this->actingAs($this->coordinator)->get(route('lessons.show', ['lesson' => $lesson]));
+        $noviceResponse = $this->actingAs($novice)->get(route('lessons.show', ['lesson' => $lesson]));
+        $employerResponse = $this->actingAs($employer)->get(route('lessons.show', ['lesson' => $lesson]));
+
+        $coordinatorResponse
+            ->assertOk()
+            ->assertDontSee(route('lessons.evaluations.create', ['lesson' => $lesson]));
+        $noviceResponse
+            ->assertOk()
+            ->assertDontSee(route('lessons.evaluations.create', ['lesson' => $lesson]));
+        $employerResponse
+            ->assertOk()
+            ->assertDontSee(route('lessons.evaluations.create', ['lesson' => $lesson]));
+    }
+
+    /** @test */
     public function instructor_should_see_a_warning_when_a_lesson_register_deadline_is_expired()
     {
         $this->travel(25)->hours();

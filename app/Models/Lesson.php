@@ -236,6 +236,11 @@ class Lesson extends Model
         return $this->requests()->whereNotNull('released_at')->whereNotNull('solved_at')->count() > 0;
     }
 
+    public function hasEvaluation()
+    {
+        return $this->evaluation()->count() > 0;
+    }
+
     public function novices()
     {
         return $this->belongsToMany(User::class)
