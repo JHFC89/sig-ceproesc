@@ -47,6 +47,16 @@ class CreateEvaluationTest extends TestCase
     }
 
     /** @test */
+    public function cannot_create_an_evaluation_for_a_lesson_that_already_has_one()
+    {
+        $this->lesson->evaluation()->create(['label' => 'test label', 'description' => 'test description']);
+        
+        $response = $this->actingAs($this->instructor)->get(route('lessons.evaluations.create', ['lesson' => $this->lesson]));
+
+        $response->assertUnauthorized();
+    }
+
+    /** @test */
     public function guest_cannot_view_the_create_evaluation_page()
     {
         $response = $this->get(route('lessons.evaluations.create', ['lesson' => $this->lesson]));

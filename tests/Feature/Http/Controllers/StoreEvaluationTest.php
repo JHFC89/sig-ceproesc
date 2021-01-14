@@ -59,6 +59,17 @@ class StoreEvaluationTest extends TestCase
     }
 
     /** @test */
+    public function cannot_store_an_evaluation_if_the_lesson_already_has_one()
+    {
+        $this->lesson->evaluation()->create(['label' => 'test label', 'description' => 'test description']);
+
+        $response = $this->actingAs($this->instructor)->post(route('lessons.evaluations.store', ['lesson' => $this->lesson]), $this->data);
+
+        $response->assertUnauthorized();
+        $this->assertEquals(1, Evaluation::count());
+    }
+
+    /** @test */
     public function guest_cannot_store_an_evaluation()
     {
         $response = $this->post(route('lessons.evaluations.store', ['lesson' => $this->lesson]), $this->data);

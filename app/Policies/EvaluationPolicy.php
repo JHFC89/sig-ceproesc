@@ -13,6 +13,15 @@ class EvaluationPolicy
 
     public function createForLesson(User $user, Lesson $lesson)
     {
-        return $user->isInstructor() && !$lesson->hasEvaluation();
+        return $user->isInstructor() 
+            && $lesson->isForInstructor($user)
+            && !$lesson->hasEvaluation();
+    }
+
+    public function storeForLesson(User $user, Lesson $lesson)
+    {
+        return $user->isInstructor() 
+            && $lesson->isForInstructor($user)
+            && !$lesson->hasEvaluation();
     }
 }
