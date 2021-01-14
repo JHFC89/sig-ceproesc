@@ -70,6 +70,28 @@ class StoreEvaluationTest extends TestCase
     }
 
     /** @test */
+    public function cannot_store_an_evaluation_if_the_lesson_is_expired()
+    {
+        $expiredLesson = Lesson::factory()->expired()->instructor($this->instructor)->create();
+
+        $response = $this->actingAs($this->instructor)->post(route('lessons.evaluations.store', ['lesson' => $expiredLesson]), $this->data);
+
+        $response->assertUnauthorized();
+        $this->assertEquals(0, Evaluation::count());
+    }
+
+    /** @test */
+    public function cannot_store_an_evaluation_if_the_lesson_is_registered()
+    {
+        $registeredLesson = Lesson::factory()->registered()->instructor($this->instructor)->create();
+
+        $response = $this->actingAs($this->instructor)->post(route('lessons.evaluations.store', ['lesson' => $registeredLesson]), $this->data);
+
+        $response->assertUnauthorized();
+        $this->assertEquals(0, Evaluation::count());
+    }
+
+    /** @test */
     public function guest_cannot_store_an_evaluation()
     {
         $response = $this->post(route('lessons.evaluations.store', ['lesson' => $this->lesson]), $this->data);

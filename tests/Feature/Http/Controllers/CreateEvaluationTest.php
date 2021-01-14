@@ -57,6 +57,26 @@ class CreateEvaluationTest extends TestCase
     }
 
     /** @test */
+    public function cannot_create_an_evaluation_if_the_lesson_is_expired()
+    {
+        $expiredLesson = Lesson::factory()->expired()->instructor($this->instructor)->create();
+
+        $response = $this->actingAs($this->instructor)->get(route('lessons.evaluations.create', ['lesson' => $expiredLesson]));
+
+        $response->assertUnauthorized();
+    }
+
+    /** @test */
+    public function cannot_create_an_evaluation_if_the_lesson_is_registered()
+    {
+        $registeredLesson = Lesson::factory()->registered()->instructor($this->instructor)->create();
+
+        $response = $this->actingAs($this->instructor)->get(route('lessons.evaluations.create', ['lesson' => $registeredLesson]));
+
+        $response->assertUnauthorized();
+    }
+
+    /** @test */
     public function guest_cannot_view_the_create_evaluation_page()
     {
         $response = $this->get(route('lessons.evaluations.create', ['lesson' => $this->lesson]));

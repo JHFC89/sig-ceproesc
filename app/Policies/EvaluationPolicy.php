@@ -15,6 +15,8 @@ class EvaluationPolicy
     {
         return $user->isInstructor() 
             && $lesson->isForInstructor($user)
+            && !$lesson->isExpired()
+            && !$lesson->isRegistered()
             && !$lesson->hasEvaluation();
     }
 
@@ -22,6 +24,8 @@ class EvaluationPolicy
     {
         return $user->isInstructor() 
             && $lesson->isForInstructor($user)
+            && !$lesson->isExpired()
+            && !$lesson->isRegistered()
             && !$lesson->hasEvaluation();
     }
 }
