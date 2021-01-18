@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatesPresencePivotTableForLessonAndUser extends Migration
+class CreatesRecordPivotTableForLessonAndUser extends Migration
 {
     /**
      * Run the migrations.
@@ -19,6 +19,7 @@ class CreatesPresencePivotTableForLessonAndUser extends Migration
             $table->foreignId('user_id');
             $table->boolean('present')->nullable();
             $table->string('observation')->nullable();
+            $table->string('grade')->nullable();
             $table->timestamps();
         });
     }

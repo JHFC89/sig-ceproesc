@@ -5,6 +5,7 @@ use App\Http\Controllers\LessonController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\LessonRequestController;
 use App\Http\Controllers\LessonRegisterController;
+use App\Http\Controllers\EvaluationGradeController;
 use App\Http\Controllers\ForWeekLessonListController;
 use App\Http\Controllers\ForTodayLessonListController;
 
@@ -21,7 +22,6 @@ use App\Http\Controllers\ForTodayLessonListController;
 
 Route::view('/mockups/lessons/create', 'mockups.lessons.create');
 
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/lessons/today', ForTodayLessonListController::class)->name('lessons.today');
     Route::get('/lessons/week', ForWeekLessonListController::class)->name('lessons.week');
@@ -35,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/requests/{request}', [LessonRequestController::class, 'show'])->name('requests.show');
     Route::patch('/requests/{request}', [LessonRequestController::class, 'update'])->name('requests.update');
    
+    Route::post('/evaluations/{evaluation}/grades', [EvaluationGradeController::class, 'store'])->name('evaluations.grades.store');
     Route::get('evaluations/{evaluation}', [EvaluationController::class, 'show'])->name('evaluations.show');
     Route::post('/lessons/{lesson}/evaluations', [EvaluationController::class, 'store'])->name('lessons.evaluations.store');
     Route::get('/lessons/{lesson}/evaluations/create', [EvaluationController::class, 'create'])->name('lessons.evaluations.create');

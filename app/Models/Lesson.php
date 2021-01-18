@@ -127,14 +127,14 @@ class Lesson extends Model
 
     public function isPresent($novice)
     {
-        $present = $this->novices()->where('user_id', $novice->id)->first()->presence->present;
+        $present = $this->novices()->where('user_id', $novice->id)->first()->record->present;
 
         return $present ? true : false;
     }
 
     public function isAbsent($novice)
     {
-        $present = $this->novices()->where('user_id', $novice->id)->first()->presence->present;
+        $present = $this->novices()->where('user_id', $novice->id)->first()->record->present;
 
         return $present ? false : true;
     }
@@ -142,16 +142,16 @@ class Lesson extends Model
     public function novicesPresenceToJson()
     {
         $novices = $this->novices->reduce(function ($novices, $novice) {
-            $presence = $novice->lessons->find($this)->presence;
-            if($presence->present === null) {
+            $record = $novice->lessons->find($this)->record;
+            if($record->present === null) {
                 $novices[$novice->id] = [
                     'presence'      => 1,
-                    'observation'   => $presence->observation,
+                    'observation'   => $record->observation,
                 ];
             } else {
                 $novices[$novice->id] = [
-                    'presence'      => $presence->present,
-                    'observation'   => $presence->observation,
+                    'presence'      => $record->present,
+                    'observation'   => $record->observation,
                 ];
             }
             return $novices;
@@ -184,7 +184,7 @@ class Lesson extends Model
 
     public function observationFor(User $novice)
     {
-        return $this->novices()->where('user_id', $novice->id)->first()->presence->observation;
+        return $this->novices()->where('user_id', $novice->id)->first()->record->observation;
     }
 
     public function register()
@@ -244,8 +244,8 @@ class Lesson extends Model
     public function novices()
     {
         return $this->belongsToMany(User::class)
-                    ->as('presence')
-                    ->withPivot('present', 'observation');
+                    ->as('record')
+                    ->withPivot('present', 'observation', 'grade');
     }
 
     public function requests()

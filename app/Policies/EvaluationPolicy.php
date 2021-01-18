@@ -50,4 +50,11 @@ class EvaluationPolicy
             && !$lesson->isRegistered()
             && !$lesson->hasEvaluation();
     }
+
+    public function storeGrade(User $user, Evaluation $evaluation)
+    {
+        if ($user->isInstructor()) {
+            return $evaluation->isForInstructor($user);
+        }
+    }
 }

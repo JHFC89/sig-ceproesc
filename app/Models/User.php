@@ -55,8 +55,8 @@ class User extends Authenticatable
     public function lessons()
     {
         return $this->belongsToMany(Lesson::class)
-                    ->as('presence')
-                    ->withPivot('present', 'observation');
+                    ->as('record')
+                    ->withPivot('present', 'observation', 'grade');
     }
 
     public function roles()
@@ -76,18 +76,18 @@ class User extends Authenticatable
 
     public function presentForLesson($lesson)
     {
-        $presence = $this->lessons()->where('lesson_id', $lesson->id)->first()->presence->present;
+        $present = $this->lessons()->where('lesson_id', $lesson->id)->first()->record->present;
 
-        if ($presence === null) {
+        if ($present === null) {
             return null;
         }
 
-        return $presence ? true : false;
+        return $present ? true : false;
     }
 
     public function observationForLesson(Lesson $lesson)
     {
-        return $this->lessons()->where('lesson_id', $lesson->id)->first()->presence->observation;
+        return $this->lessons()->where('lesson_id', $lesson->id)->first()->record->observation;
     }
     
     public function isNovice()

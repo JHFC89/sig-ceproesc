@@ -351,7 +351,7 @@ class LessonTest extends TestCase
 
         $lesson->registerFor($novice)->present()->complete();
 
-        $this->assertTrue($novice->lessons->first()->presence->present === 1);
+        $this->assertTrue($novice->lessons->first()->record->present === 1);
     }
 
     /** @test */
@@ -362,7 +362,7 @@ class LessonTest extends TestCase
 
         $lesson->registerFor($novice)->absent()->complete();
 
-        $this->assertTrue($novice->lessons->first()->presence->present === 0);
+        $this->assertTrue($novice->lessons->first()->record->present === 0);
     }
 
     /** @test */
@@ -421,7 +421,7 @@ class LessonTest extends TestCase
 
         $lesson->enroll($novice);
 
-        $this->assertNull($novice->lessons->first()->presence->present);
+        $this->assertNull($novice->lessons->first()->record->present);
     }
 
     /** @test */
@@ -563,7 +563,7 @@ class LessonTest extends TestCase
 
         $lesson->registerFor($novice)->present()->observation('test observation for a novice')->complete();
 
-        $this->assertEquals('test observation for a novice', $lesson->fresh()->novices->find($novice)->presence->observation);
+        $this->assertEquals('test observation for a novice', $lesson->fresh()->novices->find($novice)->record->observation);
     }
 
     /** @test */
@@ -576,8 +576,8 @@ class LessonTest extends TestCase
         $lesson->registerFor($noviceA)->present()->observation('test observation for a novice')->complete();
         $lesson->registerFor($noviceB)->present()->complete();
 
-        $this->assertEquals('test observation for a novice', $lesson->fresh()->novices->find($noviceA)->presence->observation);
-        $this->assertNull($lesson->fresh()->novices->find($noviceB)->presence->observation);
+        $this->assertEquals('test observation for a novice', $lesson->fresh()->novices->find($noviceA)->record->observation);
+        $this->assertNull($lesson->fresh()->novices->find($noviceB)->record->observation);
     }
 
     /** @test */
@@ -589,7 +589,7 @@ class LessonTest extends TestCase
 
         $lesson->registerFor($novice)->present()->observation('update test observation for a novice')->complete();
 
-        $this->assertEquals('update test observation for a novice', $lesson->fresh()->novices->find($novice)->presence->observation);
+        $this->assertEquals('update test observation for a novice', $lesson->fresh()->novices->find($novice)->record->observation);
     }
 
     /** @test */
