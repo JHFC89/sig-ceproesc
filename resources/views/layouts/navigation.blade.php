@@ -15,7 +15,7 @@
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         Início
                     </x-nav-link>
-                    <x-nav-link href="{{ route('lessons.show', ['lesson' => 1]) }}" :active="request()->routeIs('lessons.show')">
+                    <x-nav-link href="#" :active="request()->routeIs('lessons.show')">
                         Aulas
                     </x-nav-link>
                 </div>

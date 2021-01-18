@@ -35,11 +35,13 @@ class StoreEvaluationTest extends TestCase
     /** @test */
     public function instructor_can_store_an_evaluation()
     {
+        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->instructor)->post(route('lessons.evaluations.store', ['lesson' => $this->lesson]), $this->data);
 
         $response
             ->assertOk()
-            ->assertViewIs('evaluations.show');
+            ->assertViewIs('evaluations.show')
+            ->assertViewHas('evaluation');
         $this->assertEquals(1, Evaluation::count());
         $evaluation = Evaluation::first();
         $this->assertEquals('test evaluation', $evaluation->label);

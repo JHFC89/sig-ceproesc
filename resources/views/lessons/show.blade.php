@@ -54,6 +54,8 @@
             @endif
             @if(Auth::user()->can('createForLesson', [App\Models\Evaluation::class, $lesson]))
             <x-card.list.description-item type="link" :href="route('lessons.evaluations.create', ['lesson' => $lesson])" label="atividade avaliativa" description="criar"/>
+            @elseif($lesson->hasEvaluation())    
+            <x-card.list.description-item type="link" :href="route('evaluations.show', ['evaluation' => $lesson->evaluation])" label="atividade avaliativa" :description="$lesson->evaluation->label"/>
             @endif
         </x-slot>
     </x-card.list.description-layout>

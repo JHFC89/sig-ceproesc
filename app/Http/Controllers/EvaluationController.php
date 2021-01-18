@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lesson;
+use App\Models\Evaluation;
 use Illuminate\Http\Request;
 
 class EvaluationController extends Controller
 {
+    public function show(Evaluation $evaluation)
+    {
+        abort_if(auth()->user()->cannot('view', $evaluation), 401);
+
+        return view('evaluations.show', compact('evaluation'));
+    }
+
     public function create(Lesson $lesson)
     {
         abort_if(auth()->user()->cannot('createForLesson', [Evaluation::class, $lesson]), 401);
@@ -23,8 +31,8 @@ class EvaluationController extends Controller
             'description' => 'required|string',
         ]);
 
-        $lesson->evaluation()->create($data);
+        $evaluation = $lesson->evaluation()->create($data);
 
-        return view('evaluations.show');
+        return view('evaluations.show', compact('evaluation'));
     }
 }

@@ -141,14 +141,16 @@ class ViewLessonTest extends TestCase
     }
 
     /** @test */
-    public function instructor_cannot_see_a_link_to_create_an_evaluation_for_the_lesson_that_already_have_one()
+    public function instructor_can_see_a_link_to_view_an_evaluation_for_the_lesson_that_already_have_one()
     {
         $lesson = Lesson::factory()->hasEvaluation(1)->instructor($this->instructor)->hasNovices(3)->create();
+        $evaluation = $lesson->evaluation;
 
         $response = $this->actingAs($this->instructor)->get(route('lessons.show', ['lesson' => $lesson]));;
 
         $response
             ->assertOk()
+            ->assertSee(route('evaluations.show', ['evaluation' => $evaluation]))
             ->assertDontSee(route('lessons.evaluations.create', ['lesson' => $lesson]));
     }
 

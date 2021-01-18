@@ -11,6 +11,28 @@ class EvaluationPolicy
 {
     use HandlesAuthorization;
 
+    public function view(User $user, Evaluation $evaluation)
+    {
+        if ($user->isInstructor()) {
+            return $evaluation->isForInstructor($user);
+        }
+
+        if ($user->isCoordinator()) {
+            return true;
+        }
+        
+        return !$user->hasNoRole();
+    }
+
+    public function viewNoviceEvaluation(User $user, User $novice)
+    {
+        if ($user->isEmployer()) {
+            return $user->isEmployerOf($novice);
+        }
+
+        return $user->isInstructor() || $user->isCoordinator();
+    }
+
     public function createForLesson(User $user, Lesson $lesson)
     {
         return $user->isInstructor() 

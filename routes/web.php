@@ -21,6 +21,7 @@ use App\Http\Controllers\ForTodayLessonListController;
 
 Route::view('/mockups/lessons/create', 'mockups.lessons.create');
 
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/lessons/today', ForTodayLessonListController::class)->name('lessons.today');
     Route::get('/lessons/week', ForWeekLessonListController::class)->name('lessons.week');
@@ -34,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/requests/{request}', [LessonRequestController::class, 'show'])->name('requests.show');
     Route::patch('/requests/{request}', [LessonRequestController::class, 'update'])->name('requests.update');
    
+    Route::get('evaluations/{evaluation}', [EvaluationController::class, 'show'])->name('evaluations.show');
     Route::post('/lessons/{lesson}/evaluations', [EvaluationController::class, 'store'])->name('lessons.evaluations.store');
     Route::get('/lessons/{lesson}/evaluations/create', [EvaluationController::class, 'create'])->name('lessons.evaluations.create');
 });
