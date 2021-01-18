@@ -45,6 +45,15 @@ class LessonPolicy
         return false;
     }
 
+    public function viewLessonNovice(User $user, User $novice)
+    {
+        if ($user->isEmployer()) {
+            return $user->isEmployerOf($novice);
+        }
+        
+        return $user->isInstructor() || $user->isCoordinator();
+    }
+
     public function createRegister(user $user, lesson $lesson)
     {
         if ($this->isNotAnInstructor($user)) {

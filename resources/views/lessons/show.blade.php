@@ -60,7 +60,7 @@
         </x-slot>
     </x-card.list.description-layout>
 
-    @if(Auth::user()->isInstructor() || Auth::user()->isEmployer())
+    @unless(Auth::user()->isNovice())
     <x-card.list.table-layout title="lista de presença">
 
         <x-slot name="header">
@@ -76,7 +76,7 @@
         <x-slot name="body">
 
             @foreach($lesson->novices as $novice)
-                @if(Auth::user()->isEmployerOf($novice) || Auth::user()->isInstructor())
+                @can('viewLessonNovice', [App\Models\Lesson::class, $novice])
                 <x-card.list.table-row>
                     <x-slot name="items">
 
@@ -116,13 +116,13 @@
 
                     </x-slot>
                 </x-card.list.table-row>
-                @endif
+                @endcan
             @endforeach
 
         </x-slot>
 
     </x-card.list.table-layout>
-    @endif
+    @endunless
 
     @can('createForLesson', [App\Models\LessonRequest::class, $lesson])
     <div class="flex justify-end">

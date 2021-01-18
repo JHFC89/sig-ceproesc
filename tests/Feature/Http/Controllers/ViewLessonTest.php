@@ -381,6 +381,24 @@ class ViewLessonTest extends TestCase
     }
 
     /** @test */
+    public function coordinator_can_view_the_list_of_novices_for_a_lesson()
+    {
+        $lesson = Lesson::factory()->hasNovices(3)->create();
+        $coordinator = User::factory()->hasRoles(1, ['name' => 'coordinator'])->create();
+
+        $response = $this->actingAs($coordinator)->get(route('lessons.show', ['lesson' => $lesson]));
+
+        $response
+            ->assertOk()
+            ->assertSee($lesson->novices[0]->code)
+            ->assertSee($lesson->novices[0]->name)
+            ->assertSee($lesson->novices[1]->code)
+            ->assertSee($lesson->novices[1]->name)
+            ->assertSee($lesson->novices[2]->code)
+            ->assertSee($lesson->novices[2]->name);
+    }
+
+    /** @test */
     public function coordinator_should_see_a_warning_and_link_to_view_an_open_request_to_register()
     {
         $this->travel(25)->hours();
