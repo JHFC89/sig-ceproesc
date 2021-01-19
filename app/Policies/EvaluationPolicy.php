@@ -54,7 +54,8 @@ class EvaluationPolicy
     public function storeGrade(User $user, Evaluation $evaluation)
     {
         if ($user->isInstructor()) {
-            return $evaluation->isForInstructor($user);
+            return $evaluation->isForInstructor($user)
+                && $evaluation->lesson->isRegistered();
         }
     }
 }

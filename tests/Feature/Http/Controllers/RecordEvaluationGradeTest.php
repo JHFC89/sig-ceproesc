@@ -30,6 +30,8 @@ class RecordEvaluationGradeTest extends TestCase
 
         $this->evaluation = $this->lesson->evaluation;
 
+        $this->lesson->register();
+
         $this->instructor = $this->lesson->instructor;
 
         $this->novices = $this->lesson->novices;
@@ -68,6 +70,17 @@ class RecordEvaluationGradeTest extends TestCase
         $anotherInstrutor = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
 
         $response = $this->actingAs($anotherInstrutor)->post(route('evaluations.grades.store', ['evaluation' => $this->evaluation]), $this->data);
+
+        $response->assertUnauthorized();
+    }
+
+    /** @test */
+    public function lesson_must_be_registered_to_be_able_to_record_grades()
+    {
+        $lesson = Lesson::factory()->hasEvaluation(1)->hasNovices(3)->create();
+        $lesson->setTestData();
+
+        $response = $this->actingAs($lesson->instructor)->post(route('evaluations.grades.store', ['evaluation' => $lesson->evaluation]), $this->data);
 
         $response->assertUnauthorized();
     }
