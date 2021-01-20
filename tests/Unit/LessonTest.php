@@ -372,7 +372,7 @@ class LessonTest extends TestCase
         $lesson = Lesson::factory()->create();
 
         try {
-            $lesson->registerPresence($novice)->present();
+            $lesson->registerFor($novice)->present();
         } catch (NoviceNotEnrolledException $exception) {
             $this->assertTrue(true);
             return;

@@ -16,8 +16,6 @@ class Lesson extends Model
 
     protected $dates = ['date'];
 
-    protected $noviceToRegisterPresence;
-
     protected $noviceToRegister;
 
     protected $presenceToRegister;
@@ -78,19 +76,6 @@ class Lesson extends Model
     public function isEnrolled(User $novice)
     {
         return $this->enrolled($novice->id)->count() > 0 ? true : false;
-    }
-
-    public function registerPresence(User $novice)
-    {
-        throw_unless(
-            $this->isEnrolled($novice),
-            NoviceNotEnrolledException::class,
-            'Trying to register presence to a novice that is not enrolled to this lesson.'
-        );
-
-        $this->noviceToRegisterPresence = $novice;
-
-        return $this;
     }
 
     public function registerFor(User $novice)
