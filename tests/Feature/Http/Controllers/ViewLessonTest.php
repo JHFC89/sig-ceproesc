@@ -129,6 +129,45 @@ class ViewLessonTest extends TestCase
     }
 
     /** @test */
+    public function instructor_can_view_a_link_to_register_a_lesson_when_it_is_available_to_register()
+    {
+        $lesson = Lesson::factory()->forToday()->notRegistered()->instructor($this->instructor)->create();
+        
+        $response = $this->actingAs($this->instructor)->get(route('lessons.show', ['lesson' => $lesson]));
+
+        $response
+            ->assertOk()
+            ->assertSee('registrar')
+            ->assertSee(route('lessons.registers.create', ['lesson' => $lesson]));
+    }
+
+    /** @test */
+    public function only_instructor_can_view_a_link_to_register_a_lesson_when_it_is_available_to_register()
+    {
+        $lesson = Lesson::factory()->forToday()->notRegistered()->hasNovices(1)->create();
+        $lesson->setTestData();
+        $novice = $lesson->novices->first();
+        $employer = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
+        $employer->novices()->save($novice);
+        
+        $response = $this->actingAs($this->instructor)->get(route('lessons.show', ['lesson' => $lesson]));
+
+        $coordinatorResponse = $this->actingAs($this->coordinator)->get(route('lessons.show', ['lesson' => $lesson]));
+        $noviceResponse = $this->actingAs($novice)->get(route('lessons.show', ['lesson' => $lesson]));
+        $employerResponse = $this->actingAs($employer)->get(route('lessons.show', ['lesson' => $lesson]));
+
+        $coordinatorResponse
+            ->assertOk()
+            ->assertDontSee(route('lessons.registers.create', ['lesson' => $lesson]));
+        $noviceResponse
+            ->assertOk()
+            ->assertDontSee(route('lessons.registers.create', ['lesson' => $lesson]));
+        $employerResponse
+            ->assertOk()
+            ->assertDontSee(route('lessons.registers.create', ['lesson' => $lesson]));
+    }
+
+    /** @test */
     public function instructor_can_see_a_link_to_create_an_evaluation_for_the_lesson_that_does_not_have_one()
     {
         $lesson = Lesson::factory()->instructor($this->instructor)->hasNovices(3)->create();

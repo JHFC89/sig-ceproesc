@@ -124,7 +124,11 @@
     </x-card.list.table-layout>
     @endunless
 
-    @can('createForLesson', [App\Models\LessonRequest::class, $lesson])
+    @can('createRegister', $lesson)
+    <div class="flex justify-end">
+        <a href="{{ route('lessons.registers.create', ['lesson' => $lesson]) }}" class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown">registrar</a>
+    </div>
+    @elsecan('createForLesson', [App\Models\LessonRequest::class, $lesson])
     <div class="flex justify-end">
         <a href="{{ route('lessons.requests.create', ['lesson' => $lesson]) }}" class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown">retificar registro</a>
     </div>
