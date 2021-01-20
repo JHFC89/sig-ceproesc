@@ -45,6 +45,7 @@ class ViewEvaluationTest extends TestCase
             ->assertViewHas('evaluation')
             ->assertSee('atividade avaliativa')
             ->assertSee($this->lesson->formatted_date)
+            ->assertDontSee($this->lesson->instructor->name)
             ->assertSee(route('lessons.show', ['lesson' => $this->lesson]))
             ->assertSee($this->evaluation->label)
             ->assertSee($this->evaluation->description)
@@ -57,6 +58,29 @@ class ViewEvaluationTest extends TestCase
             ->assertSee($this->novices[2]->code)
             ->assertSee($this->novices[2]->name)
             ->assertSee($this->novices[2]->class);
+    }
+
+    /** @test */
+    public function instructor_can_view_the_grades_when_the_evaluation_is_recorded()
+    {
+        $this->novices->each(function ($novice) {
+            $this->lesson->registerFor($novice)->present()->complete();
+        });
+        $this->lesson->register();
+        $this->evaluation->record([
+            $this->novices[0]->id => 'a',
+            $this->novices[1]->id => 'b',
+            $this->novices[2]->id => 'c',
+        ]);
+        
+        $response = $this->actingAs($this->instructor)->get(route('evaluations.show', ['evaluation' => $this->evaluation]));
+
+        $response
+            ->assertOk()
+            ->assertSee('indicador da avaliação')
+            ->assertSee('a')
+            ->assertSee('b')
+            ->assertSee('c');
     }
 
     /** @test */
@@ -98,6 +122,7 @@ class ViewEvaluationTest extends TestCase
             ->assertViewHas('evaluation')
             ->assertSee('atividade avaliativa')
             ->assertSee($this->lesson->formatted_date)
+            ->assertSee($this->lesson->instructor->name)
             ->assertSee(route('lessons.show', ['lesson' => $this->lesson]))
             ->assertSee($this->evaluation->label)
             ->assertSee($this->evaluation->description)
@@ -124,6 +149,7 @@ class ViewEvaluationTest extends TestCase
             ->assertViewHas('evaluation')
             ->assertSee('atividade avaliativa')
             ->assertSee($this->lesson->formatted_date)
+            ->assertSee($this->lesson->instructor->name)
             ->assertSee(route('lessons.show', ['lesson' => $this->lesson]))
             ->assertSee($this->evaluation->label)
             ->assertSee($this->evaluation->description)
@@ -139,6 +165,24 @@ class ViewEvaluationTest extends TestCase
     }
 
     /** @test */
+    public function novice_can_view_his_evaluation_grade_when_it_is_recorded()
+    {
+        $novice = $this->lesson->novices->first();
+        $this->lesson->registerFor($novice)->present()->complete();
+        $this->lesson->register();
+        $this->evaluation->record([
+            $novice->id => 'a',
+        ]);
+
+        $response = $this->actingAs($novice)->get(route('evaluations.show', ['evaluation' => $this->evaluation]));
+        $response
+            ->assertOk()
+            ->assertViewIs('evaluations.show')
+            ->assertSee('indicador da avaliação')
+            ->assertSee('a');
+    }
+
+    /** @test */
     public function employer_can_view_only_the_evaluations_informations_that_belongs_to_his_novices()
     {
         $employer = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
@@ -151,6 +195,7 @@ class ViewEvaluationTest extends TestCase
             ->assertViewHas('evaluation')
             ->assertSee('atividade avaliativa')
             ->assertSee($this->lesson->formatted_date)
+            ->assertSee($this->lesson->instructor->name)
             ->assertSee(route('lessons.show', ['lesson' => $this->lesson]))
             ->assertSee($this->evaluation->label)
             ->assertSee($this->evaluation->description)

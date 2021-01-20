@@ -21,30 +21,52 @@
     <x-card.list.description-layout title="atividade avaliativa">
         <x-slot name="items">
             <x-card.list.description-item label="aula" type="link" :href="route('lessons.show', ['lesson' => $evaluation->lesson])" :description="$evaluation->lesson->formatted_date"/>
+            @unless (Auth::user()->isInstructor())
+                <x-card.list.description-item label="instrutor" :description="$evaluation->lesson->instructor->name"/>
+            @endif
             <x-card.list.description-item label="nome" :description="$evaluation->label"/>
             <x-card.list.description-item label="descrição" type="text" :description="$evaluation->description"/>
+            @if (Auth::user()->isNovice())
+                <x-card.list.description-item label="indicador da avaliação" :description="$evaluation->gradeForNovice(Auth::user()) ?: 'não registrado'"/>
+            @endif
         </x-slot>
     </x-card.list.description-layout>
 
     @unless(Auth::user()->isNovice())
+
     <x-card.list.table-layout title="indicadores de avaliação">
 
         <x-slot name="header">
+
             <x-card.list.table-header class="col-span-1" name="código"/>
+
             @can('createGrade', $evaluation)
+
                 <x-card.list.table-header class="col-span-5" name="nome"/>
                 <x-card.list.table-header class="col-span-2" name="turma"/>
                 <x-card.list.table-header class="text-center col-span-3" name="registrar indicador"/>
+
+            @elseif($evaluation->isRecorded())
+
+                <x-card.list.table-header class="col-span-5" name="nome"/>
+                <x-card.list.table-header class="col-span-2" name="turma"/>
+                <x-card.list.table-header class="text-center col-span-3" name="indicador da avaliação"/>
+
             @else
+
                 <x-card.list.table-header class="col-span-6" name="nome"/>
                 <x-card.list.table-header class="col-span-2" name="turma"/>
+
             @endcan
+
         </x-slot>
 
         <x-slot name="body">
 
             @foreach($evaluation->lesson->novices as $novice)
+
                 @can('viewNoviceEvaluation', [App\Models\Evaluation::class, $novice])
+
                 <x-card.list.table-row>
                     <x-slot name="items">
 
@@ -81,6 +103,26 @@
                                 </x-slot>
                             </x-card.list.table-body-item>
 
+                        @elseif($evaluation->isRecorded())
+
+                            <x-card.list.table-body-item class="col-span-5">
+                                <x-slot name="item">
+                                    <span class="flex items-center h-full">{{ $novice->name }}</span>
+                                </x-slot>
+                            </x-card.list.table-body-item>
+
+                            <x-card.list.table-body-item class="col-span-2">
+                                <x-slot name="item">
+                                    <span class="flex items-center h-full">{{ $novice->class }}</span>
+                                </x-slot>
+                            </x-card.list.table-body-item>
+
+                            <x-card.list.table-body-item class="col-span-3">
+                                <x-slot name="item">
+                                    <span class="flex items-center justify-center h-full">{{ $evaluation->gradeForNovice($novice) ?: 'ausente' }}</span>
+                                </x-slot>
+                            </x-card.list.table-body-item>
+
                         @else
 
                             <x-card.list.table-body-item class="col-span-6">
@@ -98,13 +140,17 @@
                         @endcan
 
                     </x-slot>
+
                 </x-card.list.table-row>
+
                 @endcan
+
             @endforeach
 
         </x-slot>
 
     </x-card.list.table-layout>
+
     @endunless
 
     @can('createGrade', $evaluation)
