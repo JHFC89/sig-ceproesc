@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\Lesson;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class RecordEvaluationGradeTest extends TestCase
+class StoreEvaluationGradeTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -30,11 +30,14 @@ class RecordEvaluationGradeTest extends TestCase
 
         $this->evaluation = $this->lesson->evaluation;
 
-        $this->lesson->register();
-
         $this->instructor = $this->lesson->instructor;
 
         $this->novices = $this->lesson->novices;
+        $this->novices->each(function ($novice) {
+            $this->lesson->registerFor($novice)->present()->complete();
+        });
+
+        $this->lesson->register();
 
         $this->data = [
             'gradesList' => [
@@ -58,7 +61,11 @@ class RecordEvaluationGradeTest extends TestCase
 
         $response = $this->actingAs($this->instructor)->post(route('evaluations.grades.store', ['evaluation' => $this->evaluation]), $data);
 
-        $response->assertOk();
+        $response
+            ->assertOk()
+            ->assertViewIs('evaluations.show')
+            ->assertSessionHas('status', 'notas registradas com sucesso!')
+            ->assertSee('notas registradas com sucesso!');
         $this->assertEquals('a', $this->evaluation->gradeForNovice($this->novices[0]));
         $this->assertEquals('b', $this->evaluation->gradeForNovice($this->novices[1]));
         $this->assertEquals('c', $this->evaluation->gradeForNovice($this->novices[2]));
@@ -83,6 +90,30 @@ class RecordEvaluationGradeTest extends TestCase
         $response = $this->actingAs($lesson->instructor)->post(route('evaluations.grades.store', ['evaluation' => $lesson->evaluation]), $this->data);
 
         $response->assertUnauthorized();
+    }
+
+    /** @test */
+    public function cannot_register_any_grade_if_there_is_a_grade_for_a_novice_that_is_absent_from_the_lesson()
+    {
+        $lesson = Lesson::factory()->hasEvaluation(1)->hasNovices(2)->create();
+        $lesson->setTestData();
+        $presentNovice = $lesson->novices->first();
+        $absentNovice = $lesson->novices->last();
+        $lesson->registerFor($presentNovice)->present()->complete();
+        $lesson->registerFor($absentNovice)->absent()->complete();
+        $lesson->register();
+        $data = [
+            'gradesList' => [
+                $presentNovice->id => 'a',
+                $absentNovice->id => 'a',
+            ],
+        ];
+
+        $response = $this->actingAs($lesson->instructor)->post(route('evaluations.grades.store', ['evaluation' => $lesson->evaluation]), $data);
+
+        $response->assertSessionHasErrors('grade');
+        $this->assertNull($lesson->evaluation->gradeForNovice($absentNovice));
+        $this->assertNull($lesson->evaluation->gradeForNovice($presentNovice));
     }
 
     /** @test */

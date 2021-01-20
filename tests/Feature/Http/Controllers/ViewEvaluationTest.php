@@ -37,8 +37,8 @@ class ViewEvaluationTest extends TestCase
     /** @test */
     public function instrutor_can_view_an_evaluation()
     {
-        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->instructor)->get(route('evaluations.show', ['evaluation' => $this->evaluation]));
+
         $response
             ->assertOk()
             ->assertViewIs('evaluations.show')

@@ -51,6 +51,15 @@ class EvaluationPolicy
             && !$lesson->hasEvaluation();
     }
 
+    public function createGrade(User $user, Evaluation $evaluation)
+    {
+        return $evaluation->lesson->isRegistered()
+            && !$evaluation->isRecorded()
+            && !$user->isCoordinator()
+            && !$user->isNovice()
+            && !$user->isEmployer();
+    }
+
     public function storeGrade(User $user, Evaluation $evaluation)
     {
         if ($user->isInstructor()) {

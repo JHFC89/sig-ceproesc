@@ -12,13 +12,15 @@ class EvaluationGradeController extends Controller
     {
         abort_if(request()->user()->cannot('storeGrade', $evaluation), 401);
 
-        request()->validate([
+        $data = request()->validate([
             'gradesList' => 'required|array',
             'gradesList.*' => 'required|string',
         ]);
 
-        collect(request()->gradesList)->each(function ($grade, $novice_id) use ($evaluation) {
-            $evaluation->recordGradeForNovice(User::find($novice_id), $grade);
-        });
+        $evaluation->record($data['gradesList']);
+
+        session()->flash('status', 'notas registradas com sucesso!');
+
+        return view('evaluations.show', compact('evaluation'));
     }
 }

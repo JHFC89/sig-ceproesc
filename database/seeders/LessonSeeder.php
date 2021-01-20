@@ -42,18 +42,24 @@ class LessonSeeder extends Seeder
             ]);
 
         CourseClass::where('name', 'janeiro - 2020')->first()->novices->each(function ($novice) use ($lessonForToday, $lessonForYesterday, $lessonForTomorrow) {
+            $novice->turnIntoNovice();
+
             $lessonForToday->enroll($novice);
             $lessonForYesterday->enroll($novice);
             $lessonForTomorrow->enroll($novice);
         });
 
         CourseClass::where('name', 'julho - 2020')->first()->novices->each(function ($novice) use ($lessonForToday, $lessonForYesterday, $lessonForTomorrow) {
+            $novice->turnIntoNovice();
+            
             $lessonForToday->enroll($novice);
             $lessonForYesterday->enroll($novice);
             $lessonForTomorrow->enroll($novice);
         });
 
         CourseClass::where('name', 'janeiro - 2021')->first()->novices->each(function ($novice) use ($lessonForToday, $lessonForYesterday, $lessonForTomorrow) {
+            $novice->turnIntoNovice();
+
             $lessonForToday->enroll($novice);
             $lessonForYesterday->enroll($novice);
             $lessonForTomorrow->enroll($novice);

@@ -18,6 +18,7 @@ class CreateEvaluationsTable extends Migration
             $table->foreignId('lesson_id');
             $table->string('label');
             $table->string('description');
+            $table->dateTime('recorded_at')->nullable();
             $table->timestamps();
         });
     }
