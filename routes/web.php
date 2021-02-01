@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\EvaluationController;
+use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\LessonRequestController;
 use App\Http\Controllers\LessonRegisterController;
 use App\Http\Controllers\EvaluationGradeController;
@@ -39,6 +40,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('evaluations/{evaluation}', [EvaluationController::class, 'show'])->name('evaluations.show');
     Route::post('/lessons/{lesson}/evaluations', [EvaluationController::class, 'store'])->name('lessons.evaluations.store');
     Route::get('/lessons/{lesson}/evaluations/create', [EvaluationController::class, 'create'])->name('lessons.evaluations.create');
+
+    Route::get('disciplines/{discipline}', [DisciplineController::class, 'show'])->name('disciplines.show');
 });
 
 Route::get('/dashboard', function () {

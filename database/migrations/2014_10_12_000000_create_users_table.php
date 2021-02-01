@@ -25,6 +25,7 @@ class CreateUsersTable extends Migration
                   ->default(null);
             $table->foreignId('employer_id')->nullable();
             $table->foreignId('course_class_id')->nullable();
+            $table->foreignId('discipline_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
