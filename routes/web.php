@@ -45,6 +45,10 @@ Route::middleware(['auth'])->group(function () {
         ->name('disciplines.create');
     Route::post('disciplines/store', [DisciplineController::class, 'store'])
         ->name('disciplines.store');
+    Route::get('disciplines/{discipline}/edit', [
+        DisciplineController::class, 
+        'edit'
+    ])->name('disciplines.edit');
     Route::get('disciplines/{discipline}', [DisciplineController::class, 'show'])
         ->name('disciplines.show');
 });

@@ -43,4 +43,13 @@ class DisciplineController extends Controller
 
         return view('disciplines.show', compact('discipline'));
     }
+
+    public function edit(Discipline $discipline)
+    {
+        abort_if(request()->user()->cannot('update', $discipline), 401);
+
+        $instructors = User::whereInstructor()->get();
+
+        return view('disciplines.edit', compact('instructors', 'discipline'));
+    }
 }

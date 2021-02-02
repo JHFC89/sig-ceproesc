@@ -21,23 +21,47 @@ class Discipline extends Model
         return implode(' | ', $this->instructors->pluck('name')->toArray());
     }
 
-    public function attachInstructors(array $instructors)
+    public function attachInstructors($instructors)
     {
+        if (is_int($instructors)) {
+            $instructor = User::find($instructors);
+            $this->checkIsInstructor($instructor);
+
+            $this->instructors()->save($instructor); 
+
+            return;
+        }
+
         $instructors = User::whereIn('id', $instructors)->get();
         $instructors->each(function ($instructor) {
-            throw_unless(
-                $instructor->isInstructor(),
-                NotInstructorException::class,
-                'Trying to attach a non instructor user to a discipline.'
-            );
+            $this->checkIsInstructor($instructor);
         });
 
         $this->instructors()->saveMany($instructors->all()); 
     }
 
+    private function checkIsInstructor(User $user)
+    {
+        throw_unless(
+            $user->isInstructor(),
+            NotInstructorException::class,
+            'Trying to attach a non instructor user to a discipline.'
+        );
+    }
+
+    public function isAttached(User $instructor)
+    {
+        return $this->instructors->contains($instructor);
+    }
+
     public function isBasic()
     {
         return $this->basic ? true : false;
+    }
+
+    public function isSpecific()
+    {
+        return ! $this->isBasic();
     }
 
     public function instructors()

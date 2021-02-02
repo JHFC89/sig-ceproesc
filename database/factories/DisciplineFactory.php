@@ -36,4 +36,13 @@ class DisciplineFactory extends Factory
             ];
         });
     }
+
+    public function specific()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'basic' => false,
+            ];
+        });
+    }
 }

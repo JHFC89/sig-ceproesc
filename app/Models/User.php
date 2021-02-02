@@ -128,6 +128,11 @@ class User extends Authenticatable
         return $this->novices->contains($novice);
     }
 
+    public function turnIntoInstructor()
+    {
+        $this->roles()->attach(Role::firstOrCreate(['name' => 'instructor']));
+    }
+
     public function turnIntoNovice()
     {
         $this->roles()->attach(Role::firstOrCreate(['name' => 'novice']));

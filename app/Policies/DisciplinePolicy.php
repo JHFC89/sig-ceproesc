@@ -53,7 +53,7 @@ class DisciplinePolicy
      */
     public function update(User $user, Discipline $discipline)
     {
-        //
+        return $user->isCoordinator();
     }
 
     /**
