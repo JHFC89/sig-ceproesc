@@ -41,6 +41,8 @@ class DisciplineController extends Controller
 
         $discipline->attachInstructors(request()->instructors);
 
+        session()->flash('status', 'Disciplina cadastrada com sucesso!');
+
         return view('disciplines.show', compact('discipline'));
     }
 

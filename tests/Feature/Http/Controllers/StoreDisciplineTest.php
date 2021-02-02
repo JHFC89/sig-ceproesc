@@ -43,8 +43,6 @@ class StoreDisciplineTest extends TestCase
     /** @test */
     public function coordinator_can_store_a_discipline()
     {
-        $this->withoutExceptionHandling();
-
         $instructors = User::factory()
             ->hasRoles(1, ['name' => 'instructor'])
             ->count(2)
@@ -65,7 +63,9 @@ class StoreDisciplineTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertViewIs('disciplines.show');
+            ->assertViewIs('disciplines.show')
+            ->assertSessionHas('status', 'Disciplina cadastrada com sucesso!')
+            ->assertSee('Disciplina cadastrada com sucesso!');
         $this->assertEquals(1, Discipline::count());
         $discipline = Discipline::first();
         $this->assertEquals('Test Discipline', $discipline->name);
