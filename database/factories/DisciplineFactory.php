@@ -27,4 +27,13 @@ class DisciplineFactory extends Factory
             'duration' => 30,
         ];
     }
+
+    public function basic()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'basic' => true,
+            ];
+        });
+    }
 }

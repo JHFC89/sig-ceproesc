@@ -41,7 +41,7 @@ class DisciplinePolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->isCoordinator();
     }
 
     /**
