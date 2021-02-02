@@ -5,7 +5,6 @@ namespace Tests\Feature\Http\Controllers;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Discipline;
-
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class StoreDisciplineTest extends TestCase
@@ -91,7 +90,9 @@ class StoreDisciplineTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->post(route('disciplines.store'), $this->data);
+        $response = $this
+            ->actingAs($user)
+            ->post(route('disciplines.store'), $this->data);
 
         $response->assertUnauthorized();
     }
@@ -103,7 +104,9 @@ class StoreDisciplineTest extends TestCase
             ->hasRoles(1, ['name' => 'instructor'])
             ->create();
 
-        $response = $this->actingAs($instructor)->post(route('disciplines.store'), $this->data);
+        $response = $this
+            ->actingAs($instructor)
+            ->post(route('disciplines.store'), $this->data);
 
         $response->assertUnauthorized();
     }
@@ -115,7 +118,9 @@ class StoreDisciplineTest extends TestCase
             ->hasRoles(1, ['name' => 'novice'])
             ->create();
 
-        $response = $this->actingAs($novice)->post(route('disciplines.store'), $this->data);
+        $response = $this
+            ->actingAs($novice)
+            ->post(route('disciplines.store'), $this->data);
 
         $response->assertUnauthorized();
     }
@@ -127,7 +132,9 @@ class StoreDisciplineTest extends TestCase
             ->hasRoles(1, ['name' => 'employer'])
             ->create();
 
-        $response = $this->actingAs($employer)->post(route('disciplines.store'), $this->data);
+        $response = $this
+            ->actingAs($employer)
+            ->post(route('disciplines.store'), $this->data);
 
         $response->assertUnauthorized();
     }
