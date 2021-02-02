@@ -132,4 +132,11 @@ class User extends Authenticatable
     {
         $this->roles()->attach(Role::firstOrCreate(['name' => 'novice']));
     }
+
+    public function scopeWhereInstructor($query)
+    {
+        return $query->whereHas('roles', function (\Illuminate\Database\Eloquent\Builder $query) {
+            $query->where('name', 'instructor');
+        });
+    }
 }

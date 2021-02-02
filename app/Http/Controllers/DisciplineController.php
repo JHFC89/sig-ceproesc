@@ -15,6 +15,15 @@ class DisciplineController extends Controller
         return view('disciplines.show', compact('discipline'));
     }
 
+    public function create()
+    {
+        abort_if(request()->user()->cannot('create', Discipline::class), 401);
+
+        $instructors = User::whereInstructor()->get();
+
+        return view('disciplines.create', compact('instructors'));
+    }
+
     public function store()
     {
         abort_if(request()->user()->cannot('create', Discipline::class), 401);

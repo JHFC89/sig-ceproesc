@@ -41,10 +41,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/lessons/{lesson}/evaluations', [EvaluationController::class, 'store'])->name('lessons.evaluations.store');
     Route::get('/lessons/{lesson}/evaluations/create', [EvaluationController::class, 'create'])->name('lessons.evaluations.create');
 
+    Route::get('disciplines/create', [DisciplineController::class, 'create'])
+        ->name('disciplines.create');
     Route::post('disciplines/store', [DisciplineController::class, 'store'])
         ->name('disciplines.store');
-
-    Route::get('disciplines/{discipline}', [DisciplineController::class, 'show'])->name('disciplines.show');
+    Route::get('disciplines/{discipline}', [DisciplineController::class, 'show'])
+        ->name('disciplines.show');
 });
 
 Route::get('/dashboard', function () {
