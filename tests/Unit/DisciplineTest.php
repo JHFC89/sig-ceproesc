@@ -67,6 +67,30 @@ class DisciplineTest extends TestCase
     }
 
     /** @test */
+    public function attaching_new_instructors_will_reset_the_attached_ones()
+    {
+        $discipline = Discipline::factory()->hasInstructors(3)->create();
+        $oldInstructors = $discipline->instructors->map(function ($instructor) {
+            $instructor->turnIntoInstructor();
+            return $instructor;
+        });
+        $newInstructors = User::factory()
+            ->hasRoles(1, ['name' => 'instructor'])
+            ->count(3)
+            ->create();
+
+        $discipline->attachInstructors($newInstructors->pluck('id')->toArray());
+
+        $discipline->refresh();
+        $this->assertTrue($discipline->isAttached($newInstructors[0]));
+        $this->assertTrue($discipline->isAttached($newInstructors[1]));
+        $this->assertTrue($discipline->isAttached($newInstructors[2]));
+        $this->assertFalse($discipline->isAttached($oldInstructors[0]));
+        $this->assertFalse($discipline->isAttached($oldInstructors[1]));
+        $this->assertFalse($discipline->isAttached($oldInstructors[2]));
+    }
+
+    /** @test */
     public function trying_to_attach_non_instructor_users_should_throw_an_exception()
     {
         $discipline = Discipline::factory()->create();

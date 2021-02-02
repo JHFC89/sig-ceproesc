@@ -4,6 +4,13 @@
 
 @section('content')
 
+    @if (session()->has('status'))
+    <x-alert 
+        type="success" 
+        message="{{ session('status') }}" 
+    />
+    @endif
+
     <x-card.list.description-layout title="disciplina">
         <x-slot name="items">
             <x-card.list.description-item

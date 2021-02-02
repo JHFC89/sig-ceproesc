@@ -14,6 +14,9 @@ class DisciplineSeeder extends Seeder
      */
     public function run()
     {
-        Discipline::factory()->hasInstructors(3)->create();
+        $discipline = Discipline::factory()->hasInstructors(3)->create();
+        $discipline->instructors->each(function ($instructor) {
+            $instructor->turnIntoInstructor();
+        });
     }
 }

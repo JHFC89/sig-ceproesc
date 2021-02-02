@@ -7,10 +7,13 @@
     <form 
         class="mt-4 overflow-hidden capitalize bg-white shadow rounded-md" 
         action="{{ $action }}"
-        method="{{ $method }}"
+        method="POST"
     >
-
         @csrf
+
+        @if ($method == 'PATCH' || $method == 'PUT')
+            @method('PATCH')
+        @endif
 
         <div class="px-6 py-2 divide-y">
             {{ $inputs }}

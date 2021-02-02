@@ -27,7 +27,7 @@ class Discipline extends Model
             $instructor = User::find($instructors);
             $this->checkIsInstructor($instructor);
 
-            $this->instructors()->save($instructor); 
+            $this->instructors()->sync($instructor->id); 
 
             return;
         }
@@ -37,7 +37,7 @@ class Discipline extends Model
             $this->checkIsInstructor($instructor);
         });
 
-        $this->instructors()->saveMany($instructors->all()); 
+        $this->instructors()->sync($instructors->pluck('id')->toArray()); 
     }
 
     private function checkIsInstructor(User $user)
@@ -66,6 +66,6 @@ class Discipline extends Model
 
     public function instructors()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsToMany(User::class, 'discipline_instructor');
     }
 }

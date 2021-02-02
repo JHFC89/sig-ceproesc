@@ -49,6 +49,9 @@ Route::middleware(['auth'])->group(function () {
         DisciplineController::class, 
         'edit'
     ])->name('disciplines.edit');
+    Route::patch('disciplines/{discipline}', [
+        DisciplineController::class, 'update'
+    ])->name('disciplines.update');
     Route::get('disciplines/{discipline}', [DisciplineController::class, 'show'])
         ->name('disciplines.show');
 });

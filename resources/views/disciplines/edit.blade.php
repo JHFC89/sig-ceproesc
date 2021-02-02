@@ -1,15 +1,14 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Registro De Aula')
+@section('title', 'Atualizar Disciplina')
 
 @section('content')
 
     <x-card.form-layout 
         :title="'atualizar disciplina - ' . $discipline->name" 
-        :action="route('disciplines.store')"
-        method="POST"
+        :action="route('disciplines.update', ['discipline' => $discipline])"
+        method="PATCH"
     >
-
         <x-slot name="inputs">
 
             <x-card.form-input name="name" label="nome da disciplina">

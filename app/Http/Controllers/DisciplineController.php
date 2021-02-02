@@ -52,4 +52,17 @@ class DisciplineController extends Controller
 
         return view('disciplines.edit', compact('instructors', 'discipline'));
     }
+
+    public function update(Discipline $discipline)
+    {
+        abort_if(request()->user()->cannot('update', $discipline), 401);
+
+        $discipline->update(request()->only('name', 'basic', 'duration'));
+
+        $discipline->attachInstructors(request()->instructors);
+
+        session()->flash('status', 'Disciplina atualizada com sucesso!');
+
+        return view('disciplines.show', compact('discipline'));
+    }
 }
