@@ -8,6 +8,15 @@ use Illuminate\Http\Request;
 
 class DisciplineController extends Controller
 {
+    public function index()
+    {
+        abort_if(request()->user()->cannot('viewAny', Discipline::class), 401);
+
+        $disciplines = Discipline::all();
+
+        return view('disciplines.index', compact('disciplines'));
+    }
+
     public function show(Discipline $discipline)
     {
         abort_if(request()->user()->cannot('view', $discipline), 401);

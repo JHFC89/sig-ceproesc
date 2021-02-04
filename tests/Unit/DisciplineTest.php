@@ -34,6 +34,19 @@ class DisciplineTest extends TestCase
     }
 
     /** @test */
+    public function can_get_the_type_attribute()
+    {
+        $basicDiscipline = Discipline::factory()->basic()->create();
+        $specificDiscipline = Discipline::factory()->specific()->create();
+
+        $resultForBasic = $basicDiscipline->type;
+        $resultForSpecific = $specificDiscipline->type;
+
+        $this->assertEquals('básico', $resultForBasic);
+        $this->assertEquals('específico', $resultForSpecific);
+    }
+
+    /** @test */
     public function can_attach_instructors_by_ids()
     {
         $discipline = Discipline::factory()->create();

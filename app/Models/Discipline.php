@@ -21,6 +21,11 @@ class Discipline extends Model
         return implode(' | ', $this->instructors->pluck('name')->toArray());
     }
 
+    public function getTypeAttribute()
+    {
+        return $this->basic ? 'básico' : 'específico';
+    }
+
     public function attachInstructors($instructors)
     {
         if (is_int($instructors)) {
