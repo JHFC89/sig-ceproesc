@@ -15,6 +15,8 @@ class UpdateDisciplineTest extends TestCase
 
     protected $data;
 
+    protected $coordinator;
+
     protected function setUp():void
     {
         parent::setUp();
@@ -31,14 +33,15 @@ class UpdateDisciplineTest extends TestCase
                 $this->discipline->instructors->first()->id,
             ],
         ];
+
+        $this->coordinator = User::factory()
+            ->hasRoles(1, ['name' => 'coordinator'])
+            ->create();
     }
 
     /** @test */
     public function can_update_a_discipline()
     {
-        $coordinator = User::factory()
-            ->hasRoles(1, ['name' => 'coordinator'])
-            ->create();
         $instructor = User::factory()
             ->hasRoles(1, ['name' => 'instructor'])
             ->create();
@@ -53,7 +56,7 @@ class UpdateDisciplineTest extends TestCase
         ];
 
         $response = $this
-            ->actingAs($coordinator)
+            ->actingAs($this->coordinator)
             ->patch(route(
                 'disciplines.update',
                 ['discipline' => $this->discipline]
@@ -147,5 +150,117 @@ class UpdateDisciplineTest extends TestCase
             ), $this->data);
 
         $response->assertUnauthorized();
+    }
+
+    /** @test */
+    public function name_is_required()
+    {
+        unset($this->data['name']);
+
+        $response = $this
+            ->actingAs($this->coordinator)
+            ->patch(route(
+                'disciplines.update', ['discipline' => $this->discipline]
+            ), $this->data);
+
+        $response->assertSessionHasErrors('name');
+    }
+
+    /** @test */
+    public function name_is_must_be_string()
+    {
+        $this->data['name'] = 1;
+
+        $response = $this
+            ->actingAs($this->coordinator)
+            ->patch(route(
+                'disciplines.update', ['discipline' => $this->discipline]
+            ), $this->data);
+
+        $response->assertSessionHasErrors('name');
+    }
+
+    /** @test */
+    public function basic_field_is_required()
+    {
+        unset($this->data['basic']);
+
+        $response = $this
+            ->actingAs($this->coordinator)
+            ->patch(route(
+                'disciplines.update', ['discipline' => $this->discipline]
+            ), $this->data);
+
+        $response->assertSessionHasErrors('basic');
+    }
+
+    /** @test */
+    public function basic_field_is_must_be_boolean()
+    {
+        $this->data['basic'] = 'true';
+
+        $response = $this
+            ->actingAs($this->coordinator)
+            ->patch(route(
+                'disciplines.update', ['discipline' => $this->discipline]
+            ), $this->data);
+
+        $response->assertSessionHasErrors('basic');
+    }
+
+    /** @test */
+    public function duration_field_is_required()
+    {
+        unset($this->data['duration']);
+
+        $response = $this
+            ->actingAs($this->coordinator)
+            ->patch(route(
+                'disciplines.update', ['discipline' => $this->discipline]
+            ), $this->data);
+
+        $response->assertSessionHasErrors('duration');
+    }
+
+    /** @test */
+    public function duration_field_is_must_be_integer()
+    {
+        $this->data['duration'] = 1.2;
+
+        $response = $this
+            ->actingAs($this->coordinator)
+            ->patch(route(
+                'disciplines.update', ['discipline' => $this->discipline]
+            ), $this->data);
+
+        $response->assertSessionHasErrors('duration');
+    }
+
+    /** @test */
+    public function instructors_field_is_required()
+    {
+        unset($this->data['instructors']);
+
+        $response = $this
+            ->actingAs($this->coordinator)
+            ->patch(route(
+                'disciplines.update', ['discipline' => $this->discipline]
+            ), $this->data);
+
+        $response->assertSessionHasErrors('instructors');
+    }
+
+    /** @test */
+    public function instructors_field_is_must_be_integer()
+    {
+        $this->data['instructors'] = 'not an array';
+
+        $response = $this
+            ->actingAs($this->coordinator)
+            ->patch(route(
+                'disciplines.update', ['discipline' => $this->discipline]
+            ), $this->data);
+
+        $response->assertSessionHasErrors('instructors');
     }
 }

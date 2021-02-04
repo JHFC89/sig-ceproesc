@@ -59,6 +59,13 @@ class DisciplineController extends Controller
     {
         abort_if(request()->user()->cannot('update', $discipline), 401);
 
+        request()->validate([
+            'name'          => 'required|string',
+            'basic'         => 'required|boolean',
+            'duration'      => 'required|integer',
+            'instructors'   => 'required|array',
+        ]);
+
         $discipline->update(request()->only('name', 'basic', 'duration'));
 
         $discipline->attachInstructors(request()->instructors);
