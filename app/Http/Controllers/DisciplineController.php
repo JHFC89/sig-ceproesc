@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Discipline;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class DisciplineController extends Controller
 {
@@ -38,7 +39,7 @@ class DisciplineController extends Controller
         abort_if(request()->user()->cannot('create', Discipline::class), 401);
 
         request()->validate([
-            'name'          => 'required|string',
+            'name'          => 'required|string|unique:disciplines,name',
             'basic'         => 'required|boolean',
             'duration'      => 'required|integer',
             'instructors'   => 'required|array',
@@ -69,7 +70,11 @@ class DisciplineController extends Controller
         abort_if(request()->user()->cannot('update', $discipline), 401);
 
         request()->validate([
-            'name'          => 'required|string',
+            'name'          => [
+                'required',
+                'string',
+                Rule::unique('disciplines')->ignore($discipline),
+            ],
             'basic'         => 'required|boolean',
             'duration'      => 'required|integer',
             'instructors'   => 'required|array',

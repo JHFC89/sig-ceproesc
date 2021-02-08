@@ -22,7 +22,7 @@ class DisciplineFactory extends Factory
     public function definition()
     {
         return [
-            'name' => 'Fake Discipline',
+            'name' => $this->faker->words(6, true),
             'basic' => true,
             'duration' => 30,
         ];

@@ -181,6 +181,21 @@ class UpdateDisciplineTest extends TestCase
     }
 
     /** @test */
+    public function name_must_be_unique()
+    {
+        Discipline::factory()->create(['name' => 'test discipline name']);
+        $this->data['name'] = 'test discipline name';
+
+        $response = $this
+            ->actingAs($this->coordinator)
+            ->patch(route(
+                'disciplines.update', ['discipline' => $this->discipline]
+            ), $this->data);
+
+        $response->assertSessionHasErrors('name');
+    }
+
+    /** @test */
     public function basic_field_is_required()
     {
         unset($this->data['basic']);

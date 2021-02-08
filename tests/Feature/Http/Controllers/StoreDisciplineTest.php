@@ -166,6 +166,20 @@ class StoreDisciplineTest extends TestCase
     }
 
     /** @test */
+    public function name_must_be_unique()
+    {
+        Discipline::factory()->create(['name' => 'test discipline name']);
+        $data = $this->data;
+        $data['name'] = 'test discipline name';
+
+        $response = $this
+            ->actingAs($this->coordinator)
+            ->post(route('disciplines.store'), $data);
+
+        $response->assertSessionHasErrors('name');
+    }
+
+    /** @test */
     public function basic_is_required()
     {
         $data = $this->data;

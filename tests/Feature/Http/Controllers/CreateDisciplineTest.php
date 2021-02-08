@@ -11,7 +11,6 @@ class CreateDisciplineTest extends TestCase
     /** @test */
     public function user_can_view_the_create_page()
     {
-        $this->withoutExceptionHandling();
         $coordinator = User::factory()
             ->hasRoles(1, ['name' => 'coordinator'])
             ->create();
