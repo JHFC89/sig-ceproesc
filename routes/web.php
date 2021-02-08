@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LessonController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\LessonRequestController;
@@ -56,6 +57,9 @@ Route::middleware(['auth'])->group(function () {
     ])->name('disciplines.update');
     Route::get('disciplines/{discipline}', [DisciplineController::class, 'show'])
         ->name('disciplines.show');
+
+    Route::get('courses/{course}', [CourseController::class, 'show'])
+        ->name('courses.show');
 });
 
 Route::get('/dashboard', function () {

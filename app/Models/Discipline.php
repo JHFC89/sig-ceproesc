@@ -73,4 +73,14 @@ class Discipline extends Model
     {
         return $this->belongsToMany(User::class, 'discipline_instructor');
     }
+
+    public function scopeWhereBasic($query)
+    {
+        return $query->where('basic', true);
+    }
+
+    public function scopeWhereSpecific($query)
+    {
+        return $query->where('basic', false);
+    }
 }
