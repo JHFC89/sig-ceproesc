@@ -22,7 +22,7 @@ class CourseFactory extends Factory
     public function definition()
     {
         return [
-            'name'      => 'fake course',
+            'name' => $this->faker->words(6, true),
             'duration'  => 123,
         ];
     }

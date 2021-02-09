@@ -60,6 +60,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('courses/{course}', [CourseController::class, 'show'])
         ->name('courses.show');
+    Route::post('courses', [CourseController::class, 'store'])
+        ->name('courses.store');
 });
 
 Route::get('/dashboard', function () {

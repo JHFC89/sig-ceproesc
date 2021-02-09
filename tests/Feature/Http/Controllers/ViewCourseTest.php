@@ -33,7 +33,7 @@ class ViewCourseTest extends TestCase
     public function coordinator_can_view_course()
     {
         $course = Course::factory()->hasDisciplines(2)->create([
-            'name' => 'test course',
+            'name' => 'test name course',
             'duration' => 552,
         ]);
 

@@ -69,6 +69,11 @@ class Discipline extends Model
         return ! $this->isBasic();
     }
 
+    static public function durationWhereIn(array $disciplines)
+    {
+        return Self::whereIn('id', $disciplines)->get()->sum('duration');
+    }
+
     public function instructors()
     {
         return $this->belongsToMany(User::class, 'discipline_instructor');
