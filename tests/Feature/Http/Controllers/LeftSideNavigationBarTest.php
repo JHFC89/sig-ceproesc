@@ -47,6 +47,17 @@ class LeftSideNavigationBarTest extends TestCase
     }
 
     /** @test */
+    public function coordinator_can_view_links_related_to_courses()
+    {
+        $response = $this
+            ->actingAs($this->coordinator)
+            ->get(route('dashboard'));
+
+        $response
+            ->assertSee(route('courses.create'));
+    }
+
+    /** @test */
     public function instructors_cannot_view_links_related_to_disciplines()
     {
         $response = $this
