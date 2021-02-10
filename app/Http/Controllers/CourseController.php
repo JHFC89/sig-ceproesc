@@ -14,6 +14,17 @@ class CourseController extends Controller
         return view('courses.show', compact('course'));
     }
 
+    public function create()
+    {
+        abort_if(request()->user()->cannot('create', Course::class), 401);
+
+        $disciplines = Discipline::all();
+        $basic_disciplines = $disciplines->where('basic');
+        $specific_disciplines = $disciplines->where('basic', false);
+
+        return view('courses.create', compact('basic_disciplines', 'specific_disciplines'));
+    }
+
     public function store()
     {
         abort_if(request()->user()->cannot('create', Course::class), 401);
@@ -47,6 +58,6 @@ class CourseController extends Controller
     {
         $disciplinesTotalDuration = Discipline::durationWhereIn($disciplines);
 
-        return $disciplinesTotalDuration === request()->duration;
+        return $disciplinesTotalDuration == request()->duration;
     }
 }

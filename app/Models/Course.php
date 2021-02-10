@@ -15,7 +15,7 @@ class Course extends Model
     public function addDisciplines($disciplines)
     {
         throw_if(
-            Discipline::durationWhereIn($disciplines) !== $this->duration,
+            Discipline::durationWhereIn($disciplines) != $this->duration,
             InvalidDisciplinesDurationException::class,
             'Disciplines duration does not match the course duration.'
         );
