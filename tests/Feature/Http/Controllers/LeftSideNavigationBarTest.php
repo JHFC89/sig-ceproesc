@@ -54,6 +54,7 @@ class LeftSideNavigationBarTest extends TestCase
             ->get(route('dashboard'));
 
         $response
+            ->assertSee(route('courses.index'))
             ->assertSee(route('courses.create'));
     }
 
@@ -70,6 +71,18 @@ class LeftSideNavigationBarTest extends TestCase
     }
 
     /** @test */
+    public function instructors_cannot_view_links_related_to_courses()
+    {
+        $response = $this
+            ->actingAs($this->instructor)
+            ->get(route('dashboard'));
+
+        $response
+            ->assertDontSee(route('courses.index'))
+            ->assertDontSee(route('courses.create'));
+    }
+
+    /** @test */
     public function novice_cannot_view_links_related_to_disciplines()
     {
         $response = $this
@@ -82,6 +95,18 @@ class LeftSideNavigationBarTest extends TestCase
     }
 
     /** @test */
+    public function novice_cannot_view_links_related_to_courses()
+    {
+        $response = $this
+            ->actingAs($this->novice)
+            ->get(route('dashboard'));
+
+        $response
+            ->assertDontSee(route('courses.index'))
+            ->assertDontSee(route('courses.create'));
+    }
+
+    /** @test */
     public function employer_cannot_view_links_related_to_disciplines()
     {
         $response = $this
@@ -91,5 +116,17 @@ class LeftSideNavigationBarTest extends TestCase
         $response
             ->assertDontSee(route('disciplines.index'))
             ->assertDontSee(route('disciplines.create'));
+    }
+
+    /** @test */
+    public function employer_cannot_view_links_related_to_courses()
+    {
+        $response = $this
+            ->actingAs($this->employer)
+            ->get(route('dashboard'));
+
+        $response
+            ->assertDontSee(route('courses.index'))
+            ->assertDontSee(route('courses.create'));
     }
 }

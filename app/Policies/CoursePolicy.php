@@ -18,7 +18,7 @@ class CoursePolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->isCoordinator();
     }
 
     /**

@@ -7,6 +7,15 @@ use App\Models\Discipline;
 
 class CourseController extends Controller
 {
+    public function index()
+    {
+        abort_if(request()->user()->cannot('viewAny', Course::class), 401);
+
+        $courses = Course::all();
+
+        return view('courses.index', compact('courses'));
+    }
+
     public function show(Course $course)
     {
         abort_if(request()->user()->cannot('view', $course), 401);
