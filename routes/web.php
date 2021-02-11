@@ -26,6 +26,9 @@ use App\Http\Controllers\ForTodayLessonListController;
 Route::get('holidays', [HolidayController::class, 'index'])
     ->name('holidays.index');
 
+Route::post('holidays', [HolidayController::class, 'store'])
+    ->name('holidays.store');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/lessons/today', ForTodayLessonListController::class)->name('lessons.today');
     Route::get('/lessons/week', ForWeekLessonListController::class)->name('lessons.week');
@@ -48,7 +51,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('disciplines.index');
     Route::get('disciplines/create', [DisciplineController::class, 'create'])
         ->name('disciplines.create');
-    Route::post('disciplines/store', [DisciplineController::class, 'store'])
+    Route::post('disciplines', [DisciplineController::class, 'store'])
         ->name('disciplines.store');
     Route::get('disciplines/{discipline}/edit', [
         DisciplineController::class, 

@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Holiday extends Model
 {
@@ -16,5 +17,14 @@ class Holiday extends Model
     public function getFormattedDateAttribute()
     {
         return $this->date->format('d/m/Y');
+    }
+
+    static public function formatDateToCreate(array $data)
+    {
+        return Carbon::createFromDate(
+            $data['year'], 
+            $data['month'], 
+            $data['day']
+        );
     }
 }

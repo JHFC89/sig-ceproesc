@@ -8,7 +8,24 @@ class HolidayController extends Controller
 {
     public function index()
     {
-        $holidays = Holiday::all();
+        $holidays = Holiday::oldest('date')->get();
+
+        return view('holidays.index', compact('holidays'));
+    }
+
+    public function store()
+    {
+        $holidays = collect(request()->holidays);
+        $holidays->each(function ($holiday) {
+            Holiday::create([
+                'name' => $holiday['name'],
+                'date' => Holiday::formatDateToCreate($holiday),
+            ]);
+        });
+
+        $holidays = Holiday::oldest('date')->get();
+
+        session()->flash('status', 'Feriados cadastrados com sucesso!');
 
         return view('holidays.index', compact('holidays'));
     }
