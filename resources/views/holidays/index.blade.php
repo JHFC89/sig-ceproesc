@@ -4,6 +4,10 @@
 
 @section('content')
 
+    @if (session()->has('status'))
+        <x-alert type="success" message="{{ session('status') }}"/>
+    @endif
+
     <x-card.list.table-layout title="feriados">
 
         <x-slot name="header">
@@ -36,4 +40,13 @@
         </x-slot>
 
     </x-card.list.table-layout>
+
+    <div class="flex justify-end">
+        <a 
+            href="{{ route('holidays.create') }}"
+            class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown"
+        >
+            cadastrar feriados
+        </a>
+    </div>
 @endsection

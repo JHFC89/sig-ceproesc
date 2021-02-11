@@ -99,6 +99,17 @@
                     <span class="ml-10 group-hover:text-gray-400">novo</span>
                 </a>
             </li>
+            <li>
+                <a
+                    href="{{ route('holidays.index') }}"
+                    class="
+                        flex items-center px-2 py-1 text-sm group rounded-md
+                        {{ request()->routeIs('holidays.index') ? 'font-medium text-gray-100' : '' }}
+                    "
+                >
+                    <span class="ml-10 group-hover:text-gray-400">feriados</span>
+                </a>
+            </li>
             @endcan
 
         </ul>

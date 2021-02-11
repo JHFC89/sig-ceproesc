@@ -26,6 +26,9 @@ use App\Http\Controllers\ForTodayLessonListController;
 Route::get('holidays', [HolidayController::class, 'index'])
     ->name('holidays.index');
 
+Route::get('holidays/create', [HolidayController::class, 'create'])
+    ->name('holidays.create');
+
 Route::post('holidays', [HolidayController::class, 'store'])
     ->name('holidays.store');
 

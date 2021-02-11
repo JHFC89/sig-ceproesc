@@ -13,6 +13,11 @@ class HolidayController extends Controller
         return view('holidays.index', compact('holidays'));
     }
 
+    public function create()
+    {
+        return view('holidays.create');
+    }
+
     public function store()
     {
         $holidays = collect(request()->holidays);

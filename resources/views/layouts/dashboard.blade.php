@@ -10,7 +10,8 @@
 
     <link rel="stylesheet" href="{{ mix('css/main.css') }}">
 
-    <script src="{{ mix('js/app.js') }}" async></script>
+    @section('head')
+    @show
 </head>
 <body class="flex h-screen overflow-hidden antialiased">
 

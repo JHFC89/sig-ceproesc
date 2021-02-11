@@ -59,6 +59,16 @@ class LeftSideNavigationBarTest extends TestCase
     }
 
     /** @test */
+    public function coordinator_can_view_link_to_view_holidays()
+    {
+        $response = $this
+            ->actingAs($this->coordinator)
+            ->get(route('dashboard'));
+
+        $response->assertSee(route('holidays.index'));
+    }
+
+    /** @test */
     public function instructors_cannot_view_links_related_to_disciplines()
     {
         $response = $this
