@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\LessonRequestController;
@@ -22,7 +23,8 @@ use App\Http\Controllers\ForTodayLessonListController;
 |
 */
 
-Route::view('/mockups/lessons/create', 'mockups.lessons.create');
+Route::get('holidays', [HolidayController::class, 'index'])
+    ->name('holidays.index');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/lessons/today', ForTodayLessonListController::class)->name('lessons.today');
