@@ -16,6 +16,14 @@ class CreateCourseClassesTable extends Migration
         Schema::create('course_classes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->date('begin');
+            $table->date('end');
+            $table->string('first_theoretical_activity_day');
+            $table->string('second_theoretical_activity_day');
+            $table->integer('first_theoretical_activity_duration');
+            $table->integer('second_theoretical_activity_duration');
+            $table->date('vacation_begin');
+            $table->date('vacation_end');
             $table->timestamps();
         });
     }

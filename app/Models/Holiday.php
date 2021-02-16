@@ -27,4 +27,9 @@ class Holiday extends Model
             $data['day']
         );
     }
+
+    public function format(string $format)
+    {
+        return $this->date->format($format);
+    }
 }
