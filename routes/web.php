@@ -6,6 +6,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\DisciplineController;
+use App\Http\Controllers\CourseClassController;
 use App\Http\Controllers\LessonRequestController;
 use App\Http\Controllers\LessonRegisterController;
 use App\Http\Controllers\EvaluationGradeController;
@@ -31,6 +32,9 @@ Route::get('holidays/create', [HolidayController::class, 'create'])
 
 Route::post('holidays', [HolidayController::class, 'store'])
     ->name('holidays.store');
+
+Route::get('classes/{courseClass}', [CourseClassController::class, 'show'])
+    ->name('classes.show');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/lessons/today', ForTodayLessonListController::class)->name('lessons.today');

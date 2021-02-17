@@ -23,16 +23,20 @@ class CourseClassFactory extends Factory
     public function definition()
     {
         $begin = Carbon::parse('+1 week');
+        $end = $begin->copy()->addMonths(3);
+        $vacation_begin = $begin->copy()->addDays(30);
+        $vacation_end = $begin->copy()->addDays(45);
         return [
             'name'                                  => 'test class name',
             'begin'                                 => $begin,
-            'end'                                   => $begin->addMonths(3),
+            'end'                                   => $end,
             'first_theoretical_activity_day'        => 'friday',
             'first_theoretical_activity_duration'   => 4,
             'second_theoretical_activity_day'       => 'saturday',
             'second_theoretical_activity_duration'  => 5,
-            'vacation_begin'                        => $begin->addDays(30),
-            'vacation_end'                          => $begin->addDays(45),
+            'vacation_begin'                        => $vacation_begin,
+            'vacation_end'                          => $vacation_end,
+            'course_id'                             => 1,
         ];
     }
 }

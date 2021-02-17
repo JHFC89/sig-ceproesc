@@ -19,45 +19,46 @@ class CourseClassTest extends TestCase
     {
         $courseClass = new CourseClass;
         $courseClass->name = 'test name'; 
-        $courseClass->begin = Carbon::createFromDate(2021, 4, 1); 
-        $courseClass->end = Carbon::createFromDate(2021, 7, 1); 
+        $courseClass->begin = Carbon::create(2021, 4, 1); 
+        $courseClass->end = Carbon::create(2021, 7, 1); 
         $courseClass->first_theoretical_activity_day = 'friday'; 
         $courseClass->first_theoretical_activity_duration = 4; 
         $courseClass->second_theoretical_activity_day = 'saturday'; 
         $courseClass->second_theoretical_activity_duration = 4; 
-        $courseClass->vacation_begin = Carbon::createFromDate(2021, 5, 3); 
-        $courseClass->vacation_end = Carbon::createFromDate(2021, 5, 17); 
+        $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
+        $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->course_id = 1; 
         $courseClass->save(); 
         $courseClass->offdays()->createMany([
-            ['date' => Carbon::createFromDate(2021, 4, 30)],
-            ['date' => Carbon::createFromDate(2021, 6, 11)],
+            ['date' => Carbon::create(2021, 4, 30)],
+            ['date' => Carbon::create(2021, 6, 11)],
         ]);
         Holiday::factory()->create([
-            'date' => Carbon::createFromDate(2021, 5, 1),
+            'date' => Carbon::create(2021, 5, 1),
         ]);
 
         $result = $courseClass->allTheoreticalDays();
 
         $expectedResult = collect([
-            Carbon::createFromDate(2021, 4, 2),
-            Carbon::createFromDate(2021, 4, 3),
-            Carbon::createFromDate(2021, 4, 9),
-            Carbon::createFromDate(2021, 4, 10),
-            Carbon::createFromDate(2021, 4, 16),
-            Carbon::createFromDate(2021, 4, 17),
-            Carbon::createFromDate(2021, 4, 23),
-            Carbon::createFromDate(2021, 4, 24),
-            Carbon::createFromDate(2021, 5, 21),
-            Carbon::createFromDate(2021, 5, 22),
-            Carbon::createFromDate(2021, 5, 28),
-            Carbon::createFromDate(2021, 5, 29),
-            Carbon::createFromDate(2021, 6, 4),
-            Carbon::createFromDate(2021, 6, 5),
-            Carbon::createFromDate(2021, 6, 12),
-            Carbon::createFromDate(2021, 6, 18),
-            Carbon::createFromDate(2021, 6, 19),
-            Carbon::createFromDate(2021, 6, 25),
-            Carbon::createFromDate(2021, 6, 26),
+            Carbon::create(2021, 4, 2),
+            Carbon::create(2021, 4, 3),
+            Carbon::create(2021, 4, 9),
+            Carbon::create(2021, 4, 10),
+            Carbon::create(2021, 4, 16),
+            Carbon::create(2021, 4, 17),
+            Carbon::create(2021, 4, 23),
+            Carbon::create(2021, 4, 24),
+            Carbon::create(2021, 5, 21),
+            Carbon::create(2021, 5, 22),
+            Carbon::create(2021, 5, 28),
+            Carbon::create(2021, 5, 29),
+            Carbon::create(2021, 6, 4),
+            Carbon::create(2021, 6, 5),
+            Carbon::create(2021, 6, 12),
+            Carbon::create(2021, 6, 18),
+            Carbon::create(2021, 6, 19),
+            Carbon::create(2021, 6, 25),
+            Carbon::create(2021, 6, 26),
         ])->keyBy->format('d-m-Y');
 
         $this->assertEquals($expectedResult->keys(), $result->keys());
@@ -68,14 +69,15 @@ class CourseClassTest extends TestCase
     {
         $courseClass = new CourseClass;
         $courseClass->name = 'test name'; 
-        $courseClass->begin = Carbon::createFromDate(2021, 4, 1); 
-        $courseClass->end = Carbon::createFromDate(2021, 4, 30); 
+        $courseClass->begin = Carbon::create(2021, 4, 1); 
+        $courseClass->end = Carbon::create(2021, 4, 30); 
         $courseClass->first_theoretical_activity_day = 'friday'; 
         $courseClass->first_theoretical_activity_duration = 4; 
         $courseClass->second_theoretical_activity_day = 'saturday'; 
         $courseClass->second_theoretical_activity_duration = 5; 
-        $courseClass->vacation_begin = Carbon::createFromDate(2021, 5, 3); 
-        $courseClass->vacation_end = Carbon::createFromDate(2021, 5, 17); 
+        $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
+        $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->course_id = 1;
         $courseClass->save(); 
 
         $result = $courseClass->totalTheoreticalDaysDuration();
@@ -88,25 +90,26 @@ class CourseClassTest extends TestCase
     {
         $courseClass = new CourseClass;
         $courseClass->name = 'test name'; 
-        $courseClass->begin = Carbon::createFromDate(2021, 4, 1); 
-        $courseClass->end = Carbon::createFromDate(2021, 7, 30); 
+        $courseClass->begin = Carbon::create(2021, 4, 1); 
+        $courseClass->end = Carbon::create(2021, 7, 30); 
         $courseClass->first_theoretical_activity_day = 'friday'; 
         $courseClass->first_theoretical_activity_duration = 4; 
         $courseClass->second_theoretical_activity_day = 'saturday'; 
         $courseClass->second_theoretical_activity_duration = 5; 
-        $courseClass->vacation_begin = Carbon::createFromDate(2021, 5, 3); 
-        $courseClass->vacation_end = Carbon::createFromDate(2021, 5, 17); 
+        $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
+        $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->course_id = 1;
         $courseClass->save(); 
         $courseClass->offdays()->createMany([
-            ['date' => Carbon::createFromDate(2021, 4, 30)],
-            ['date' => Carbon::createFromDate(2021, 6, 11)],
+            ['date' => Carbon::create(2021, 4, 30)],
+            ['date' => Carbon::create(2021, 6, 11)],
         ]);
 
         $result = $courseClass->allOffdays();
 
         $expectedResult = collect([
-            Carbon::createFromDate(2021, 4, 30),
-            Carbon::createFromDate(2021, 6, 11),
+            Carbon::create(2021, 4, 30),
+            Carbon::create(2021, 6, 11),
         ])->keyBy->format('d-m-Y');
 
         $this->assertEquals($expectedResult->keys(), $result->keys());
@@ -117,34 +120,35 @@ class CourseClassTest extends TestCase
     {
         $courseClass = new CourseClass;
         $courseClass->name = 'test name'; 
-        $courseClass->begin = Carbon::createFromDate(2021, 4, 1); 
-        $courseClass->end = Carbon::createFromDate(2021, 7, 30); 
+        $courseClass->begin = Carbon::create(2021, 4, 1); 
+        $courseClass->end = Carbon::create(2021, 7, 30); 
         $courseClass->first_theoretical_activity_day = 'friday'; 
         $courseClass->first_theoretical_activity_duration = 4; 
         $courseClass->second_theoretical_activity_day = 'saturday'; 
         $courseClass->second_theoretical_activity_duration = 5; 
-        $courseClass->vacation_begin = Carbon::createFromDate(2021, 5, 3); 
-        $courseClass->vacation_end = Carbon::createFromDate(2021, 5, 17); 
+        $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
+        $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->course_id = 1;
         $courseClass->save(); 
 
         $result = $courseClass->allVacationDays();
 
         $expectedResult = collect([
-            Carbon::createFromDate(2021, 5, 3),
-            Carbon::createFromDate(2021, 5, 4),
-            Carbon::createFromDate(2021, 5, 5),
-            Carbon::createFromDate(2021, 5, 6),
-            Carbon::createFromDate(2021, 5, 7),
-            Carbon::createFromDate(2021, 5, 8),
-            Carbon::createFromDate(2021, 5, 9),
-            Carbon::createFromDate(2021, 5, 10),
-            Carbon::createFromDate(2021, 5, 11),
-            Carbon::createFromDate(2021, 5, 12),
-            Carbon::createFromDate(2021, 5, 13),
-            Carbon::createFromDate(2021, 5, 14),
-            Carbon::createFromDate(2021, 5, 15),
-            Carbon::createFromDate(2021, 5, 16),
-            Carbon::createFromDate(2021, 5, 17),
+            Carbon::create(2021, 5, 3),
+            Carbon::create(2021, 5, 4),
+            Carbon::create(2021, 5, 5),
+            Carbon::create(2021, 5, 6),
+            Carbon::create(2021, 5, 7),
+            Carbon::create(2021, 5, 8),
+            Carbon::create(2021, 5, 9),
+            Carbon::create(2021, 5, 10),
+            Carbon::create(2021, 5, 11),
+            Carbon::create(2021, 5, 12),
+            Carbon::create(2021, 5, 13),
+            Carbon::create(2021, 5, 14),
+            Carbon::create(2021, 5, 15),
+            Carbon::create(2021, 5, 16),
+            Carbon::create(2021, 5, 17),
         ])->keyBy->format('d-m-Y');
 
         $this->assertEquals($expectedResult->keys(), $result->keys());

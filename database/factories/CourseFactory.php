@@ -23,7 +23,7 @@ class CourseFactory extends Factory
     {
         return [
             'name' => $this->faker->words(6, true),
-            'duration'  => 123,
+            'duration'  => 120,
         ];
     }
 }

@@ -1,6 +1,6 @@
 @props(['title','header', 'body'])
 
-<div>
+<div {{ $attributes }}>
     <h2 class="text-xl font-medium text-gray-700 capitalize">{{ $title }}</h2>
 
     <div class="mt-4 overflow-hidden capitalize shadow rounded-md">

@@ -17,17 +17,17 @@ class HolidaySeeder extends Seeder
     {
         Holiday::factory()->create([
             'name' => 'dia do trabalho',
-            'date' => Carbon::createFromDate(2021, 5, 1)->toDateString(),
+            'date' => Carbon::create(2021, 5, 1)->toDateString(),
         ]);
 
         Holiday::factory()->create([
             'name' => 'dia da criança',
-            'date' => Carbon::createFromDate(2021, 10, 12)->toDateString(),
+            'date' => Carbon::create(2021, 10, 12)->toDateString(),
         ]);
 
         Holiday::factory()->create([
             'name' => 'dia da independência',
-            'date' => Carbon::createFromDate(2021, 9, 7)->toDateString(),
+            'date' => Carbon::create(2021, 9, 7)->toDateString(),
         ]);
     }
 }

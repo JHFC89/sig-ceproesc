@@ -32,4 +32,9 @@ class Holiday extends Model
     {
         return $this->date->format($format);
     }
+
+    static public function allHolidays()
+    {
+        return Self::all()->keyBy->format('d-m-Y');
+    }
 }

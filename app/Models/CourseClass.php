@@ -11,6 +11,8 @@ class CourseClass extends Model
 {
     use HasFactory;
 
+    protected $dates = ['begin', 'end', 'vacation_begin', 'vacation_end'];
+
     public function getFirstDayAttribute()
     {
         return $this->first_theoretical_activity_day;
@@ -112,5 +114,10 @@ class CourseClass extends Model
     public function novices()
     {
         return $this->hasMany(User::class);
+    }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
     }
 }
