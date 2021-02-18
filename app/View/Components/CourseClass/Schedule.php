@@ -6,7 +6,7 @@ use App\Models\Holiday;
 use Carbon\Carbon;
 use Illuminate\View\Component;
 
-class Month extends Component
+class Schedule extends Component
 {
     public $courseClass;
 
@@ -43,7 +43,7 @@ class Month extends Component
      */
     public function render()
     {
-        return view('components.course-class.month');
+        return view('components.course-class.schedule');
     }
 
     public function months()
