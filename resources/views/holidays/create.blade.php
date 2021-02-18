@@ -2,14 +2,14 @@
 
 @section('title', 'Cadastrar Feriados')
 
-@section('head')
+@push('head')
     @livewireStyles
-@endsection
+@endpush
 
 @section('content')
     <livewire:holiday-form />
 @endsection
 
-@section('scripts')
+@push('footer')
     @livewireScripts
-@endsection
+@endpush

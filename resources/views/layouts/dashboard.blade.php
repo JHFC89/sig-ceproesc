@@ -10,8 +10,7 @@
 
     <link rel="stylesheet" href="{{ mix('css/main.css') }}">
 
-    @section('head')
-    @show
+    @stack('head')
 </head>
 <body class="flex h-screen overflow-hidden antialiased">
 
@@ -30,6 +29,7 @@
         </main>
     </div>
 
+    @stack('footer')
     @section('scripts')
         <script type="text/javascript" src="{{ mix('js/app.js') }}" defer></script>
     @show
