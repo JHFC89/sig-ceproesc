@@ -18,22 +18,36 @@ class Schedule extends Component
 
     public $holidays;
 
+    private $clickable;
+
+    private $begin;
+
+    private $end;
+
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($group)
+    public function __construct($group, $offdays = false)
     {
         $this->courseClass = $group;
 
-        $this->theoreticalDays= $group->allTheoreticalDays();
+        $this->theoreticalDays = $group->allTheoreticalDays();
         
         $this->vacation = $group->allVacationDays();
 
-        $this->offdays = $group->allOffdays();
+        $this->offdays = $offdays 
+            ? $this->allOffdays($offdays) 
+            : $group->allOffdays();
+
+        $this->clickable = $offdays ? true : false;
 
         $this->holidays = Holiday::allHolidays();
+
+        $this->begin = $this->courseClass->begin;
+
+        $this->end = $this->courseClass->end;
     }
 
     /**
@@ -92,7 +106,7 @@ class Schedule extends Component
         return $weeks;
     }
 
-    public function dateTypeStyles($date)
+    public function dateType($date)
     {
         if (! $date) {
             return;
@@ -103,12 +117,14 @@ class Schedule extends Component
         switch ($dayType) {
             case 'theoretical':
                 $style = 'bg-green-500 text-white';
+                $style = $this->clickable ? $style . ' cursor-pointer' : $style;
                 break;
             case 'vacation':
                 $style = 'bg-orange-500 text-white';
                 break;
             case 'offday':
                 $style = 'bg-yellow-300 text-white';
+                $style = $this->clickable ? $style . ' cursor-pointer' : $style;
                 break;
             case 'holiday':
                 $style = 'bg-red-500 text-white';
@@ -116,15 +132,27 @@ class Schedule extends Component
             case 'sunday':
                 $style = 'bg-white';
                 break;
+            case 'out':
+                $style = 'bg-white';
+                break;
             default:
                 $style = 'bg-blue-500 text-white';
         }
 
-        return $style;
+        return [
+            'date'  => $date,
+            'style' => $style,
+            'type'  => $dayType,
+        ];
     }
 
     private function dayType($date)
     {
+        if ($this->offdays->has($date->format('d-m-Y'))) {
+            $this->offdays->forget($date->format('d-m-Y'));
+            return 'offday';
+        }
+
         if ($this->theoreticalDays->has($date->format('d-m-Y'))) {
             $this->theoreticalDays->forget($date->format('d-m-Y'));
             return 'theoretical';
@@ -135,11 +163,6 @@ class Schedule extends Component
             return 'vacation';
         }
 
-        if ($this->offdays->has($date->format('d-m-Y'))) {
-            $this->offdays->forget($date->format('d-m-Y'));
-            return 'offday';
-        }
-
         if ($this->holidays->has($date->format('d-m-Y'))) {
             $this->holidays->forget($date->format('d-m-Y'));
             return 'holiday';
@@ -148,5 +171,32 @@ class Schedule extends Component
         if ($date->isSunday()) {
             return 'sunday';
         }
+
+        if (! $date->between($this->begin, $this->end)) {
+            return 'out';
+        }
+    }
+
+    private function allOffdays($offdays)
+    {
+        return $offdays->keyBy->format('d-m-Y');
+    }
+
+    public function dateFormat($date, $format)
+    {
+        return $date ? $date->format($format) : '';
+    }
+
+    public function isClickable($type)
+    {
+        if (! $this->clickable) {
+            return false;
+        }
+
+        if ($type == 'offday' || $type == 'theoretical') {
+            return true;
+        }
+
+        return false;
     }
 }

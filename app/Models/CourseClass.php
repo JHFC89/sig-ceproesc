@@ -35,7 +35,6 @@ class CourseClass extends Model
 
     public function allTheoreticalDays()
     {
-        // get all days for course duration
         $days = CarbonPeriod::since($this->begin)->days(1)->until($this->end);
 
         // filter the two week days of theoretical activity
@@ -44,20 +43,60 @@ class CourseClass extends Model
                 || $date->is($this->second_day);
         }, 'theoretical_days');
 
-        // exclude the offdays
+        $days = $this->excludeOffdays($days);
+
+        $days = $this->excludeVacation($days);
+
+        $days = $this->excludeHolidays($days);
+
+        return collect($days)->keyBy->format('d-m-Y');
+    }
+
+    public function allPracticalDays($offdays = false)
+    {
+        $days = CarbonPeriod::since($this->begin)->days(1)->until($this->end);
+
+        // exclude the two week days of theoretical activity
         $days->filter(function ($date) {
-            return ! $this->offdays->contains(function ($offday) use ($date) {
+            return ! $date->is($this->first_day)
+                && ! $date->is($this->second_day)
+                && ! $date->isSunday();
+        }, 'theoretical_days');
+
+        $days = $this->excludeOffdays($days, $offdays);
+
+        $days = $this->excludeVacation($days);
+
+        $days = $this->excludeHolidays($days);
+
+        return collect($days)->keyBy->format('d-m-Y');
+    }
+
+    private function excludeOffdays($days, $offdays = false)
+    {
+        $offdays = $offdays ? $offays : $this->offdays;
+
+        $days->filter(function ($date) use ($offdays) {
+            return ! $offdays->contains(function ($offday) use ($date) {
                 return $date->format('d-m-Y') 
                     == $offday->format('d-m-Y');
             });
         }, 'offdays');
 
-        // exclude the vacation
+        return $days;
+    }
+
+    private function excludeVacation($days)
+    {
         $days->filter(function ($date) {
             return ! $date->between($this->vacation_begin, $this->vacation_end);
         }, 'vacation');
 
-        // exclude holidays
+        return $days;
+    }
+
+    private function excludeHolidays($days)
+    {
         $days->filter(function ($date) {
             return ! Holiday::all()->contains(function ($holiday) use ($date) {
                 return $date->format('d-m-Y') 
@@ -65,7 +104,7 @@ class CourseClass extends Model
             });
         }, 'holidays');
 
-        return collect($days)->keyBy->format('d-m-Y');
+        return $days;
     }
 
     public function allOffdays()

@@ -24,18 +24,6 @@ use App\Http\Controllers\ForTodayLessonListController;
 |
 */
 
-Route::get('holidays', [HolidayController::class, 'index'])
-    ->name('holidays.index');
-
-Route::get('holidays/create', [HolidayController::class, 'create'])
-    ->name('holidays.create');
-
-Route::post('holidays', [HolidayController::class, 'store'])
-    ->name('holidays.store');
-
-Route::get('classes/{courseClass}', [CourseClassController::class, 'show'])
-    ->name('classes.show');
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/lessons/today', ForTodayLessonListController::class)->name('lessons.today');
     Route::get('/lessons/week', ForWeekLessonListController::class)->name('lessons.week');
@@ -78,6 +66,19 @@ Route::middleware(['auth'])->group(function () {
         ->name('courses.show');
     Route::post('courses', [CourseController::class, 'store'])
         ->name('courses.store');
+
+    Route::get('classes/create', [CourseClassController::class, 'create'])
+        ->name('classes.create');
+    Route::get('classes/{courseClass}', [CourseClassController::class, 'show'])
+        ->name('classes.show');
+
+    Route::get('holidays', [HolidayController::class, 'index'])
+        ->name('holidays.index');
+    Route::get('holidays/create', [HolidayController::class, 'create'])
+        ->name('holidays.create');
+    Route::post('holidays', [HolidayController::class, 'store'])
+        ->name('holidays.store');
+
 });
 
 Route::get('/dashboard', function () {

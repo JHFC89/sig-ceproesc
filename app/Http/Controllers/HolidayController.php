@@ -8,6 +8,8 @@ class HolidayController extends Controller
 {
     public function index()
     {
+        abort_if(request()->user()->cannot('viewAny', Holiday::class), 401);
+
         $holidays = Holiday::oldest('date')->get();
 
         return view('holidays.index', compact('holidays'));
@@ -15,11 +17,15 @@ class HolidayController extends Controller
 
     public function create()
     {
+        abort_if(request()->user()->cannot('create', Holiday::class), 401);
+
         return view('holidays.create');
     }
 
     public function store()
     {
+        abort_if(request()->user()->cannot('create', Holiday::class), 401);
+
         $holidays = collect(request()->holidays);
         $holidays->each(function ($holiday) {
             Holiday::create([

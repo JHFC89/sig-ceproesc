@@ -22,52 +22,11 @@
 
             <x-card.form-input name="date" label="data">
                 <x-slot name="input">
-                    <div class="space-x-4">
-                        <label class="inline-flex items-center space-x-2">
-                            <span>dia</span>
-                            <input 
-                                class="form-input block w-16"
-                                type="number"
-                                min="1"
-                                max="31"
-                                name="holidays[{{ $holiday }}][day]"
-                                value="1"
-                                required
-                            >
-                        </label>
-                        <label class="inline-flex items-center space-x-2">
-                            <span>mês</span>
-                            <select 
-                                class="form-select"
-                                name="holidays[{{ $holiday }}][month]"
-                                required
-                            >
-                                <option value="1">Janeiro</option>
-                                <option value="2">Fevereiro</option>
-                                <option value="3">Março</option>
-                                <option value="4">Abril</option>
-                                <option value="5">Maio</option>
-                                <option value="6">Junho</option>
-                                <option value="7">Julho</option>
-                                <option value="8">Agosto</option>
-                                <option value="9">Setembro</option>
-                                <option value="10">Outrubro</option>
-                                <option value="11">Novembro</option>
-                                <option value="12">Dezembro</option>
-                            </select>
-                        </label>
-                        <label class="inline-flex items-center space-x-2">
-                            <span>ano</span>
-                            <input
-                                class="form-input block w-24"
-                                type="number"
-                                min="{{ now()->format('Y') }}"
-                                name="holidays[{{ $holiday }}][year]"
-                                value="{{ now()->format('Y') }}"
-                                requried
-                            >
-                        </label>
-                    </div>
+                    <x-card.select-date
+                        :dayName="'holidays[' . $holiday . '][day]'"
+                        :monthName="'holidays[' . $holiday . '][month]'"
+                        :yearName="'holidays[' . $holiday . '][year]'"
+                    />
                 </x-slot>
             </x-card.form-input>
 

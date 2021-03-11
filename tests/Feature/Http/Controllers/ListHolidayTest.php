@@ -32,4 +32,58 @@ class ListHolidayTest extends TestCase
             ->assertSee($holidays[2]->name)
             ->assertSee($holidays[2]->formatted_date);
     }
+
+    /** @test */
+    public function guest_cannot_view_a_list_of_holidays()
+    {
+        $response = $this->get(route('holidays.index'));
+
+        $response->assertRedirect('login');
+    }
+
+    /** @test */
+    public function user_without_roles_cannot_view_a_list_of_holidays()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('holidays.index'));
+
+        $response->assertUnauthorized();
+    }
+
+    /** @test */
+    public function instructor_cannot_view_a_list_of_holidays()
+    {
+        $instructor = User::factory()
+            ->hasRoles(1, ['name' => 'instructor'])
+            ->create();
+
+        $response = $this->actingAs($instructor)->get(route('holidays.index'));
+
+        $response->assertUnauthorized();
+    }
+
+    /** @test */
+    public function novice_cannot_view_a_list_of_holidays()
+    {
+        $novice = User::factory()
+            ->hasRoles(1, ['name' => 'novice'])
+            ->create();
+
+        $response = $this->actingAs($novice)->get(route('holidays.index'));
+
+        $response->assertUnauthorized();
+    }
+
+    /** @test */
+    public function employer_cannot_view_a_list_of_holidays()
+    {
+        $employer = User::factory()
+            ->hasRoles(1, ['name' => 'employer'])
+            ->create();
+
+        $response = $this->actingAs($employer)->get(route('holidays.index'));
+
+        $response->assertUnauthorized();
+    }
 }

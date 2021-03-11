@@ -50,4 +50,64 @@ class StoreHolidayTest extends TestCase
         $this->assertEquals('fakest holiday', $holidays[1]->name);
         $this->assertEquals('03/04/2021', $holidays[1]->formatted_date);
     }
+
+    /** @test */
+    public function guest_cannot_store_a_holiday()
+    {
+        $response = $this->post(route('holidays.store'), []);
+
+        $response->assertRedirect('login');
+    }
+
+    /** @test */
+    public function user_without_role_cannot_store_a_holiday()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('holidays.store'), []);
+
+        $response->assertUnauthorized();
+    }
+
+    /** @test */
+    public function instructor_cannot_store_a_holiday()
+    {
+        $instructor = User::factory()
+            ->hasRoles(1, ['name' => 'instructor'])
+            ->create();
+
+        $response = $this
+            ->actingAs($instructor)
+            ->post(route('holidays.store'), []);
+
+        $response->assertUnauthorized();
+    }
+
+    /** @test */
+    public function novice_cannot_store_a_holiday()
+    {
+        $novice = User::factory()
+            ->hasRoles(1, ['name' => 'novice'])
+            ->create();
+
+        $response = $this
+            ->actingAs($novice)
+            ->post(route('holidays.store'), []);
+
+        $response->assertUnauthorized();
+    }
+
+    /** @test */
+    public function employer_cannot_store_a_holiday()
+    {
+        $employer = User::factory()
+            ->hasRoles(1, ['name' => 'employer'])
+            ->create();
+
+        $response = $this
+            ->actingAs($employer)
+            ->post(route('holidays.store'), []);
+
+        $response->assertUnauthorized();
+    }
 }

@@ -54,6 +54,7 @@
                         class="block w-20 form-input bg-gray-100" 
                         type="number"
                         :value="data.basicDuration"
+                        disabled
                     >
                 </x-slot>
             </x-card.form-input>
@@ -66,6 +67,7 @@
                         type="number"
                         value="90"
                         :value="data.specificDuration"
+                        disabled
                     >
                 </x-slot>
             </x-card.form-input>

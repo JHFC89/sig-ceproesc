@@ -117,6 +117,7 @@
     </div>
 
     <div>
+
         <h2 class="text-xl font-medium text-gray-700 capitalize">cronograma</h2>
 
         <div class="px-6 py-6 mt-4 capitalize bg-white shadow divide-y rounded-md">
