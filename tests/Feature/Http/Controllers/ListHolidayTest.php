@@ -5,6 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Holiday;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ListHolidayTest extends TestCase
@@ -14,7 +15,14 @@ class ListHolidayTest extends TestCase
     /** @test */
     public function coordinator_can_view_a_list_of_holidays()
     {
-        $holidays = Holiday::factory()->count(3)->create();
+        $holidays = Holiday::factory()
+            ->count(3)
+            ->state(new Sequence(
+                ['local' => null],
+                ['local' => 'araraquara'],
+                ['local' => 'matão'],
+            ))
+            ->create();
         $coordinator = User::factory()
             ->hasRoles(['name' => 'coordinator'])
             ->create();
@@ -27,10 +35,12 @@ class ListHolidayTest extends TestCase
             ->assertViewHas('holidays')
             ->assertSee($holidays[0]->name)
             ->assertSee($holidays[0]->formatted_date)
+            ->assertSee($holidays[0]->local)
             ->assertSee($holidays[1]->name)
             ->assertSee($holidays[1]->formatted_date)
+            ->assertSee($holidays[1]->local)
             ->assertSee($holidays[2]->name)
-            ->assertSee($holidays[2]->formatted_date);
+            ->assertSee($holidays[2]->local);
     }
 
     /** @test */

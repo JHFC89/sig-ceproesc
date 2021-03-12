@@ -14,6 +14,15 @@ class Holiday extends Model
 
     protected $dates = ['date'];
 
+    public function getLocalAttribute($value)
+    {
+        if (is_null($value)) {
+            return 'nacional';
+        }
+        
+        return $value;
+    }
+
     public function getFormattedDateAttribute()
     {
         return $this->date->format('d/m/Y');

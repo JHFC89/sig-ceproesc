@@ -21,12 +21,21 @@ class StoreHolidayTest extends TestCase
                     'day'   => 1,
                     'month' => 2,
                     'year'  => 2021,
+                    'local' => null,
                 ],
                 [
                     'name'  => 'fakest holiday',
                     'day'   => 3,
                     'month' => 4,
                     'year'  => 2021,
+                    'local' => null,
+                ],
+                [
+                    'name'  => 'fake local holiday',
+                    'day'   => 5,
+                    'month' => 6,
+                    'year'  => 2021,
+                    'local' => 'fake city of tiny lights',
                 ],
             ]
         ];
@@ -43,12 +52,17 @@ class StoreHolidayTest extends TestCase
             ->assertViewIs('holidays.index')
             ->assertViewHas('holidays')
             ->assertSessionHas('status', 'Feriados cadastrados com sucesso!');
-        $this->assertEquals(2, Holiday::count());
+        $this->assertEquals(3, Holiday::count());
         $holidays = Holiday::oldest('date')->get();
         $this->assertEquals('fake holiday', $holidays[0]->name);
         $this->assertEquals('01/02/2021', $holidays[0]->formatted_date);
+        $this->assertEquals('nacional', $holidays[0]->local);
         $this->assertEquals('fakest holiday', $holidays[1]->name);
         $this->assertEquals('03/04/2021', $holidays[1]->formatted_date);
+        $this->assertEquals('nacional', $holidays[1]->local);
+        $this->assertEquals('fake local holiday', $holidays[2]->name);
+        $this->assertEquals('05/06/2021', $holidays[2]->formatted_date);
+        $this->assertEquals('fake city of tiny lights', $holidays[2]->local);
     }
 
     /** @test */

@@ -13,6 +13,7 @@
         <x-slot name="header">
             <x-card.list.table-header class="col-span-4" name="nome"/>
             <x-card.list.table-header class="col-span-4" name="data"/>
+            <x-card.list.table-header class="col-span-4" name="local"/>
         </x-slot>
 
         <x-slot name="body">
@@ -30,6 +31,12 @@
                     <x-card.list.table-body-item class="flex items-center col-span-4">
                         <x-slot name="item">
                             <span>{{ $holiday->formatted_date }}</span>
+                        </x-slot>
+                    </x-card.list.table-body-item>
+
+                    <x-card.list.table-body-item class="flex items-center col-span-4">
+                        <x-slot name="item">
+                            <span>{{ $holiday->local }}</span>
                         </x-slot>
                     </x-card.list.table-body-item>
 

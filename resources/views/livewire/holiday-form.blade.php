@@ -30,6 +30,25 @@
                 </x-slot>
             </x-card.form-input>
 
+            <x-card.form-input name="local" label="local">
+                <x-slot name="input">
+                    <select 
+                        class="form-select capitalize" 
+                        name="holidays[{{ $holiday }}][local]" 
+                    >
+                        <option value="">Nacional</option>
+                        @foreach (App\Models\CitiesList::LIST as $city)
+                            <option 
+                                class="capitalize" 
+                                value="{{ $city }}"
+                            >
+                                {{ $city }}
+                            </option>
+                        @endforeach
+                    </select>
+                </x-slot>
+            </x-card.form-input>
+
         @endfor
 
         </x-slot>

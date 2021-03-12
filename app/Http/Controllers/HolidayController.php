@@ -31,6 +31,7 @@ class HolidayController extends Controller
             Holiday::create([
                 'name' => $holiday['name'],
                 'date' => Holiday::formatDateToCreate($holiday),
+                'local' => $holiday['local'],
             ]);
         });
 
