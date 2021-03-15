@@ -98,9 +98,10 @@ class CourseClass extends Model
     private function excludeHolidays($days)
     {
         $days->filter(function ($date) {
-            return ! Holiday::all()->contains(function ($holiday) use ($date) {
-                return $date->format('d-m-Y') 
-                    == $holiday->format('d-m-Y');
+            return ! Holiday::allForCity($this->city)
+                ->contains(function ($holiday) use ($date) {
+                    return $date->format('d-m-Y') 
+                        == $holiday->format('d-m-Y');
             });
         }, 'holidays');
 

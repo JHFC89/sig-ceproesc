@@ -18,6 +18,10 @@
                 :description="$courseClass->name"
             />
             <x-card.list.description-item
+                label="cidade"
+                :description="$courseClass->city"
+            />
+            <x-card.list.description-item
                 label="carga horária teórica total"
                 :description="$courseClass->course->duration . ' hr'"
             />

@@ -17,6 +17,7 @@ class CreateCourseClassesTable extends Migration
             $table->id();
             $table->foreignId('course_id');
             $table->string('name');
+            $table->string('city');
             $table->date('begin');
             $table->date('end');
             $table->string('first_theoretical_activity_day');

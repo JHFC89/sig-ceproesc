@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\CitiesList;
 use App\Models\Course;
 use App\Models\CourseClass;
 use Carbon\Carbon;
@@ -36,6 +37,7 @@ class CourseClassForm extends Component
 
     protected $rules = [
         'class.name'                => 'required',
+        'class.city'                => 'required',
         'course'                    => 'required',
         'class.first_day'           => 'required|different:class.second_day',
         'class.second_day'          => 'required|different:class.first_day',
@@ -93,6 +95,7 @@ class CourseClassForm extends Component
     {
         $courseClass = new CourseClass;
         $courseClass->name = $this->class['name'];
+        $courseClass->city = $this->class['city'];
         $courseClass->begin = $this->date($this->class['begin']);
         $courseClass->end = $this->date($this->class['end']);
         $courseClass->first_theoretical_activity_day = $this->class['first_day'];
@@ -111,6 +114,7 @@ class CourseClassForm extends Component
 
         return [
             'name'                  => null,
+            'city'                  => CitiesList::LIST[0],
             'begin'                 => [
                 'day'   => 1,
                 'month' => 1,

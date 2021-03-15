@@ -28,6 +28,11 @@ class Holiday extends Model
         return $this->date->format('d/m/Y');
     }
 
+    static public function allForCity(string $local)
+    {
+        return Self::where('local', $local)->orWhere('local', null)->get();
+    }
+
     static public function formatDateToCreate(array $data)
     {
         return Carbon::createFromDate(

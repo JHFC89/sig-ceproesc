@@ -19,6 +19,7 @@ class CourseClassTest extends TestCase
     {
         $courseClass = new CourseClass;
         $courseClass->name = 'test name'; 
+        $courseClass->city = 'fake city'; 
         $courseClass->begin = Carbon::create(2021, 4, 1); 
         $courseClass->end = Carbon::create(2021, 7, 1); 
         $courseClass->first_theoretical_activity_day = 'friday'; 
@@ -69,6 +70,7 @@ class CourseClassTest extends TestCase
     {
         $courseClass = new CourseClass;
         $courseClass->name = 'test name'; 
+        $courseClass->city = 'test city'; 
         $courseClass->begin = Carbon::create(2021, 4, 1); 
         $courseClass->end = Carbon::create(2021, 4, 30); 
         $courseClass->first_theoretical_activity_day = 'friday'; 
@@ -90,6 +92,7 @@ class CourseClassTest extends TestCase
     {
         $courseClass = new CourseClass;
         $courseClass->name = 'test name'; 
+        $courseClass->city = 'test city'; 
         $courseClass->begin = Carbon::create(2021, 4, 1); 
         $courseClass->end = Carbon::create(2021, 7, 30); 
         $courseClass->first_theoretical_activity_day = 'friday'; 
@@ -120,6 +123,7 @@ class CourseClassTest extends TestCase
     {
         $courseClass = new CourseClass;
         $courseClass->name = 'test name'; 
+        $courseClass->city = 'test city'; 
         $courseClass->begin = Carbon::create(2021, 4, 1); 
         $courseClass->end = Carbon::create(2021, 7, 30); 
         $courseClass->first_theoretical_activity_day = 'friday'; 

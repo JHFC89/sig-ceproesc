@@ -26,6 +26,30 @@
                         </x-slot>
                     </x-card.form-input>
 
+                    <x-card.form-input name="city" label="cidade">
+                        <x-slot name="input">
+                            <select 
+                                wire:model="class.city"
+                                class="form-select capitalize @error('course')border-red-500 @enderror" 
+                                name="city" 
+                                required
+                            >
+                                <option class="text-gray-400" selected disabled>Escolha uma cidade</option>
+                                @foreach (App\Models\CitiesList::LIST as $city)
+                                    <option 
+                                        class="capitalize" 
+                                        value="{{ $city }}"
+                                    >
+                                        {{ $city }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('class.city')
+                                <span class="block text-sm text-red-500">{{ $message }}</span>
+                            @enderror
+                        </x-slot>
+                    </x-card.form-input>
+
                     <x-card.form-input name="course" label="programa">
                         <x-slot name="input">
                             <div class="flex">

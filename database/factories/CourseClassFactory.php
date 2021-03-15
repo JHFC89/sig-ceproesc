@@ -28,6 +28,7 @@ class CourseClassFactory extends Factory
         $vacation_end = $begin->copy()->addDays(45);
         return [
             'name'                                  => 'test class name',
+            'city'                                  => 'test city',
             'begin'                                 => $begin,
             'end'                                   => $end,
             'first_theoretical_activity_day'        => 'friday',
