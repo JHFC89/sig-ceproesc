@@ -43,7 +43,9 @@ class Schedule extends Component
 
         $this->clickable = $offdays ? true : false;
 
-        $this->holidays = Holiday::allHolidays();
+        $this->holidays = Holiday::allForCity($group->city)
+             ->keyBy
+             ->format('d-m-Y');
 
         $this->begin = $this->courseClass->begin;
 
