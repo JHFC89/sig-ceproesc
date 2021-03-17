@@ -5,6 +5,7 @@
 'wireDay' => '',
 'wireMonth' => '',
 'wireYear' => '',
+'disabled' => false,
 ])
 
 <div class="space-x-4">
@@ -12,7 +13,8 @@
         <span>dia</span>
         <input 
             @if ($wireDay) wire:model="{{ $wireDay }}" @endif
-            class="form-input block w-16"
+            @if ($disabled) disabled @endif
+            class="form-input block w-16 @if ($disabled) bg-gray-100 @endif"
             type="number"
             min="1"
             max="31"
@@ -25,7 +27,8 @@
         <span>mês</span>
         <select 
             @if ($wireMonth) wire:model="{{ $wireMonth }}" @endif
-            class="form-select"
+            @if ($disabled) disabled @endif
+            class="form-select @if ($disabled) bg-gray-100 @endif"
             name="{{ $monthName }}"
             required
         >
@@ -47,7 +50,8 @@
         <span>ano</span>
         <input
             @if ($wireYear) wire:model="{{ $wireYear }}" @endif
-            class="form-input block w-24"
+            @if ($disabled) disabled @endif
+            class="form-input block w-24 @if ($disabled) bg-gray-100 @endif"
             type="number"
             min="{{ now()->format('Y') }}"
             name="{{ $yearName }}"

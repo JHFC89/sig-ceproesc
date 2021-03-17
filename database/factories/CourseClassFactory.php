@@ -24,6 +24,8 @@ class CourseClassFactory extends Factory
     {
         $begin = Carbon::parse('+1 week');
         $end = $begin->copy()->addMonths(3);
+        $intro_begin = $begin;
+        $intro_end = $begin->copy()->addDays(10);
         $vacation_begin = $begin->copy()->addDays(30);
         $vacation_end = $begin->copy()->addDays(45);
         return [
@@ -31,6 +33,8 @@ class CourseClassFactory extends Factory
             'city'                                  => 'test city',
             'begin'                                 => $begin,
             'end'                                   => $end,
+            'intro_begin'                           => $intro_begin,
+            'intro_end'                             => $intro_end,
             'first_theoretical_activity_day'        => 'friday',
             'first_theoretical_activity_duration'   => 4,
             'second_theoretical_activity_day'       => 'saturday',

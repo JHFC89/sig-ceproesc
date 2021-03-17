@@ -39,6 +39,7 @@ class CourseClassForm extends Component
         'class.name'                => 'required',
         'class.city'                => 'required',
         'course'                    => 'required',
+        'class.begin'               => 'required',
         'class.first_day'           => 'required|different:class.second_day',
         'class.second_day'          => 'required|different:class.first_day',
         'class.first_day_duration'  => 'required|integer|between:1,6',
@@ -59,11 +60,6 @@ class CourseClassForm extends Component
     public function render()
     {
         return view('livewire.course-class-form');
-    }
-
-    public function updated($value, $name)
-    {
-        $this->generateCourseClass();
     }
 
     public function selectCourse($id)
@@ -98,6 +94,8 @@ class CourseClassForm extends Component
         $courseClass->city = $this->class['city'];
         $courseClass->begin = $this->date($this->class['begin']);
         $courseClass->end = $this->date($this->class['end']);
+        $courseClass->intro_begin = $this->date($this->class['begin']);
+        $courseClass->intro_end = $this->date($this->class['intro_end']);
         $courseClass->first_theoretical_activity_day = $this->class['first_day'];
         $courseClass->second_theoretical_activity_day = $this->class['second_day'];
         $courseClass->vacation_begin = $this->date($this->class['vacation_begin']);
@@ -125,6 +123,11 @@ class CourseClassForm extends Component
                 'month' => 1,
                 'year'  => $currentYear
             ],
+            'intro_end'             => [
+                'day'   => 1,
+                'month' => 1,
+                'year'  => $currentYear
+            ],
             'first_day'             => 'monday',
             'first_day_duration'    => 4,
             'second_day'            => 'saturday',
@@ -140,6 +143,11 @@ class CourseClassForm extends Component
                 'year'  => $currentYear
             ],
         ];
+    }
+
+    public function updated()
+    {
+        $this->generateCourseClass();
     }
 
     private function date(array $date)
@@ -205,11 +213,13 @@ class CourseClassForm extends Component
 
         $firstDays = $allDays->filter->is($courseClass->first_day);
         $secondDays = $allDays->filter->is($courseClass->second_day);
+        $introDays = $allDays->diffKeys($firstDays)->diffKeys($secondDays);
 
         $firstDaysDuration = $firstDays->count() * $courseClass->first_duration;
         $secondDaysDuration = $secondDays->count() * $courseClass->second_duration;
+        $introDaysDuration = $introDays->count() * $courseClass->first_duration;
 
-        return $firstDaysDuration + $secondDaysDuration;
+        return $firstDaysDuration + $secondDaysDuration + $introDaysDuration;
     }
 
     public function calculateTotalPracticalDuration()

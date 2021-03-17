@@ -11,7 +11,14 @@ class CourseClass extends Model
 {
     use HasFactory;
 
-    protected $dates = ['begin', 'end', 'vacation_begin', 'vacation_end'];
+    protected $dates = [
+        'begin',
+        'end',
+        'intro_begin',
+        'intro_end',
+        'vacation_begin',
+        'vacation_end'
+    ];
 
     public function getFirstDayAttribute()
     {
@@ -35,12 +42,16 @@ class CourseClass extends Model
 
     public function allTheoreticalDays()
     {
-        $days = CarbonPeriod::since($this->begin)->days(1)->until($this->end);
+        $days = $this->allDurationDays();
 
-        // filter the two week days of theoretical activity
+        // filter the two week days and intro days of theoretical activity
         $days->filter(function ($date) {
             return $date->is($this->first_day)
-                || $date->is($this->second_day);
+                || $date->is($this->second_day)
+                || (
+                    $date->between($this->intro_begin, $this->intro_end)
+                    && ! $date->isSunday()
+                );
         }, 'theoretical_days');
 
         $days = $this->excludeOffdays($days);
@@ -54,13 +65,14 @@ class CourseClass extends Model
 
     public function allPracticalDays($offdays = false)
     {
-        $days = CarbonPeriod::since($this->begin)->days(1)->until($this->end);
+        $days = $this->allDurationDays();
 
-        // exclude the two week days of theoretical activity
+        // exclude the two week days and intro days of theoretical activity
         $days->filter(function ($date) {
             return ! $date->is($this->first_day)
                 && ! $date->is($this->second_day)
-                && ! $date->isSunday();
+                && ! $date->isSunday()
+                && ! $date->between($this->intro_begin, $this->intro_end);
         }, 'theoretical_days');
 
         $days = $this->excludeOffdays($days, $offdays);
@@ -70,6 +82,11 @@ class CourseClass extends Model
         $days = $this->excludeHolidays($days);
 
         return collect($days)->keyBy->format('d-m-Y');
+    }
+
+    private function allDurationDays()
+    {
+        return CarbonPeriod::since($this->begin)->days(1)->until($this->end);
     }
 
     private function excludeOffdays($days, $offdays = false)
@@ -128,11 +145,13 @@ class CourseClass extends Model
 
         $firstDays = $allDays->filter->is($this->first_day);
         $secondDays = $allDays->filter->is($this->second_day);
+        $introDays = $allDays->diffKeys($firstDays)->diffKeys($secondDays);
 
         $firstDaysDuration = $firstDays->count() * $this->first_duration;
         $secondDaysDuration = $secondDays->count() * $this->second_duration;
+        $introDaysDuration = $introDays->count() * $this->first_duration;
 
-        return $firstDaysDuration + $secondDaysDuration;
+        return $firstDaysDuration + $secondDaysDuration + $introDaysDuration;
     }
 
     public function subscribe(User $novice)

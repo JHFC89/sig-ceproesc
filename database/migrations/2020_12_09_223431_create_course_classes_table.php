@@ -20,6 +20,8 @@ class CreateCourseClassesTable extends Migration
             $table->string('city');
             $table->date('begin');
             $table->date('end');
+            $table->date('intro_begin');
+            $table->date('intro_end');
             $table->string('first_theoretical_activity_day');
             $table->string('second_theoretical_activity_day');
             $table->integer('first_theoretical_activity_duration');

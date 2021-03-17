@@ -143,6 +143,31 @@
                         </x-slot>
                     </x-card.form-input>
 
+                    <x-card.form-input name="intro_begin" label="dia de início da introdução">
+                        <x-slot name="input">
+                            <x-card.select-date
+                                :disabled="true"
+                                wireDay="class.begin.day"
+                                wireMonth="class.begin.month"
+                                wireYear="class.begin.year"
+                            />
+                        </x-slot>
+                    </x-card.form-input>
+
+                    <x-card.form-input name="intro_end" label="dia do término da introdução">
+                        <x-slot name="input">
+                            <x-card.select-date
+                                wireDay="class.intro_end.day"
+                                wireMonth="class.intro_end.month"
+                                wireYear="class.intro_end.year"
+                            />
+                            @error('intro_end')
+                                <span class="mt-2 block text-sm text-red-500">{{ $message }}</span>
+                            @enderror
+                        </x-slot>
+                    </x-card.form-input>
+
+
                     <x-card.form-input name="vacation_begin" label="dia de início das férias">
                         <x-slot name="input">
                             <x-card.select-date
@@ -192,7 +217,6 @@
                                         <option value="wednesday">quarta-feira</option>
                                         <option value="thursday">quinta-feira</option>
                                         <option value="friday">sexta-feira</option>
-                                        <option value="saturday">sábado</option>
                                     </select>
                                 </label>
 
@@ -219,7 +243,7 @@
                         </x-slot>
                     </x-card.form-input>
 
-                    <x-card.form-input name="second_day" label="primeiro dia da semana de aula teórica">
+                    <x-card.form-input name="second_day" label="segundo dia da semana de aula teórica">
                         <x-slot name="input">
                             <div class="space-x-4">
 

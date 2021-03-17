@@ -22,6 +22,8 @@ class CourseClassTest extends TestCase
         $courseClass->city = 'fake city'; 
         $courseClass->begin = Carbon::create(2021, 4, 1); 
         $courseClass->end = Carbon::create(2021, 7, 1); 
+        $courseClass->intro_begin = Carbon::create(2021, 4, 1); 
+        $courseClass->intro_end = Carbon::create(2021, 4, 7); 
         $courseClass->first_theoretical_activity_day = 'friday'; 
         $courseClass->first_theoretical_activity_duration = 4; 
         $courseClass->second_theoretical_activity_day = 'saturday'; 
@@ -41,8 +43,12 @@ class CourseClassTest extends TestCase
         $result = $courseClass->allTheoreticalDays();
 
         $expectedResult = collect([
+            Carbon::create(2021, 4, 1),
             Carbon::create(2021, 4, 2),
             Carbon::create(2021, 4, 3),
+            Carbon::create(2021, 4, 5),
+            Carbon::create(2021, 4, 6),
+            Carbon::create(2021, 4, 7),
             Carbon::create(2021, 4, 9),
             Carbon::create(2021, 4, 10),
             Carbon::create(2021, 4, 16),
@@ -73,6 +79,8 @@ class CourseClassTest extends TestCase
         $courseClass->city = 'test city'; 
         $courseClass->begin = Carbon::create(2021, 4, 1); 
         $courseClass->end = Carbon::create(2021, 4, 30); 
+        $courseClass->intro_begin = Carbon::create(2021, 4, 1); 
+        $courseClass->intro_end = Carbon::create(2021, 4, 7); 
         $courseClass->first_theoretical_activity_day = 'friday'; 
         $courseClass->first_theoretical_activity_duration = 4; 
         $courseClass->second_theoretical_activity_day = 'saturday'; 
@@ -80,11 +88,83 @@ class CourseClassTest extends TestCase
         $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
         $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
         $courseClass->course_id = 1;
-        $courseClass->save(); 
+        $courseClass->save();
 
         $result = $courseClass->totalTheoreticalDaysDuration();
 
-        $this->assertEquals(40, $result);
+        $this->assertEquals(56, $result);
+    }
+
+    /** @test */
+    public function can_get_all_practical_activity_days()
+    {
+        $courseClass = new CourseClass;
+        $courseClass->name = 'test name'; 
+        $courseClass->city = 'fake city'; 
+        $courseClass->begin = Carbon::create(2021, 4, 1); 
+        $courseClass->end = Carbon::create(2021, 7, 1); 
+        $courseClass->intro_begin = Carbon::create(2021, 4, 1); 
+        $courseClass->intro_end = Carbon::create(2021, 4, 7); 
+        $courseClass->first_theoretical_activity_day = 'friday'; 
+        $courseClass->first_theoretical_activity_duration = 4; 
+        $courseClass->second_theoretical_activity_day = 'saturday'; 
+        $courseClass->second_theoretical_activity_duration = 4; 
+        $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
+        $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->course_id = 1; 
+        $courseClass->save(); 
+        $courseClass->offdays()->createMany([
+            ['date' => Carbon::create(2021, 4, 30)],
+            ['date' => Carbon::create(2021, 6, 11)],
+        ]);
+        Holiday::factory()->create(['date' => Carbon::create(2021, 4, 21)]);
+        Holiday::factory()->create(['date' => Carbon::create(2021, 5, 1),]);
+
+        $result = $courseClass->allPracticalDays();
+
+        $expectedResult = collect([
+            Carbon::create(2021, 4, 8),
+            Carbon::create(2021, 4, 12),
+            Carbon::create(2021, 4, 13),
+            Carbon::create(2021, 4, 14),
+            Carbon::create(2021, 4, 15),
+            Carbon::create(2021, 4, 19),
+            Carbon::create(2021, 4, 20),
+            Carbon::create(2021, 4, 22),
+            Carbon::create(2021, 4, 26),
+            Carbon::create(2021, 4, 27),
+            Carbon::create(2021, 4, 28),
+            Carbon::create(2021, 4, 29),
+            Carbon::create(2021, 5, 18),
+            Carbon::create(2021, 5, 19),
+            Carbon::create(2021, 5, 20),
+            Carbon::create(2021, 5, 24),
+            Carbon::create(2021, 5, 25),
+            Carbon::create(2021, 5, 26),
+            Carbon::create(2021, 5, 27),
+            Carbon::create(2021, 5, 31),
+            Carbon::create(2021, 6, 1),
+            Carbon::create(2021, 6, 2),
+            Carbon::create(2021, 6, 3),
+            Carbon::create(2021, 6, 7),
+            Carbon::create(2021, 6, 8),
+            Carbon::create(2021, 6, 9),
+            Carbon::create(2021, 6, 10),
+            Carbon::create(2021, 6, 14),
+            Carbon::create(2021, 6, 15),
+            Carbon::create(2021, 6, 16),
+            Carbon::create(2021, 6, 17),
+            Carbon::create(2021, 6, 21),
+            Carbon::create(2021, 6, 22),
+            Carbon::create(2021, 6, 23),
+            Carbon::create(2021, 6, 24),
+            Carbon::create(2021, 6, 28),
+            Carbon::create(2021, 6, 29),
+            Carbon::create(2021, 6, 30),
+            Carbon::create(2021, 7, 1),
+        ])->keyBy->format('d-m-Y');
+
+        $this->assertEquals($expectedResult->keys(), $result->keys());
     }
 
     /** @test */
@@ -95,6 +175,8 @@ class CourseClassTest extends TestCase
         $courseClass->city = 'test city'; 
         $courseClass->begin = Carbon::create(2021, 4, 1); 
         $courseClass->end = Carbon::create(2021, 7, 30); 
+        $courseClass->intro_begin = Carbon::create(2021, 4, 1); 
+        $courseClass->intro_end = Carbon::create(2021, 4, 7); 
         $courseClass->first_theoretical_activity_day = 'friday'; 
         $courseClass->first_theoretical_activity_duration = 4; 
         $courseClass->second_theoretical_activity_day = 'saturday'; 
@@ -126,6 +208,8 @@ class CourseClassTest extends TestCase
         $courseClass->city = 'test city'; 
         $courseClass->begin = Carbon::create(2021, 4, 1); 
         $courseClass->end = Carbon::create(2021, 7, 30); 
+        $courseClass->intro_begin = Carbon::create(2021, 4, 1); 
+        $courseClass->intro_end = Carbon::create(2021, 4, 7); 
         $courseClass->first_theoretical_activity_day = 'friday'; 
         $courseClass->first_theoretical_activity_duration = 4; 
         $courseClass->second_theoretical_activity_day = 'saturday'; 
