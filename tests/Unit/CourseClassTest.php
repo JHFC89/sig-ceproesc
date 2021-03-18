@@ -28,6 +28,7 @@ class CourseClassTest extends TestCase
         $courseClass->first_theoretical_activity_duration = 4; 
         $courseClass->second_theoretical_activity_day = 'saturday'; 
         $courseClass->second_theoretical_activity_duration = 4; 
+        $courseClass->practical_duration = 1; 
         $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
         $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
         $courseClass->course_id = 1; 
@@ -85,14 +86,15 @@ class CourseClassTest extends TestCase
         $courseClass->first_theoretical_activity_duration = 4; 
         $courseClass->second_theoretical_activity_day = 'saturday'; 
         $courseClass->second_theoretical_activity_duration = 5; 
+        $courseClass->practical_duration = 1; 
         $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
         $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
         $courseClass->course_id = 1;
         $courseClass->save();
 
-        $result = $courseClass->totalTheoreticalDaysDuration();
+        $resultInHours = $courseClass->totalTheoreticalDaysDuration();
 
-        $this->assertEquals(56, $result);
+        $this->assertEquals(56, $resultInHours);
     }
 
     /** @test */
@@ -109,6 +111,7 @@ class CourseClassTest extends TestCase
         $courseClass->first_theoretical_activity_duration = 4; 
         $courseClass->second_theoretical_activity_day = 'saturday'; 
         $courseClass->second_theoretical_activity_duration = 4; 
+        $courseClass->practical_duration = 1; 
         $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
         $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
         $courseClass->course_id = 1; 
@@ -168,6 +171,31 @@ class CourseClassTest extends TestCase
     }
 
     /** @test */
+    public function can_get_total_duration_for_practical_activity_days()
+    {
+        $courseClass = new CourseClass;
+        $courseClass->name = 'test name'; 
+        $courseClass->city = 'test city'; 
+        $courseClass->begin = Carbon::create(2021, 4, 1); 
+        $courseClass->end = Carbon::create(2021, 4, 30); 
+        $courseClass->intro_begin = Carbon::create(2021, 4, 1); 
+        $courseClass->intro_end = Carbon::create(2021, 4, 7); 
+        $courseClass->first_theoretical_activity_day = 'friday'; 
+        $courseClass->first_theoretical_activity_duration = 4; 
+        $courseClass->second_theoretical_activity_day = 'saturday'; 
+        $courseClass->second_theoretical_activity_duration = 5; 
+        $courseClass->practical_duration = 1; 
+        $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
+        $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->course_id = 1;
+        $courseClass->save();
+
+        $resultInMinutes = $courseClass->totalPracticalDaysDuration();
+
+        $this->assertEquals(13, $resultInMinutes);
+    }
+
+    /** @test */
     public function can_get_all_offdays()
     {
         $courseClass = new CourseClass;
@@ -181,6 +209,7 @@ class CourseClassTest extends TestCase
         $courseClass->first_theoretical_activity_duration = 4; 
         $courseClass->second_theoretical_activity_day = 'saturday'; 
         $courseClass->second_theoretical_activity_duration = 5; 
+        $courseClass->practical_duration = 1; 
         $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
         $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
         $courseClass->course_id = 1;
@@ -214,6 +243,7 @@ class CourseClassTest extends TestCase
         $courseClass->first_theoretical_activity_duration = 4; 
         $courseClass->second_theoretical_activity_day = 'saturday'; 
         $courseClass->second_theoretical_activity_duration = 5; 
+        $courseClass->practical_duration = 1; 
         $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
         $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
         $courseClass->course_id = 1;

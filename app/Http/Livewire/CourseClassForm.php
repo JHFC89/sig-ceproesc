@@ -27,8 +27,6 @@ class CourseClassForm extends Component
 
     public $specificDuration = null;
 
-    public $practicalDuration = null;
-
     public $showSchedule = false;
 
     protected $listeners = ['toggledoffday' => 'toggleOffday'];
@@ -36,16 +34,17 @@ class CourseClassForm extends Component
     protected $run = false;
 
     protected $rules = [
-        'class.name'                => 'required',
-        'class.city'                => 'required',
-        'course'                    => 'required',
-        'class.begin'               => 'required',
-        'class.first_day'           => 'required|different:class.second_day',
-        'class.second_day'          => 'required|different:class.first_day',
-        'class.first_day_duration'  => 'required|integer|between:1,6',
-        'class.second_day_duration' => 'required|integer|between:1,6',
-        'class.second_day_duration' => 'required|integer|between:1,6',
-        'practicalDuration'         => 'required|integer|between:1,6',
+        'class.name'                        => 'required',
+        'class.city'                        => 'required',
+        'course'                            => 'required',
+        'class.begin'                       => 'required',
+        'class.first_day'                   => 'required|different:class.second_day',
+        'class.second_day'                  => 'required|different:class.first_day',
+        'class.first_day_duration'          => 'required|integer|between:1,6',
+        'class.second_day_duration'         => 'required|integer|between:1,6',
+        'class.second_day_duration'         => 'required|integer|between:1,6',
+        'class.practical_duration.hours'    => 'required|integer|between:1,6',
+        'class.practical_duration.minutes'  => 'required|integer|between:0,59',
     ];
 
     public function mount()
@@ -98,6 +97,7 @@ class CourseClassForm extends Component
         $courseClass->intro_end = $this->date($this->class['intro_end']);
         $courseClass->first_theoretical_activity_day = $this->class['first_day'];
         $courseClass->second_theoretical_activity_day = $this->class['second_day'];
+        $courseClass->practical_duration = $this->practicalDuration();
         $courseClass->vacation_begin = $this->date($this->class['vacation_begin']);
         $courseClass->vacation_end = $this->date($this->class['vacation_end']);
         $courseClass->first_theoretical_activity_duration = $this->class['first_day_duration'];
@@ -132,6 +132,10 @@ class CourseClassForm extends Component
             'first_day_duration'    => 4,
             'second_day'            => 'saturday',
             'second_day_duration'   => 5,
+            'practical_duration'    => [
+                'hours'   => 5,
+                'minutes' => 15,
+            ],
             'vacation_begin'        => [
                 'day'   => 1,
                 'month' => 1,
@@ -153,6 +157,16 @@ class CourseClassForm extends Component
     private function date(array $date)
     {
         return Carbon::create($date['year'], $date['month'], $date['day']);
+    }
+
+    private function practicalDuration()
+    {
+        $hours = $this->class['practical_duration']['hours'];
+        $minutes = $this->class['practical_duration']['minutes'];
+
+        $hoursInMinutes = $hours * 60;
+
+        return $hoursInMinutes + $minutes;
     }
 
     public function toggleOffday($date)
@@ -229,7 +243,7 @@ class CourseClassForm extends Component
         }
         
         if ($this->showSchedule) {
-            return $this->courseClass->allPracticalDays()->count() * $this->practicalDuration;
+            return $this->courseClass->totalPracticalDaysDuration() / 60;
         }
     }
 

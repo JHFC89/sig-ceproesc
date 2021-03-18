@@ -151,7 +151,14 @@ class CourseClass extends Model
         $secondDaysDuration = $secondDays->count() * $this->second_duration;
         $introDaysDuration = $introDays->count() * $this->first_duration;
 
+        // return hours
         return $firstDaysDuration + $secondDaysDuration + $introDaysDuration;
+    }
+
+    public function totalPracticalDaysDuration()
+    {
+        // return minutes
+        return $this->allPracticalDays()->count() * $this->practical_duration;
     }
 
     public function subscribe(User $novice)

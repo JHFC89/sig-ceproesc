@@ -26,6 +26,7 @@ class CreateCourseClassesTable extends Migration
             $table->string('second_theoretical_activity_day');
             $table->integer('first_theoretical_activity_duration');
             $table->integer('second_theoretical_activity_duration');
+            $table->integer('practical_duration');
             $table->date('vacation_begin');
             $table->date('vacation_end');
             $table->timestamps();

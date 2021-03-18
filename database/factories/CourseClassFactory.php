@@ -39,6 +39,7 @@ class CourseClassFactory extends Factory
             'first_theoretical_activity_duration'   => 4,
             'second_theoretical_activity_day'       => 'saturday',
             'second_theoretical_activity_duration'  => 5,
+            'practical_duration'                    => 300,
             'vacation_begin'                        => $vacation_begin,
             'vacation_end'                          => $vacation_end,
             'course_id'                             => 1,

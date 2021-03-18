@@ -287,17 +287,34 @@
 
                     <x-card.form-input name="practical_duration" label="carga horária atividade prática">
                         <x-slot name="input">
-                            <input 
-                                wire:model="practicalDuration"
-                                class="block w-20 form-input @error('practicalDuration')border-red-500 @enderror" 
-                                type="number"
-                                value="{{ $practicalDuration }}"
-                                min="1"
-                                max="6"
-                            >
-                            @error('practicalDuration')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                            <div class="space-x-4">
+                                <label class="inline-flex items-center space-x-2">
+                                    <input 
+                                        wire:model="class.practical_duration.hours"
+                                        class="inline-block w-20 form-input @error('class.practical_duration.hours')border-red-500 @enderror" 
+                                        type="number"
+                                        min="1"
+                                        max="6"
+                                    >
+                                    <span>Horas</span>
+                                </label>
+                                <label class="inline-flex items-center space-x-2">
+                                    <input 
+                                        wire:model="class.practical_duration.minutes"
+                                        class="inline-block w-20 form-input @error('class.practical_duration.minutes')border-red-500 @enderror" 
+                                        type="number"
+                                        min="1"
+                                        max="59"
+                                    >
+                                    <span>Minutos</span>
+                                </label>
+                                @error('class.practical_duration.hours')
+                                    <span class="block text-sm text-red-500">{{ $message }}</span>
+                                @enderror
+                                @error('class.practical_duration.minutes')
+                                    <span class="block text-sm text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
                         </x-slot>
                     </x-card.form-input>
 

@@ -33,6 +33,10 @@
                 label="carga horária módulo específico"
                 :description="$courseClass->course->specificDisciplinesDuration() . ' hr'"
             />
+            <x-card.list.description-item
+                label="carga horária prática total"
+                :description="($courseClass->totalPracticalDaysDuration() / 60) . ' hr'"
+            />
         </x-slot>
     </x-card.list.description-layout>
 
