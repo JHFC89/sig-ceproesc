@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Course;
 use App\Models\Discipline;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Factories\Sequence;
 
 class CourseSeeder extends Seeder
 {
@@ -16,15 +15,15 @@ class CourseSeeder extends Seeder
      */
     public function run()
     {
-        Course::factory()
-            ->hasAttached(
-                Discipline::factory()
-                    ->count(10)
-                    ->state(new Sequence(
-                        ['basic' => true],
-                        ['basic' => false]
-                    ))
-            )
-            ->create();
+        $disciplinesA = Discipline::where('duration', 30)->take(2)->get();
+        $disciplinesB = Discipline::where('duration', 48)->take(2)->get();
+        $disciplines = $disciplinesA->concat($disciplinesB);
+
+        $course = Course::factory()->create([
+            'name'      => 'Programa de Teste',
+            'duration'  => 156,
+        ]);
+
+        $course->addDisciplines($disciplines->pluck('id')->toArray());
     }
 }
