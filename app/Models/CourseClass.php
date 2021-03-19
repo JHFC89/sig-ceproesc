@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Carbon\CarbonPeriod;
+use App\Models\CourseClassSchedule;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\NotANoviceException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CourseClass extends Model
 {
-    use HasFactory;
+    use HasFactory, CourseClassSchedule;
 
     protected $dates = [
         'begin',
@@ -38,127 +38,6 @@ class CourseClass extends Model
     public function getSecondDurationAttribute()
     {
         return $this->second_theoretical_activity_duration;
-    }
-
-    public function allTheoreticalDays()
-    {
-        $days = $this->allDurationDays();
-
-        // filter the two week days and intro days of theoretical activity
-        $days->filter(function ($date) {
-            return $date->is($this->first_day)
-                || $date->is($this->second_day)
-                || (
-                    $date->between($this->intro_begin, $this->intro_end)
-                    && ! $date->isSunday()
-                );
-        }, 'theoretical_days');
-
-        $days = $this->excludeOffdays($days);
-
-        $days = $this->excludeVacation($days);
-
-        $days = $this->excludeHolidays($days);
-
-        return collect($days)->keyBy->format('d-m-Y');
-    }
-
-    public function allPracticalDays($offdays = false)
-    {
-        $days = $this->allDurationDays();
-
-        // exclude the two week days and intro days of theoretical activity
-        $days->filter(function ($date) {
-            return ! $date->is($this->first_day)
-                && ! $date->is($this->second_day)
-                && ! $date->isSunday()
-                && ! $date->between($this->intro_begin, $this->intro_end);
-        }, 'theoretical_days');
-
-        $days = $this->excludeOffdays($days, $offdays);
-
-        $days = $this->excludeVacation($days);
-
-        $days = $this->excludeHolidays($days);
-
-        return collect($days)->keyBy->format('d-m-Y');
-    }
-
-    private function allDurationDays()
-    {
-        return CarbonPeriod::since($this->begin)->days(1)->until($this->end);
-    }
-
-    private function excludeOffdays($days, $offdays = false)
-    {
-        $offdays = $offdays ? $offays : $this->offdays;
-
-        $days->filter(function ($date) use ($offdays) {
-            return ! $offdays->contains(function ($offday) use ($date) {
-                return $date->format('d-m-Y') 
-                    == $offday->format('d-m-Y');
-            });
-        }, 'offdays');
-
-        return $days;
-    }
-
-    private function excludeVacation($days)
-    {
-        $days->filter(function ($date) {
-            return ! $date->between($this->vacation_begin, $this->vacation_end);
-        }, 'vacation');
-
-        return $days;
-    }
-
-    private function excludeHolidays($days)
-    {
-        $days->filter(function ($date) {
-            return ! Holiday::allForCity($this->city)
-                ->contains(function ($holiday) use ($date) {
-                    return $date->format('d-m-Y') 
-                        == $holiday->format('d-m-Y');
-            });
-        }, 'holidays');
-
-        return $days;
-    }
-
-    public function allOffdays()
-    {
-        return $this->offdays->keyBy->format('d-m-Y');
-    }
-
-    public function allVacationDays()
-    {
-        $days = CarbonPeriod::since($this->vacation_begin)
-            ->days(1)
-            ->until($this->vacation_end);
-
-        return collect($days)->keyBy->format('d-m-Y');
-    }
-
-    public function totalTheoreticalDaysDuration()
-    {
-        $allDays = $this->allTheoreticalDays();
-
-        $firstDays = $allDays->filter->is($this->first_day);
-        $secondDays = $allDays->filter->is($this->second_day);
-        $introDays = $allDays->diffKeys($firstDays)->diffKeys($secondDays);
-
-        $firstDaysDuration = $firstDays->count() * $this->first_duration;
-        $secondDaysDuration = $secondDays->count() * $this->second_duration;
-        $introDaysDuration = $introDays->count() * $this->first_duration;
-
-        // return hours
-        return $firstDaysDuration + $secondDaysDuration + $introDaysDuration;
-    }
-
-    public function totalPracticalDaysDuration()
-    {
-        // return minutes
-        return $this->allPracticalDays()->count() * $this->practical_duration;
     }
 
     public function subscribe(User $novice)
