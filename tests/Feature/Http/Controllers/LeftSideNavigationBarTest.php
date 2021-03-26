@@ -4,6 +4,7 @@ namespace Tests\Feature\Http\Controllers;
 
 use Tests\TestCase;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LeftSideNavigationBarTest extends TestCase
 {
@@ -31,6 +32,8 @@ class LeftSideNavigationBarTest extends TestCase
             ->hasRoles(1, ['name' => 'employer'])
             ->create();
     }
+
+    use RefreshDatabase;
 
     /** @test */
     public function coordinator_can_view_links_related_to_disciplines()
@@ -64,6 +67,16 @@ class LeftSideNavigationBarTest extends TestCase
             ->get(route('dashboard'));
 
         $response->assertSee(route('holidays.index'));
+    }
+
+    /** @test */
+    public function coordinator_can_view_links_related_to_courses_classes()
+    {
+        $response = $this
+            ->actingAs($this->coordinator)
+            ->get(route('dashboard'));
+
+        $response->assertSee(route('classes.create'));
     }
 
     /** @test */

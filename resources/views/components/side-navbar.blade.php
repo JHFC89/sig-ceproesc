@@ -70,7 +70,7 @@
                 <a href="{{ route('courses.index') }}"
                     class="
                         flex items-center px-2 py-2 group rounded-md
-                        {{ request()->routeIs('courses.*') ? 'font-medium text-gray-100' : '' }}
+                        {{ request()->routeIs('courses.*') || request()->routeIs('holidays.*') ? 'font-medium text-gray-100' : '' }}
                     "
                 >
                     <x-icons.document-text class="w-6 group-hover:text-gray-400"/>
@@ -108,6 +108,31 @@
                     "
                 >
                     <span class="ml-10 group-hover:text-gray-400">feriados</span>
+                </a>
+            </li>
+            @endcan
+
+            @can('create', \App\Models\CourseClass::class)
+            <li>
+                <a href="{{ route('classes.create') }}"
+                    class="
+                        flex items-center px-2 py-2 group rounded-md
+                        {{ request()->routeIs('classes.*') ? 'font-medium text-gray-100' : '' }}
+                    "
+                >
+                    <x-icons.user-group class="w-6 group-hover:text-gray-400"/>
+                    <span class="ml-4 group-hover:text-gray-400">Turmas</span>
+                </a>
+            </li>
+            <li>
+                <a
+                    href="{{ route('classes.create') }}"
+                    class="
+                        flex items-center px-2 py-1 text-sm group rounded-md
+                        {{ request()->routeIs('classes.create') ? 'font-medium text-gray-100' : '' }}
+                    "
+                >
+                    <span class="ml-10 group-hover:text-gray-400">nova</span>
                 </a>
             </li>
             @endcan
