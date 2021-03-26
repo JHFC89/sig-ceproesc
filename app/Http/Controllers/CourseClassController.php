@@ -6,6 +6,15 @@ use App\Models\CourseClass;
 
 class CourseClassController extends Controller
 {
+    public function index()
+    {
+        abort_if(request()->user()->cannot('viewAny', CourseClass::class), 401);
+
+        $courseClasses = CourseClass::all();
+
+        return view('classes.index', compact('courseClasses'));
+    }
+
     public function show(CourseClass $courseClass)
     {
         abort_if(request()->user()->cannot('view', $courseClass), 401);

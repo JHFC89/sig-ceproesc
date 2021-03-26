@@ -114,7 +114,7 @@
 
             @can('create', \App\Models\CourseClass::class)
             <li>
-                <a href="{{ route('classes.create') }}"
+                <a href="{{ route('classes.index') }}"
                     class="
                         flex items-center px-2 py-2 group rounded-md
                         {{ request()->routeIs('classes.*') ? 'font-medium text-gray-100' : '' }}
@@ -122,6 +122,17 @@
                 >
                     <x-icons.user-group class="w-6 group-hover:text-gray-400"/>
                     <span class="ml-4 group-hover:text-gray-400">Turmas</span>
+                </a>
+            </li>
+            <li>
+                <a
+                    href="{{ route('classes.index') }}"
+                    class="
+                        flex items-center px-2 py-1 text-sm group rounded-md
+                        {{ request()->routeIs('classes.index') ? 'font-medium text-gray-100' : '' }}
+                    "
+                >
+                    <span class="ml-10 group-hover:text-gray-400">todas</span>
                 </a>
             </li>
             <li>

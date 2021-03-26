@@ -67,6 +67,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('courses', [CourseController::class, 'store'])
         ->name('courses.store');
 
+    Route::get('classes', [CourseClassController::class, 'index'])
+        ->name('classes.index');
     Route::get('classes/create', [CourseClassController::class, 'create'])
         ->name('classes.create');
     Route::get('classes/{courseClass}', [CourseClassController::class, 'show'])

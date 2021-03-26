@@ -76,7 +76,9 @@ class LeftSideNavigationBarTest extends TestCase
             ->actingAs($this->coordinator)
             ->get(route('dashboard'));
 
-        $response->assertSee(route('classes.create'));
+        $response
+            ->assertSee(route('classes.index'))
+            ->assertSee(route('classes.create'));
     }
 
     /** @test */
