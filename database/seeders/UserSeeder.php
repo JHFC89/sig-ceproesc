@@ -52,8 +52,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('asdf'),
             ]);
 
-        CourseClass::where('name', 'janeiro - 2020')->first()->subscribe($noviceA);
-
         // novice 2
         $noviceB = User::factory()
             ->hasRoles(1, ['name' => 'novice'])
@@ -63,8 +61,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('asdf'),
             ]);
 
-        CourseClass::where('name', 'julho - 2020')->first()->subscribe($noviceB);
-
         // novice 3
         $noviceC = User::factory()
             ->hasRoles(1, ['name' => 'novice'])
@@ -73,8 +69,6 @@ class UserSeeder extends Seeder
                 'email' => 'aprendiz3@sig.com.br',
                 'password' => Hash::make('asdf'),
             ]);
-
-        CourseClass::where('name', 'janeiro - 2021')->first()->subscribe($noviceC);
 
         // employer
         $employer = User::factory()

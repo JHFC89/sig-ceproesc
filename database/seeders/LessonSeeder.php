@@ -16,50 +16,6 @@ class LessonSeeder extends Seeder
      */
     public function run()
     {
-        // Lessons for instructor
-        $lessonForToday = Lesson::factory()
-            ->forToday()
-            ->notRegistered()
-            ->create([
-                'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
-            ]);
-
-        $lessonForYesterday = Lesson::factory()
-            ->forYesterday()
-            ->notRegistered()
-            ->create([
-                'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
-            ]);
-
-        $lessonForTomorrow = Lesson::factory()
-            ->forTomorrow()
-            ->notRegistered()
-            ->create([
-                'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
-            ]);
-
-        CourseClass::where('name', 'janeiro - 2020')->first()->novices->each(function ($novice) use ($lessonForToday, $lessonForYesterday, $lessonForTomorrow) {
-            $novice->turnIntoNovice();
-
-            $lessonForToday->enroll($novice);
-            $lessonForYesterday->enroll($novice);
-            $lessonForTomorrow->enroll($novice);
-        });
-
-        CourseClass::where('name', 'julho - 2020')->first()->novices->each(function ($novice) use ($lessonForToday, $lessonForYesterday, $lessonForTomorrow) {
-            $novice->turnIntoNovice();
-            
-            $lessonForToday->enroll($novice);
-            $lessonForYesterday->enroll($novice);
-            $lessonForTomorrow->enroll($novice);
-        });
-
-        CourseClass::where('name', 'janeiro - 2021')->first()->novices->each(function ($novice) use ($lessonForToday, $lessonForYesterday, $lessonForTomorrow) {
-            $novice->turnIntoNovice();
-
-            $lessonForToday->enroll($novice);
-            $lessonForYesterday->enroll($novice);
-            $lessonForTomorrow->enroll($novice);
-        });
+        //
     }
 }

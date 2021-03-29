@@ -17,9 +17,7 @@ class DatabaseSeeder extends Seeder
             HolidaySeeder::class,
             DisciplineSeeder::class,
             CourseSeeder::class,
-            CourseClassSeeder::class,
             UserSeeder::class,
-            LessonSeeder::class,
         ]);
     }
 }
