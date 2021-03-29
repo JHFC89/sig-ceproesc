@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <x-card.list.table-layout title="programas">
+    <x-card.list.table-layout title="turmas">
 
         <x-slot name="header">
             <x-card.list.table-header class="col-span-4" name="nome"/>
