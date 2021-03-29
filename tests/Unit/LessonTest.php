@@ -9,12 +9,13 @@ use App\Models\Lesson;
 use App\Models\CourseClass;
 use App\Exceptions\LessonRegisteredException;
 use App\Exceptions\NoviceNotEnrolledException;
+use App\Models\Discipline;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LessonTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test */
     public function can_get_the_formatted_date()
     {
@@ -75,7 +76,7 @@ class LessonTest extends TestCase
 
         $resultForAssignedInstructor = $lesson->isForInstructor($assignedInstructor);
         $resultForNotAssignedInstructor = $lesson->isForInstructor($notAssignedInstructor);
-        
+
         $this->assertTrue($resultForAssignedInstructor);
         $this->assertFalse($resultForNotAssignedInstructor);
     }
@@ -93,7 +94,7 @@ class LessonTest extends TestCase
         $resultForNotExpiredLessonForNow = $notExpiredLessonForNow->isExpired();
         $resultForNotExpiredLessonForFuture = $notExpiredLessonForFuture->isExpired();
         $resultForRegisteredLesson = $registeredLesson->isExpired();
-        
+
         $this->assertTrue($resultForExpiredLesson);
         $this->assertFalse($resultForNotExpiredLessonForNow);
         $this->assertFalse($resultForNotExpiredLessonForFuture);
@@ -294,13 +295,13 @@ class LessonTest extends TestCase
         $date->setTimezone('UTC');
         $this->assertEquals($date->format('d/m/Y H:i'), $lesson->date->format('d/m/Y H:i'));
     }
-    
+
     /** @test */
     public function can_enroll_a_novice()
     {
         $novice = User::factory()->create();
         $lesson = Lesson::factory()->create();
-        
+
         $lesson->enroll($novice);
 
         $this->assertNotNull($novice->lessons);
@@ -312,7 +313,7 @@ class LessonTest extends TestCase
     {
         $novice = User::factory()->create();
         $lesson = Lesson::factory()->create();
-        
+
         $lesson->enroll($novice);
 
         $this->assertTrue($lesson->isEnrolled($novice));
@@ -323,7 +324,7 @@ class LessonTest extends TestCase
     {
         $novice = User::factory()->create();
         $lesson = Lesson::factory()->create();
-        
+
         $this->assertFalse($lesson->isEnrolled($novice));
     }
 
@@ -481,7 +482,7 @@ class LessonTest extends TestCase
             return $expectedResult;
         }, []);
 
-        $result = $lesson->novicesPresenceToJson(); 
+        $result = $lesson->novicesPresenceToJson();
 
         $this->assertEquals(json_encode($expectedResult), $result);
     }
@@ -499,14 +500,14 @@ class LessonTest extends TestCase
             }
         });
         $expectedResult = $novices->reduce(function ($expectedResult, $novice) use ($lesson) {
-            $expectedResult[$novice->id] = [ 
+            $expectedResult[$novice->id] = [
                 'presence' => $novice->presentForLesson($lesson) ? 1 : 0,
                 'observation' => null,
             ];
             return $expectedResult;
         }, []);
 
-        $result = $lesson->novicesPresenceToJson(); 
+        $result = $lesson->novicesPresenceToJson();
 
         $this->assertEquals(json_encode($expectedResult), $result);
     }
@@ -602,10 +603,10 @@ class LessonTest extends TestCase
 
         try {
             $lesson->fresh()
-                   ->registerFor($novice)
-                   ->absent()
-                   ->observation('update observation for a novice')
-                   ->complete();
+                ->registerFor($novice)
+                ->absent()
+                ->observation('update observation for a novice')
+                ->complete();
         } catch (LessonRegisteredException $exception) {
             $this->assertTrue(true);
             return;
@@ -654,7 +655,7 @@ class LessonTest extends TestCase
     {
         $instructor = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
         $lessons = Lesson::factory()->instructor($instructor)->count(3)->create();
-        
+
         $result = Lesson::forInstructor($instructor)->get();
 
         $this->assertEquals($lessons->pluck('id')->toArray(), $result->pluck('id')->toArray());
@@ -670,7 +671,7 @@ class LessonTest extends TestCase
         $lessons->each(function ($lesson) use ($novice) {
             $lesson->enroll($novice);
         });
-        
+
         $result = Lesson::forEmployer($employer)->get();
 
         $this->assertEquals($lessons->pluck('id')->toArray(), $result->pluck('id')->toArray());
@@ -684,7 +685,7 @@ class LessonTest extends TestCase
         $lessons->each(function ($lesson) use ($novice) {
             $lesson->enroll($novice);
         });
-        
+
         $result = Lesson::forNovice($novice)->get();
 
         $this->assertEquals($lessons->pluck('id')->toArray(), $result->pluck('id')->toArray());
@@ -696,8 +697,8 @@ class LessonTest extends TestCase
         $classA = CourseClass::factory()->create(['name' => 'janeiro - 2020']);
         $classB = CourseClass::factory()->create(['name' => 'julho - 2020']);
         $classC = CourseClass::factory()->create(['name' => 'janeiro - 2021']);
-        $novicesForClassA = User::factory()->hasRoles(1,['name' => 'novice'])->count(3)->create();
-        $novicesForClassB = User::factory()->hasRoles(1,['name' => 'novice'])->count(3)->create();
+        $novicesForClassA = User::factory()->hasRoles(1, ['name' => 'novice'])->count(3)->create();
+        $novicesForClassB = User::factory()->hasRoles(1, ['name' => 'novice'])->count(3)->create();
         $lesson = Lesson::factory()->notRegistered()->create();
         $novicesForClassA->each(function ($novice) use ($classA, $lesson) {
             $classA->subscribe($novice);
@@ -712,15 +713,15 @@ class LessonTest extends TestCase
 
         $this->assertEquals(['janeiro - 2020', 'julho - 2020'], $result);
     }
-    
+
     /** @test */
     public function get_formatted_related_course_classes()
     {
         $classA = CourseClass::factory()->create(['name' => 'janeiro - 2020']);
         $classB = CourseClass::factory()->create(['name' => 'julho - 2020']);
         $classC = CourseClass::factory()->create(['name' => 'janeiro - 2021']);
-        $novicesForClassA = User::factory()->hasRoles(1,['name' => 'novice'])->count(3)->create();
-        $novicesForClassB = User::factory()->hasRoles(1,['name' => 'novice'])->count(3)->create();
+        $novicesForClassA = User::factory()->hasRoles(1, ['name' => 'novice'])->count(3)->create();
+        $novicesForClassB = User::factory()->hasRoles(1, ['name' => 'novice'])->count(3)->create();
         $lesson = Lesson::factory()->notRegistered()->create();
         $novicesForClassA->each(function ($novice) use ($classA, $lesson) {
             $classA->subscribe($novice);
@@ -734,5 +735,28 @@ class LessonTest extends TestCase
         $result = $lesson->formatted_course_classes;
 
         $this->assertEquals('janeiro - 2020 | julho - 2020', $result);
+    }
+
+    /** @test */
+    public function create_from_array()
+    {
+        $instructor = User::fakeInstructor();
+        $discipline = Discipline::factory()->create();
+        $date = now()->addDay();
+        $array = [
+            'date'          => $date->format('Y-m-d'),
+            'type'          => 'first',
+            'duration'      => 2,
+            'discipline_id' => $discipline->id,
+            'instructor_id' => $instructor->id,
+        ];
+
+        $lesson = Lesson::fromArray($array);
+
+        $this->assertEquals($date->format('d/m/Y'), $lesson->formattedDate);
+        $this->assertEquals('first', $lesson->type);
+        $this->assertEquals(2, $lesson->hourly_load);
+        $this->assertEquals($discipline->id, $lesson->discipline->id);
+        $this->assertEquals($instructor->id, $lesson->instructor->id);
     }
 }

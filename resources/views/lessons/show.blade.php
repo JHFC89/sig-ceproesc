@@ -43,7 +43,7 @@
             @else
             <x-card.list.description-item label="turma" :description="$lesson->formatted_course_classes"/>
             @endif
-            <x-card.list.description-item label="disciplina" :description="$lesson->discipline"/>
+            <x-card.list.description-item label="disciplina" :description="$lesson->discipline->name"/>
             <x-card.list.description-item label="carga horária" :description="$lesson->hourly_load"/>
             @if(Auth::user()->isNovice() && $lesson->isRegistered())
             <x-card.list.description-item label="presença" :description="Auth::user()->presentForLesson($lesson) ? 'presente' : 'ausente'"/>

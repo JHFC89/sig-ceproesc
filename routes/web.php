@@ -73,6 +73,10 @@ Route::middleware(['auth'])->group(function () {
         ->name('classes.create');
     Route::get('classes/{courseClass}', [CourseClassController::class, 'show'])
         ->name('classes.show');
+    Route::get('classes/{courseClass}/lessons', [LessonController::class, 'index'])
+        ->name('classes.lessons.index');
+    Route::get('classes/{courseClass}/lessons/create', [LessonController::class, 'create'])
+        ->name('classes.lessons.create');
 
     Route::get('holidays', [HolidayController::class, 'index'])
         ->name('holidays.index');

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Models\Discipline;
 use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\User;
@@ -43,15 +44,21 @@ class ViewLessonListingTest extends TestCase
     /** @test */
     public function an_instructor_cannot_see_a_lesson_of_another_instructor_in_the_list_of_today_lessons()
     {
-        $instructorA = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
-        $instructorB = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
+        $instructorA = User::fakeInstructor();
+        $instructorB = User::fakeInstructor();
+        $disciplineA = Discipline::factory()->create([
+            'name' => 'instructor A discipline'
+        ]);
+        $disciplineB = Discipline::factory()->create([
+            'name' => 'instructor B discipline'
+        ]);
         $lessonForInstructorA = Lesson::factory()
             ->forToday()
             ->notRegistered()
             ->hasNovices(3)
             ->create([
                 'instructor_id' => $instructorA,
-                'discipline' => 'instructor A discipline',
+                'discipline_id' => $disciplineA,
             ]);
         $lessonForInstructorB = Lesson::factory()
             ->forToday()
@@ -59,7 +66,7 @@ class ViewLessonListingTest extends TestCase
             ->hasNovices(3)
             ->create([
                 'instructor_id' => $instructorB,
-                'discipline' => 'instructor B discipline',
+                'discipline_id' => $disciplineB,
             ]);
 
         $response = $this->actingAs($instructorA)->get('lessons/today');
@@ -107,23 +114,29 @@ class ViewLessonListingTest extends TestCase
     /** @test */
     public function an_instructor_cannot_see_a_lesson_of_another_instructor_in_the_list_of_week_lessons()
     {
-        $instructorA = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
-        $instructorB = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
+        $instructorA = User::fakeInstructor();
+        $instructorB = User::fakeInstructor();
+        $disciplineA = Discipline::factory()->create([
+            'name' => 'instructor A discipline'
+        ]);
+        $disciplineB = Discipline::factory()->create([
+            'name' => 'instructor B discipline'
+        ]);
         $lessonForInstructorA = Lesson::factory()
-            ->thisWeek()
+            ->forToday()
             ->notRegistered()
             ->hasNovices(3)
             ->create([
                 'instructor_id' => $instructorA,
-                'discipline' => 'instructor A discipline',
+                'discipline_id' => $disciplineA,
             ]);
         $lessonForInstructorB = Lesson::factory()
-            ->thisWeek()
+            ->forToday()
             ->notRegistered()
             ->hasNovices(3)
             ->create([
                 'instructor_id' => $instructorB,
-                'discipline' => 'instructor B discipline',
+                'discipline_id' => $disciplineB,
             ]);
 
         $response = $this->actingAs($instructorA)->get('lessons/week');

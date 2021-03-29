@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Discipline;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Lesson;
@@ -26,8 +27,9 @@ class LessonFactory extends Factory
         return [
             'instructor_id' => User::factory()->hasRoles(1, ['name' => 'instructor']),
             'date'          => Carbon::parse('+2 weeks'),
-            'discipline'    => 'fake discipline',
+            'discipline_id' => Discipline::factory()->create(),
             'hourly_load'   => '123hr',
+            'type'          => 'first',
         ];
     }
 

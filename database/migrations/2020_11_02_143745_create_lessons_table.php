@@ -16,8 +16,9 @@ class CreateLessonsTable extends Migration
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
             $table->foreignId('instructor_id');
+            $table->foreignId('discipline_id');
             $table->dateTime('date');
-            $table->string('discipline');
+            $table->string('type');
             $table->string('hourly_load');
             $table->text('register')->nullable();
             $table->dateTime('registered_at')->nullable();

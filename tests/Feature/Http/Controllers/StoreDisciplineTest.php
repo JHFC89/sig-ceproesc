@@ -19,7 +19,6 @@ class StoreDisciplineTest extends TestCase
     {
         parent::setUp();
 
-
         $this->coordinator = User::factory()
             ->hasRoles(1, ['name' => 'coordinator'])
             ->create();
@@ -43,6 +42,7 @@ class StoreDisciplineTest extends TestCase
     /** @test */
     public function coordinator_can_store_a_discipline()
     {
+        $disciplines = Discipline::all()->each->delete();
         $instructors = User::factory()
             ->hasRoles(1, ['name' => 'instructor'])
             ->count(2)

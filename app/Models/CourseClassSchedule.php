@@ -2,11 +2,17 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 
 trait CourseClassSchedule
 {
     public function allTheoreticalDays()
+    {
+        return $this->formattedDates($this->allTheoreticalPeriod());
+    }
+
+    private function allTheoreticalPeriod()
     {
         $days = $this->allDurationDays();
 
@@ -18,7 +24,7 @@ trait CourseClassSchedule
 
         $days->filter($this->holidaysFilter(), 'holidays');
 
-        return $this->formattedDates($days);
+        return $days;
     }
 
     private function theoreticalDaysFilter()
@@ -35,6 +41,11 @@ trait CourseClassSchedule
 
     public function allPracticalDays($offdays = false)
     {
+        return $this->formattedDates($this->allPracticalPeriod($offdays));
+    }
+
+    public function allPracticalPeriod($offdays = false)
+    {
         $days = $this->allDurationDays();
 
         $days->filter($this->practicalDaysFilter(), 'practical_days');
@@ -45,7 +56,7 @@ trait CourseClassSchedule
 
         $days->filter($this->holidaysFilter(), 'holidays');
 
-        return $this->formattedDates($days);
+        return $days;
     }
 
     private function practicalDaysFilter()
@@ -127,6 +138,35 @@ trait CourseClassSchedule
     {
         // return minutes
         return $this->allPracticalDays()->count() * $this->practical_duration;
+    }
+
+    public function allMonths()
+    {
+        $months = CarbonPeriod::since($this->begin)
+            ->months(1)
+            ->until($this->end)
+            ->map(function($date) {
+                return [
+                    'id'    => $date->format('m-Y'),
+                    'month' => $date->format('m'),
+                    'year'  => $date->format('Y'),
+                ];
+            });
+
+        return collect($months);
+    }
+
+    public function theoreticalDaysForMonth(int $month, int $year)
+    {
+        $month = Carbon::createFromDate($year, $month, 1);
+
+        $days = $this->allTheoreticalPeriod();
+
+        $days->filter(function($date) use ($month) {
+            return $date->isSameMonth($month);
+        });
+
+        return $this->formattedDates($days);
     }
 
     private function formattedDates($dates)

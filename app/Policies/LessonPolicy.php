@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\CourseClass;
 use App\Models\User;
 use App\Models\Lesson;
 use Illuminate\Auth\Access\Response;
@@ -18,6 +19,25 @@ class LessonPolicy
     public function __construct()
     {
         $this->draft = false;
+    }
+
+    public function viewAny(User $user, CourseClass $courseClass)
+    {
+        if ($user->isInstructor()) {
+            return $courseClass->lessons()
+                               ->where('instructor_id', $user->id)
+                               ->count() > 0;
+        }
+
+        if ($user->isNovice()) {
+            return $courseClass->isSubscribed($user);
+        }
+
+        if ($user->isEmployer()) {
+            return $courseClass->hasNovicesFor($user);
+        }
+
+        return $user->isCoordinator();
     }
 
     public function view(User $user, Lesson $lesson)
@@ -43,6 +63,11 @@ class LessonPolicy
         }
 
         return false;
+    }
+
+    public function create(User $user)
+    {
+        return $user->isCoordinator();
     }
 
     public function viewLessonNovice(User $user, User $novice)

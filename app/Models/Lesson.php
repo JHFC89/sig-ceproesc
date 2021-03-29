@@ -27,6 +27,11 @@ class Lesson extends Model
         return $this->date->format('d/m/Y');
     }
 
+    public function getFormattedTypeAttribute()
+    {
+        return $this->type == 'first' ? '1º' : '2º';
+    }
+
     public function getFormattedCourseClassesAttribute()
     {
         $relatedCourseClasses = $this->relatedCourseClasses();
@@ -36,6 +41,19 @@ class Lesson extends Model
         }
 
         return implode(' | ', $relatedCourseClasses);
+    }
+
+    public static function fromArray(array $lesson)
+    {
+        // TODO: if same date, same type, same instructor and same discipline
+        // of another lesson, unify then
+        return Self::create([
+            'date'          => $lesson['date'],
+            'type'          => $lesson['type'],
+            'hourly_load'   => $lesson['duration'],
+            'instructor_id' => $lesson['instructor_id'],
+            'discipline_id' => $lesson['discipline_id'],
+        ]);
     }
 
     public function isRegistered()
@@ -224,6 +242,16 @@ class Lesson extends Model
     public function hasEvaluation()
     {
         return $this->evaluation()->count() > 0;
+    }
+
+    public function courseClasses()
+    {
+        return $this->belongsToMany(CourseClass::class);
+    }
+
+    public function discipline()
+    {
+        return $this->belongsTo(Discipline::class);
     }
 
     public function novices()

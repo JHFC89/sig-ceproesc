@@ -21,7 +21,6 @@ class LessonSeeder extends Seeder
             ->forToday()
             ->notRegistered()
             ->create([
-                'discipline' => 'português',
                 'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
             ]);
 
@@ -29,7 +28,6 @@ class LessonSeeder extends Seeder
             ->forYesterday()
             ->notRegistered()
             ->create([
-                'discipline' => 'administração',
                 'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
             ]);
 
@@ -37,7 +35,6 @@ class LessonSeeder extends Seeder
             ->forTomorrow()
             ->notRegistered()
             ->create([
-                'discipline' => 'finanças',
                 'instructor_id' => User::where('email', 'instrutor@sig.com.br')->first(),
             ]);
 

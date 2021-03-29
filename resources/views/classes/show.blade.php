@@ -136,4 +136,21 @@
         </div>
 
     </div>
+    <div class="flex justify-end mt-4">
+        @if ($courseClass->hasLessons())
+            <a
+                href="{{ route('classes.lessons.index', ['courseClass' => $courseClass]) }}"
+                class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown"
+            >
+                ver aulas cadastradas
+            </a>
+        @else
+            <a
+                href="{{ route('classes.lessons.create', ['courseClass' => $courseClass]) }}"
+                class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown"
+            >
+                cadastrar aulas
+            </a>
+        @endif
+        </div>
 @endsection

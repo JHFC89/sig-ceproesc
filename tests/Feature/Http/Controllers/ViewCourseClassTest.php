@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Models\Discipline;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\CourseClass;
@@ -20,13 +21,10 @@ class ViewCourseClassTest extends TestCase
         $this->courseClass = CourseClass::factory()->forCourse()->create();
     }
 
-
     /** @test */
     public function coordinator_can_view_a_course_class()
     {
-        $coordinator = User::factory()
-            ->hasRoles(['name' => 'coordinator'])
-            ->create();
+        $coordinator = User::fakeCoordinator();
         $courseClass = CourseClass::factory()->forCourse()->create();
 
         $response = $this
@@ -37,6 +35,60 @@ class ViewCourseClassTest extends TestCase
             ->assertOk()
             ->assertViewIs('classes.show')
             ->assertViewHas('courseClass');
+    }
+
+    /** @test */
+    public function can_see_a_link_to_create_lessons_if_not_created_already()
+    {
+        $coordinator = User::fakeCoordinator();
+        $courseClass = CourseClass::factory()->forCourse()->create();
+
+        $response = $this
+            ->actingAs($coordinator)
+            ->get(route('classes.show', ['courseClass' => $courseClass]));
+
+        $response
+            ->assertOk()
+            ->assertSee(route('classes.lessons.create', [
+                'courseClass' => $courseClass
+            ]))
+            ->assertDontSeeText(route('classes.lessons.index', [
+                'courseClass' => $courseClass
+            ]));
+    }
+
+    /** @test */
+    public function cannot_see_a_link_to_create_lessons_if_it_is_already_created()
+    {
+        $coordinator = User::fakeCoordinator();
+        $instructor = User::fakeInstructor();
+        $discipline = Discipline::factory()->create();
+        $courseClass = CourseClass::factory()->forCourse()->create();
+        $date = now()->addDays(3);
+        $lessons = [
+            [
+                'id'            => $date->format('Y-m-d') . '-first',
+                'date'          => $date->format('Y-m-d'),
+                'type'          => 'first',
+                'duration'      => 2,
+                'discipline_id' => $discipline->id,
+                'instructor_id' => $instructor->id,
+            ]
+        ];
+        $courseClass->createLessonsFromArray($lessons);
+
+        $response = $this
+            ->actingAs($coordinator)
+            ->get(route('classes.show', ['courseClass' => $courseClass]));
+
+        $response
+            ->assertOk()
+            ->assertSee(route('classes.lessons.index', [
+                'courseClass' => $courseClass
+            ]))
+            ->assertDontSee(route('classes.lessons.create', [
+                'courseClass' => $courseClass
+            ]));
     }
 
     /** @test */

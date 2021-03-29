@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Models\Discipline;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Role;
@@ -46,13 +47,16 @@ class ViewLessonTest extends TestCase
     public function instructor_can_view_a_not_registered_lesson_he_is_assigned_to()
     {
         $date = Carbon::now();
+        $discipline = Discipline::factory()->create([
+            'name' => 'administração'
+        ]);
         $lesson = Lesson::factory()
             ->notRegistered()
             ->instructor($this->instructor)
             ->hasNovices(3)
             ->create([
                 'date'          => $date,
-                'discipline'    => 'administração',
+                'discipline_id' => $discipline,
                 'hourly_load'   => '123hr',
         ]);
         $lesson->novices->each(function ($novice) {

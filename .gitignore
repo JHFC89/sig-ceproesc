@@ -13,3 +13,4 @@ yarn-error.log
 /docker/mysql/*
 sig
 tags
+phpstan.neon

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\Discipline;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Lesson;
@@ -46,27 +47,37 @@ class ListOfTodaysLessonsComponentTest extends TestCase
     /** @test */
     public function instructor_can_see_lessons_he_is_assigned_to()
     {
-        $courseClassA = CourseClass::factory()->create(['name' => 'janeiro - 2020']);
+        $courseClassA = CourseClass::factory()->create([
+            'name' => 'janeiro - 2020'
+        ]);
+        $disciplineA = Discipline::factory()->create([
+            'name' => 'fake discipline'
+        ]);
         $lessonA = Lesson::factory()
             ->forToday()
             ->notRegistered()
             ->hasNovices(3)
             ->instructor($this->instructor)
             ->create([
-                'discipline' => 'fake discipline',
+                'discipline_id' => $disciplineA,
             ]);
         $lessonA->novices->each(function ($novice) use ($courseClassA) {
             $novice->turnIntoNovice();
             $courseClassA->subscribe($novice);
         });
-        $courseClassB = CourseClass::factory()->create(['name' => 'julho - 2020']);
+        $courseClassB = CourseClass::factory()->create([
+            'name' => 'julho - 2020'
+        ]);
+        $disciplineB = Discipline::factory()->create([
+            'name' => 'fakest discipline'
+        ]);
         $lessonB = Lesson::factory()
             ->forToday()
             ->notRegistered()
             ->hasNovices(3)
             ->instructor($this->instructor)
             ->create([
-                'discipline' => 'fakest discipline',
+                'discipline_id' => $disciplineB,
             ]);
         $lessonB->novices->each(function ($novice) use ($courseClassB) {
             $novice->turnIntoNovice();
@@ -87,16 +98,28 @@ class ListOfTodaysLessonsComponentTest extends TestCase
     /** @test */
     public function instructor_cannot_see_lessons_he_is_not_assigned_to()
     {
-        $instructorA = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
-        $instructorB = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
-        $lessonForInstructorA = Lesson::factory()->forToday()->notRegistered()->hasNovices(3)->create([
-                'instructor_id' => $instructorA,
-                'discipline' => 'instructor A discipline',
-            ]);
-        $lessonForInstructorB = Lesson::factory()->forToday()->notRegistered()->hasNovices(3)->create([
-                'instructor_id' => $instructorB,
-                'discipline' => 'instructor B discipline',
-            ]);
+        $instructorA = User::fakeInstructor();
+        $instructorB = User::fakeInstructor();
+        $disciplineA = Discipline::factory()->create([
+            'name' => 'instructor A discipline'
+        ]);
+        $disciplineB = Discipline::factory()->create([
+            'name' => 'instructor B discipline'
+        ]);
+        $lessonForInstructorA = Lesson::factory()->forToday()
+                                                 ->notRegistered()
+                                                 ->hasNovices(3)
+                                                 ->create([
+                                                    'instructor_id' => $instructorA,
+                                                    'discipline_id' => $disciplineA,
+                                                ]);
+        $lessonForInstructorB = Lesson::factory()->forToday()
+                                                 ->notRegistered()
+                                                 ->hasNovices(3)
+                                                 ->create([
+                                                    'instructor_id' => $instructorB,
+                                                    'discipline_id' => $disciplineB,
+                                                ]);
         
         $component = $this->component(ForTodayList::class, ['user' => $instructorA]);
 
