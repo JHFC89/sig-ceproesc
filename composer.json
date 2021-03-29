@@ -22,6 +22,7 @@
         "laravel/breeze": "^0.0.5",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
+        "phpstan/phpstan": "^0.12.82",
         "phpunit/phpunit": "^9.3.3"
     },
     "config": {
