@@ -389,19 +389,17 @@ class CourseClassTest extends TestCase
         $disciplineB = Discipline::factory()->create();
         $dateA = now()->addDays(1)->format('Y-m-d');
         $dateB = now()->addDays(2)->format('Y-m-d');
-        $idA = $dateA . '-' . 'first';
-        $idB = $dateB . '-' . 'second';
         $array = [
-            $idA => [
-                'id' => $idA,
+            [
+                'id' => 'lesson A',
                 'date' => $dateA,
                 'type' => 'first',
                 'duration' => 2,
                 'instructor_id' => $instructorA->id,
                 'discipline_id' => $disciplineA->id,
             ],
-            $idB => [
-                'id' => $idB,
+            [
+                'id' => 'Lesson B',
                 'date' => $dateB,
                 'type' => 'second',
                 'duration' => 3,
@@ -423,6 +421,102 @@ class CourseClassTest extends TestCase
     }
 
     /** @test */
+    public function duplicate_lessons_will_be_joined_when_creating_from_array()
+    {
+        $courseClassA = $this->testCourseClass();
+        $courseClassA->name = 'Class A';
+        $courseClassA->save();
+        $courseClassB = $this->testCourseClass();
+        $courseClassB->name = 'Class B';
+        $courseClassB->save();
+        $instructorA = User::fakeInstructor();
+        $instructorB = User::fakeInstructor();
+        $disciplineA = Discipline::factory()->create();
+        $disciplineB = Discipline::factory()->create();
+        $dateA = $courseClassA->begin->addDays(1)->format('Y-m-d');
+        $dateB = $courseClassA->begin->addDays(2)->format('Y-m-d');
+        $dateC = $courseClassA->begin->addDays(3)->format('Y-m-d');
+        $dateD = $courseClassA->begin->addDays(4)->format('Y-m-d');
+        $arrayA = [
+            [
+                'id' => 'Lesson A',
+                'date' => $dateA,
+                'type' => 'first',
+                'duration' => 2,
+                'instructor_id' => $instructorA->id,
+                'discipline_id' => $disciplineA->id,
+            ],
+            [
+                'id' => 'Lesson B',
+                'date' => $dateB,
+                'type' => 'second',
+                'duration' => 3,
+                'instructor_id' => $instructorB->id,
+                'discipline_id' => $disciplineB->id,
+            ],
+            [
+                'id' => 'Lesson C',
+                'date' => $dateC,
+                'type' => 'second',
+                'duration' => 2,
+                'instructor_id' => $instructorA->id,
+                'discipline_id' => $disciplineB->id,
+            ],
+            [
+                'id' => 'Lesson D',
+                'date' => $dateD,
+                'type' => 'second',
+                'duration' => 3,
+                'instructor_id' => $instructorB->id,
+                'discipline_id' => $disciplineA->id,
+            ],
+        ];
+        $courseClassA->createLessonsFromArray($arrayA);
+        $this->assertEquals(4, Lesson::count());
+        //Lessons B and C are equal to Class A's Lessons B and C
+        $arrayB = [
+            [
+                'id' => 'Lesson A',
+                'date' => $dateA,
+                'type' => 'second',
+                'duration' => 2,
+                'instructor_id' => $instructorB->id,
+                'discipline_id' => $disciplineB->id,
+            ],
+            [
+                'id' => 'Lesson B',
+                'date' => $dateB,
+                'type' => 'second',
+                'duration' => 3,
+                'instructor_id' => $instructorB->id,
+                'discipline_id' => $disciplineB->id,
+            ],
+            [
+                'id' => 'Lesson C',
+                'date' => $dateC,
+                'type' => 'second',
+                'duration' => 2,
+                'instructor_id' => $instructorA->id,
+                'discipline_id' => $disciplineB->id,
+            ],
+            [
+                'id' => 'Lesson D',
+                'date' => $dateD,
+                'type' => 'first',
+                'duration' => 3,
+                'instructor_id' => $instructorA->id,
+                'discipline_id' => $disciplineB->id,
+            ],
+        ];
+
+        $courseClassB->createLessonsFromArray($arrayB);
+
+        $this->assertEquals(6, Lesson::count());
+        $this->assertEquals(4, $courseClassA->lessons()->count());
+        $this->assertEquals(4, $courseClassB->lessons()->count());
+    }
+
+    /** @test */
     public function cannot_create_lessons_from_array_if_already_have_lessons()
     {
         $courseClass = $this->testCourseClass();
@@ -433,19 +527,17 @@ class CourseClassTest extends TestCase
         $disciplineB = Discipline::factory()->create();
         $dateA = now()->addDays(1)->format('Y-m-d');
         $dateB = now()->addDays(2)->format('Y-m-d');
-        $idA = $dateA . '-' . 'first';
-        $idB = $dateB . '-' . 'second';
         $array = [
-            $idA => [
-                'id' => $idA,
+            [
+                'id' => 'Lesson A',
                 'date' => $dateA,
                 'type' => 'first',
                 'duration' => 2,
                 'instructor_id' => $instructorA->id,
                 'discipline_id' => $disciplineA->id,
             ],
-            $idB => [
-                'id' => $idB,
+            [
+                'id' => 'Lesson B',
                 'date' => $dateB,
                 'type' => 'second',
                 'duration' => 3,

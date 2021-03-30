@@ -50,13 +50,50 @@ class CourseClass extends Model
             'Trying to create Lessons for a CourseClass that already have Lessons.'
         );
 
-        $lessons = collect($lessons)->map(function ($lesson) {
+        $lessons = collect($lessons);
+
+        $extistingLessons = $this->existingLessonsBetweenDuration($lessons);
+
+        $lessons = $this->filterExistingLessons($lessons, $extistingLessons);
+
+        $lessons = $lessons->map(function ($lesson) {
             return Lesson::fromArray($lesson);
         });
+
+        $lessons = $lessons->concat($extistingLessons);
 
         $this->lessons()->attach($lessons->pluck('id')->toArray());
 
         return $lessons;
+    }
+
+    private function existingLessonsBetweenDuration($lessons)
+    {
+        return Lesson::whereBetween('date', [$this->begin, $this->end])
+            ->where(function($query) use ($lessons) {
+                $lessons->each(function ($lesson) use ($query) {
+                    $query->orWhere(function ($query) use ($lesson) {
+                        $query->where('date', $lesson['date'])
+                              ->where('type', $lesson['type'])
+                              ->where('instructor_id', $lesson['instructor_id'])
+                              ->where('discipline_id', $lesson['discipline_id']);
+
+                    });
+                });
+            })
+            ->get();
+    }
+
+    private function filterExistingLessons($lessons, $existingLessons)
+    {
+        $duplicates = $existingLessons->map(function ($duplicate) {
+            return $duplicate->date->format('Y-m-d') . '-' . $duplicate->type;
+        });
+
+        return $lessons->reject(function ($lesson) use ($duplicates) {
+            return $duplicates->contains($lesson['date'] . '-' . $lesson['type']);
+        });
+
     }
 
     public function subscribe(User $novice)
