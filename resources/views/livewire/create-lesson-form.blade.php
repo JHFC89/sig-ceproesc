@@ -116,7 +116,7 @@
                         Foram cadastradas <span class="text-blue-500 font-bold">{{ $createdLessons->count() }}</span> aulas no total.
                     </p>
                     <a
-                        href="{{ route('dashboard') }}"
+                        href="{{ route('classes.lessons.index', ['courseClass' => $courseClass]) }}"
                         class="inline-block mt-8 px-4 py-2 shadow-md text-base font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown"
                     >entendi</a>
                 </div>
