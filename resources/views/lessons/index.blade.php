@@ -37,7 +37,7 @@
                     <x-card.list.table-body-item class="flex items-center col-span-4">
                         <x-slot name="item">
                             <div class="w-full text-center">
-                                <span>{{ $lesson->discipline }}</span>
+                                <span>{{ $lesson->discipline->name }}</span>
                             </div>
                         </x-slot>
                     </x-card.list.table-body-item>
