@@ -27,19 +27,19 @@ class ListLessonTest extends TestCase
                  ->assertViewIs('lessons.index')
                  ->assertViewHas('lessons')
                  ->assertSee($courseClass->lessons[0]->formattedDate)
-                 ->assertSee($courseClass->lessons[0]->discipline)
+                 ->assertSee($courseClass->lessons[0]->discipline->name)
                  ->assertSee($courseClass->lessons[0]->instructor->name)
                  ->assertSee(route('lessons.show', [
                      'lesson' => $courseClass->lessons[0]
                  ]))
                  ->assertSee($courseClass->lessons[1]->formattedDate)
-                 ->assertSee($courseClass->lessons[1]->discipline)
+                 ->assertSee($courseClass->lessons[1]->discipline->name)
                  ->assertSee($courseClass->lessons[1]->instructor->name)
                  ->assertSee(route('lessons.show', [
                      'lesson' => $courseClass->lessons[1]
                  ]))
                  ->assertSee($courseClass->lessons[2]->formattedDate)
-                 ->assertSee($courseClass->lessons[2]->discipline)
+                 ->assertSee($courseClass->lessons[2]->discipline->name)
                  ->assertSee($courseClass->lessons[2]->instructor->name)
                  ->assertSee(route('lessons.show', [
                      'lesson' => $courseClass->lessons[2]
