@@ -25,9 +25,9 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     {
         parent::setUp();
 
-        $this->instructor = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
-        $this->novice = User::factory()->hasRoles(1, ['name' => 'novice'])->create();
-        $this->employer = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
+        $this->instructor = User::fakeInstructor();
+        $this->novice = User::fakeNovice();
+        $this->employer = User::fakeEmployer();
 
         Carbon::setTestNow(Carbon::parse('next wednesday'));
     }
@@ -56,22 +56,49 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     public function lessons_are_show_in_ascending_order_relative_to_their_date()
     {
         $this->travelTo(now()->startOfWeek()->addDay(1));
-        $thirdLesson = Lesson::factory()->instructor($this->instructor)->create(['date' => Carbon::parse('tomorrow')]);
-        $firstLesson = Lesson::factory()->instructor($this->instructor)->create(['date' => Carbon::parse('yesterday')]);
-        $secondLesson = Lesson::factory()->instructor($this->instructor)->create(['date' => Carbon::parse('today')]);
+        $thirdLesson = Lesson::factory()->instructor($this->instructor)
+                                        ->create([
+                                            'date' => Carbon::parse('tomorrow')
+                                        ]);
+        $firstLesson = Lesson::factory()->instructor($this->instructor)
+                                        ->create([
+                                            'date' => Carbon::parse('yesterday')
+                                        ]);
+        $secondLesson = Lesson::factory()->instructor($this->instructor)
+                                         ->create([
+                                             'date' => Carbon::parse('today')
+                                         ]);
         $lessons = collect([$firstLesson, $secondLesson, $thirdLesson]);
         $lessons->each(function ($lesson) {
             $lesson->enroll($this->novice);
         });
-        $this->employer->novices()->save($this->novice);
+        $this->employer->company->novices()->save($this->novice);
 
-        $componentForInstructor = $this->forThisWeekListComponent('Week', $this->instructor);
-        $componentForNovice = $this->forThisWeekListComponent('Week', $this->novice);
-        $componentForEmployer = $this->forThisWeekListComponent('Week', $this->employer);
+        $componentForInstructor = $this->forThisWeekListComponent(
+            'Week',
+            $this->instructor
+        );
+        $componentForNovice = $this->forThisWeekListComponent(
+            'Week',
+            $this->novice
+        );
+        $componentForEmployer = $this->forThisWeekListComponent(
+            'Week',
+            $this->employer
+        );
 
-        $this->assertEquals($lessons->pluck('id'), $componentForInstructor->lessons->pluck('id'));
-        $this->assertEquals($lessons->pluck('id'), $componentForNovice->lessons->pluck('id'));
-        $this->assertEquals($lessons->pluck('id'), $componentForEmployer->lessons->pluck('id'));
+        $this->assertEquals(
+            $lessons->pluck('id'),
+            $componentForInstructor->lessons->pluck('id')
+        );
+        $this->assertEquals(
+            $lessons->pluck('id'),
+            $componentForNovice->lessons->pluck('id')
+        );
+        $this->assertEquals(
+            $lessons->pluck('id'),
+            $componentForEmployer->lessons->pluck('id')
+        );
 
         $this->travelBack();
     }
@@ -315,10 +342,13 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     /** @test */
     public function employer_can_see_their_novices_classes()
     {
-        $noviceA = User::factory()->hasRoles(1, ['name' => 'novice'])->make();
-        $noviceB = User::factory()->hasRoles(1, ['name' => 'novice'])->make();
-        $this->employer->novices()->saveMany([$noviceA, $noviceB]);
-        $lesson = Lesson::factory()->thisWeek()->notRegistered()->instructor($this->instructor)->create();
+        $noviceA = User::fakeNovice();
+        $noviceB = User::fakeNovice();
+        $this->employer->company->novices()->saveMany([$noviceA, $noviceB]);
+        $lesson = Lesson::factory()->thisWeek()
+                                   ->notRegistered()
+                                   ->instructor($this->instructor)
+                                   ->create();
         $lesson->enroll($noviceA);
         $lesson->enroll($noviceB);
         
@@ -330,15 +360,21 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     /** @test */
     public function employer_cannot_see_another_employer_novices_classes()
     {
-        $noviceA = User::factory()->hasRoles(1, ['name' => 'novice'])->make();
-        $employerA = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
-        $employerA->novices()->save($noviceA);
-        $lessonForNoviceA = Lesson::factory()->thisWeek()->notRegistered()->instructor($this->instructor)->create();
+        $noviceA = User::fakeNovice();
+        $employerA = User::fakeEmployer();
+        $employerA->company->novices()->save($noviceA);
+        $lessonForNoviceA = Lesson::factory()->thisWeek()
+                                             ->notRegistered()
+                                             ->instructor($this->instructor)
+                                             ->create();
         $lessonForNoviceA->enroll($noviceA);
-        $noviceB = User::factory()->hasRoles(1, ['name' => 'novice'])->make();
-        $employerB = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
-        $employerB->novices()->save($noviceB);
-        $lessonForNoviceB = Lesson::factory()->thisWeek()->notRegistered()->instructor($this->instructor)->create();
+        $noviceB = User::fakeNovice();
+        $employerB = User::fakeEmployer();
+        $employerB->company->novices()->save($noviceB);
+        $lessonForNoviceB = Lesson::factory()->thisWeek()
+                                             ->notRegistered()
+                                             ->instructor($this->instructor)
+                                             ->create();
         $lessonForNoviceB->enroll($noviceB);
         
         $componentForEmployerA = $this->forThisWeekListComponent('Today', $employerA);
@@ -353,36 +389,55 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     /** @test */
     public function employer_cannot_see_link_to_register_class()
     {
-        $this->employer->novices()->save($this->novice);
-        $lesson = Lesson::factory()->thisWeek()->notRegistered()->instructor($this->instructor)->create();
+        $this->employer->company->novices()->save($this->novice);
+        $lesson = Lesson::factory()->thisWeek()
+                                   ->notRegistered()
+                                   ->instructor($this->instructor)
+                                   ->create();
         $lesson->enroll($this->novice);
 
-        $component = $this->component(ForWeekList::class, ['user' => $this->employer]);
+        $component = $this->component(ForWeekList::class, [
+            'user' => $this->employer
+        ]);
 
-        $component->assertDontSee(route('lessons.registers.create', ['lesson' => $lesson]));
+        $component->assertDontSee(route('lessons.registers.create', [
+            'lesson' => $lesson
+        ]));
     }
 
     /** @test */
     public function employer_cannot_see_link_to_request_to_register_an_expired_lesson()
     {
-        $this->employer->novices()->save($this->novice);
-        $experiredLesson = Lesson::factory()->expired()->instructor($this->instructor)->create();
+        $this->employer->company->novices()->save($this->novice);
+        $experiredLesson = Lesson::factory()->expired()
+                                            ->instructor($this->instructor)
+                                            ->create();
         $experiredLesson->enroll($this->novice);
 
-        $component = $this->component(ForWeekList::class, ['user' => $this->employer]);
+        $component = $this->component(ForWeekList::class, [
+            'user' => $this->employer
+        ]);
 
-        $component->assertDontSee(route('lessons.requests.create', ['lesson' => $experiredLesson]));
+        $component->assertDontSee(route('lessons.requests.create', [
+            'lesson' => $experiredLesson
+        ]));
     }
 
     /** @test */
     public function employer_cannot_see_a_warning_when_a_lesson_has_a_pending_request_to_register()
     {
-        $this->employer->novices()->save($this->novice);
-        $lesson = Lesson::factory()->expired()->instructor($this->instructor)->hasRequests(1)->create();
+        $this->employer->company->novices()->save($this->novice);
+        $lesson = Lesson::factory()->expired()
+                                   ->instructor($this->instructor)
+                                   ->hasRequests(1)
+                                   ->create();
         $lesson->enroll($this->novice);
         $lesson->openRequest()->release();
 
-        $component = $this->component(ForWeekList::class, ['title' => 'Week', 'user' => $this->employer]);
+        $component = $this->component(ForWeekList::class, [
+            'title' => 'Week',
+            'user' => $this->employer
+        ]);
         
         $component->assertDontSee('liberada');
     }

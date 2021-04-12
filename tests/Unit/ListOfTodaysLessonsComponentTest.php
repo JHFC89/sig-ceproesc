@@ -24,9 +24,9 @@ class ListOfTodaysLessonsComponentTest extends TestCase
     {
         parent::setUp();
 
-        $this->instructor = User::factory()->hasRoles(1, ['name' => 'instructor'])->create();
-        $this->novice = User::factory()->hasRoles(1, ['name' => 'novice'])->create();
-        $this->employer = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
+        $this->instructor = User::fakeInstructor();
+        $this->novice = User::fakeNovice();
+        $this->employer = User::fakeEmployer();
     }
 
     protected function forTodayListComponent($user, $title = 'Today')
@@ -210,7 +210,7 @@ class ListOfTodaysLessonsComponentTest extends TestCase
     {
         $noviceA = User::factory()->hasRoles(1, ['name' => 'novice'])->make();
         $noviceB = User::factory()->hasRoles(1, ['name' => 'novice'])->make();
-        $this->employer->novices()->saveMany([$noviceA, $noviceB]);
+        $this->employer->company->novices()->saveMany([$noviceA, $noviceB]);
         $lesson = Lesson::factory()->forToday()->notRegistered()->instructor($this->instructor)->create();
         $lesson->enroll($noviceA);
         $lesson->enroll($noviceB);
@@ -223,15 +223,21 @@ class ListOfTodaysLessonsComponentTest extends TestCase
     /** @test */
     public function employer_cannot_see_another_employer_novices_classes()
     {
-        $noviceA = User::factory()->hasRoles(1, ['name' => 'novice'])->make();
-        $employerA = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
-        $employerA->novices()->save($noviceA);
-        $lessonForNoviceA = Lesson::factory()->forToday()->notRegistered()->instructor($this->instructor)->create();
+        $noviceA = User::fakeNovice();
+        $employerA = User::fakeEmployer();
+        $employerA->company->novices()->save($noviceA);
+        $lessonForNoviceA = Lesson::factory()->forToday()
+                                             ->notRegistered()
+                                             ->instructor($this->instructor)
+                                             ->create();
         $lessonForNoviceA->enroll($noviceA);
-        $noviceB = User::factory()->hasRoles(1, ['name' => 'novice'])->make();
-        $employerB = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
-        $employerB->novices()->save($noviceB);
-        $lessonForNoviceB = Lesson::factory()->forToday()->notRegistered()->instructor($this->instructor)->create();
+        $noviceB = User::fakeNovice();
+        $employerB = User::fakeEmployer();
+        $employerB->company->novices()->save($noviceB);
+        $lessonForNoviceB = Lesson::factory()->forToday()
+                                             ->notRegistered()
+                                             ->instructor($this->instructor)
+                                             ->create();
         $lessonForNoviceB->enroll($noviceB);
         
         $componentForEmployerA = $this->forTodayListComponent($employerA);
@@ -246,20 +252,31 @@ class ListOfTodaysLessonsComponentTest extends TestCase
     /** @test */
     public function employer_cannot_see_link_to_register_class()
     {
-        $this->employer->novices()->save($this->novice);
-        $lesson = Lesson::factory()->forToday()->notRegistered()->instructor($this->instructor)->create();
+        $this->employer->company->novices()->save($this->novice);
+        $lesson = Lesson::factory()->forToday()
+                                   ->notRegistered()
+                                   ->instructor($this->instructor)
+                                   ->create();
         $lesson->enroll($this->novice);
 
-        $component = $this->component(ForTodayList::class, ['user' => $this->employer]);
+        $component = $this->component(ForTodayList::class, [
+            'user' => $this->employer
+        ]);
 
-        $component->assertDontSee(route('lessons.registers.create', ['lesson' => $lesson]));
+        $component->assertDontSee(route('lessons.registers.create', [
+            'lesson' => $lesson
+        ]));
     }
 
     /** @test */
     public function users_cannot_see_lessons_for_another_day()
     {
-        $this->employer->novices()->save($this->novice);
-        $lessonForAnotherDay = Lesson::factory()->notForToday()->notRegistered()->hasNovices(3)->instructor($this->instructor)->create(); 
+        $this->employer->company->novices()->save($this->novice);
+        $lessonForAnotherDay = Lesson::factory()->notForToday()
+                                                ->notRegistered()
+                                                ->hasNovices(3)
+                                                ->instructor($this->instructor)
+                                                ->create(); 
         $lessonForAnotherDay->enroll($this->novice);
 
         $componentForInstructor = $this->forTodayListComponent($this->instructor);

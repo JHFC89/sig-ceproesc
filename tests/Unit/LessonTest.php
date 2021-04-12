@@ -518,8 +518,8 @@ class LessonTest extends TestCase
         $lessonForEmployer = Lesson::factory()->hasNovices(1)->create();
         $lessonNotForEmployer = Lesson::factory()->hasNovices(1)->create();
         $noviceForEmployer = $lessonForEmployer->novices()->first();
-        $employer = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
-        $employer->novices()->save($noviceForEmployer);
+        $employer = User::fakeEmployer();
+        $employer->company->novices()->save($noviceForEmployer);
 
         $lessonForEmployerResult = $lessonForEmployer->hasNovicesForEmployer($employer);
         $lessonNotForEmployerResult = $lessonNotForEmployer->hasNovicesForEmployer($employer);
@@ -664,9 +664,9 @@ class LessonTest extends TestCase
     /** @test */
     public function get_lessons_for_novices_that_belongs_to_an_employer()
     {
-        $employer = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
-        $novice = User::factory()->hasRoles(1, ['name' => 'novice'])->create();
-        $employer->novices()->save($novice);
+        $employer = User::fakeEmployer();
+        $novice = User::fakeNovice();
+        $employer->company->novices()->save($novice);
         $lessons = Lesson::factory()->count(3)->create();
         $lessons->each(function ($lesson) use ($novice) {
             $lesson->enroll($novice);
@@ -674,7 +674,10 @@ class LessonTest extends TestCase
 
         $result = Lesson::forEmployer($employer)->get();
 
-        $this->assertEquals($lessons->pluck('id')->toArray(), $result->pluck('id')->toArray());
+        $this->assertEquals(
+            $lessons->pluck('id')->toArray(),
+            $result->pluck('id')->toArray()
+        );
     }
 
     /** @test */

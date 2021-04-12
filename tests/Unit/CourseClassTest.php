@@ -367,8 +367,8 @@ class CourseClassTest extends TestCase
         $noviceA = User::fakeNovice();
         $noviceB = User::fakeNovice();
         $courseClass = CourseClass::factory()->create();
-        $employerA->novices()->save($noviceA);
-        $employerB->novices()->save($noviceB);
+        $employerA->company->novices()->save($noviceA);
+        $employerB->company->novices()->save($noviceB);
         $courseClass->subscribe($noviceA);
 
         $resultA = $courseClass->hasNovicesFor($employerA);

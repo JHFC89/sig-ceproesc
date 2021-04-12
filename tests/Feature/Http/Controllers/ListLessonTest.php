@@ -133,7 +133,7 @@ class ListLessonTest extends TestCase
     {
         $employer = User::fakeEmployer();
         $novice = User::fakeNovice();
-        $employer->novices()->save($novice);
+        $employer->company->novices()->save($novice);
         $courseClass = CourseClass::factory()->hasLessons(3)->create();
         $courseClass->subscribe($novice);
 
@@ -149,9 +149,9 @@ class ListLessonTest extends TestCase
     public function employer_cannot_view_a_list_of_lessons_for_a_course_class_he_has_no_novice_enrolled_to()
     {
         $courseClass = CourseClass::factory()->hasLessons(3)->create();
-        $employer = User::fakeNovice();
+        $employer = User::fakeEmployer();
         $novice = User::fakeNovice();
-        $employer->novices()->save($novice);
+        $employer->company->novices()->save($novice);
 
         $response = $this->actingAs($employer)
                          ->get(route('classes.lessons.index', [

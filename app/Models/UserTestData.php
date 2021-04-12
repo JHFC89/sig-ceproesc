@@ -21,6 +21,8 @@ trait UserTestData
 
     public static function fakeEmployer()
     {
-        return static::factory()->hasRoles(['name' => 'employer'])->create();
+        return static::factory()->hasRoles(['name' => 'employer'])
+                                ->forCompany()
+                                ->create();
     }
 }

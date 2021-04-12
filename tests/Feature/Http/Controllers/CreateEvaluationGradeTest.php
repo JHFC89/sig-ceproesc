@@ -127,9 +127,12 @@ class CreateEvaluationGradeTest extends TestCase
     /** @test */
     public function employer_cannot_create_grade()
     {
-        $employer = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
+        $employer = User::fakeEmployer();
 
-        $response = $this->actingAs($employer)->get(route('evaluations.show', ['evaluation' => $this->evaluation]));
+        $response = $this->actingAs($employer)
+                         ->get(route('evaluations.show', [
+                             'evaluation' => $this->evaluation
+                         ]));
 
         $response
             ->assertOk()

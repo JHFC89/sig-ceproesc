@@ -52,6 +52,11 @@ class User extends Authenticatable
         return $this->courseClass ? $this->courseClass->name : null;
     }
 
+    public function getNovicesAttribute()
+    {
+        return $this->novices();
+    }
+
     public function lessons()
     {
         return $this->belongsToMany(Lesson::class)
@@ -66,7 +71,12 @@ class User extends Authenticatable
 
     public function novices()
     {
-        return $this->hasMany(User::class, 'employer_id');
+        return self::where('employer_id', $this->company->id)->get();
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 
     public function courseClass()
@@ -123,7 +133,7 @@ class User extends Authenticatable
         return $this->roles->isEmpty();
     }
 
-    public function isEmployerOf(user $novice)
+    public function isEmployerOf(User $novice)
     {
         return $this->novices->contains($novice);
     }

@@ -185,10 +185,16 @@ class ViewEvaluationTest extends TestCase
     /** @test */
     public function employer_can_view_only_the_evaluations_informations_that_belongs_to_his_novices()
     {
-        $employer = User::factory()->hasRoles(1, ['name' => 'employer'])->create();
-        $employer->novices()->saveMany([$this->novices[0], $this->novices[1]]);
+        $employer = User::fakeEmployer();
+        $employer->company->novices()->saveMany([
+            $this->novices[0],
+            $this->novices[1]
+        ]);
 
-        $response = $this->actingAs($employer)->get(route('evaluations.show', ['evaluation' => $this->evaluation]));
+        $response = $this->actingAs($employer)
+                         ->get(route('evaluations.show', [
+                             'evaluation' => $this->evaluation
+                         ]));
         $response
             ->assertOk()
             ->assertViewIs('evaluations.show')
