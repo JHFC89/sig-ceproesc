@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Registro De Aula')
+@section('title', 'Cadastrar Novo Programa')
 
 @section('content')
 
