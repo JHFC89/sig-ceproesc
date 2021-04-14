@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\DisciplineController;
@@ -85,6 +86,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('holidays', [HolidayController::class, 'store'])
         ->name('holidays.store');
 
+    Route::get('companies', [CompanyController::class, 'index'])
+        ->name('companies.index');
+    Route::get('/companies/create', [CompanyController::class, 'create'])
+        ->name('companies.create');
+    Route::post('/companies', [CompanyController::class, 'store'])
+        ->name('companies.store');
+    Route::get('companies/{company}', [CompanyController::class, 'show'])
+        ->name('companies.show');
 });
 
 Route::get('/dashboard', function () {

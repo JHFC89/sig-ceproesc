@@ -73,13 +73,14 @@ class UserSeeder extends Seeder
         // employer
         $employer = User::factory()
             ->hasRoles(1, ['name' => 'employer'])
+            ->forCompany()
             ->create([
                 'name' => 'Empresa 1',
                 'email' => 'empresa@sig.com.br',
                 'password' => Hash::make('asdf'),
             ]);
 
-        $employer->novices()->saveMany([$noviceA, $noviceB]);
+        $employer->company->novices()->saveMany([$noviceA, $noviceB]);
 
         // coordinator
         $coordinator = User::factory()
