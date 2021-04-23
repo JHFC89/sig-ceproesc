@@ -24,6 +24,7 @@ class ViewCourseClassTest extends TestCase
     /** @test */
     public function coordinator_can_view_a_course_class()
     {
+        $this->withoutExceptionHandling();
         $coordinator = User::fakeCoordinator();
         $courseClass = CourseClass::factory()->forCourse()->create();
 

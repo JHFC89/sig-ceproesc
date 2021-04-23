@@ -42,6 +42,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+    * The relationships that should always be loaded.
+    *
+    * @var array
+    */
+    protected $with = ['registration'];
+
+    public function getNameAttribute()
+    {
+        return $this->registration->name;
+    }
+
+    public function getCompanyAttribute()
+    {
+        return $this->registration->company;
+    }
+
     public function getCodeAttribute()
     {
         return '2021' . $this->id;
@@ -74,14 +91,14 @@ class User extends Authenticatable
         return self::where('employer_id', $this->company->id)->get();
     }
 
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
-
     public function courseClass()
     {
         return $this->belongsTo(CourseClass::class);
+    }
+
+    public function registration()
+    {
+        return $this->hasOne(Registration::class);
     }
 
     public function presentForLesson($lesson)

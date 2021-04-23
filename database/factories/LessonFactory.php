@@ -25,7 +25,9 @@ class LessonFactory extends Factory
     public function definition()
     {
         return [
-            'instructor_id' => User::factory()->hasRoles(1, ['name' => 'instructor']),
+            'instructor_id' => User::factory()->hasRoles(1, [
+                'name' => 'instructor'
+            ])->create(),
             'date'          => Carbon::parse('+2 weeks'),
             'discipline_id' => Discipline::factory()->create(),
             'hourly_load'   => '123hr',

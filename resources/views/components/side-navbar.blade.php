@@ -148,6 +148,43 @@
             </li>
             @endcan
 
+            @can('create', \App\Models\Company::class)
+            <li>
+                <span 
+                    class="
+                        flex items-center px-2 py-2 group rounded-md cursor-default
+                        {{ request()->routeIs('companies.*') || request()->routeIs('employers.*')
+                        ? 'font-medium text-gray-100' : '' }}
+                    "
+                >
+                    <x-icons.user-circle class="w-6 group-hover:text-gray-400"/>
+                    <span class="ml-4 group-hover:text-gray-400">Usuários</span>
+                </span>
+            </li>
+            <li>
+                <a
+                    href="{{ route('companies.index') }}"
+                    class="
+                        flex items-center px-2 py-1 text-sm group rounded-md
+                        {{ request()->routeIs('companies.index')
+                        ? 'font-medium text-gray-100' : '' }}
+                    "
+                >
+                    <span class="ml-10 group-hover:text-gray-400">empresas</span>
+                </a>
+                <a
+                    href="{{ route('companies.create') }}"
+                    class="
+                        flex items-center px-2 py-1 text-sm group rounded-md
+                        {{ request()->routeIs('companies.create')
+                        ? 'font-medium text-gray-100' : '' }}
+                    "
+                >
+                    <span class="ml-10 group-hover:text-gray-400">nova empresa</span>
+                </a>
+            </li>
+            @endcan
+
         </ul>
     </nav>
 </aside>

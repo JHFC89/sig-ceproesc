@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Facades\InvitationCode;
+use App\Models\Company;
+use App\Models\Invitation;
 use App\Models\User;
 use App\Models\CourseClass;
 use Illuminate\Database\Seeder;
@@ -20,7 +23,6 @@ class UserSeeder extends Seeder
         User::factory()
             ->hasRoles(1, ['name' => 'instructor'])
             ->create([
-                'name' => 'Instrutor 1',
                 'email' => 'instrutor@sig.com.br',
                 'password' => Hash::make('asdf'),
             ]);
@@ -29,7 +31,6 @@ class UserSeeder extends Seeder
         User::factory()
             ->hasRoles(1, ['name' => 'instructor'])
             ->create([
-                'name' => 'Instrutor 2',
                 'email' => 'instrutor2@sig.com.br',
                 'password' => Hash::make('asdf'),
             ]);
@@ -38,7 +39,6 @@ class UserSeeder extends Seeder
         User::factory()
             ->hasRoles(1, ['name' => 'instructor'])
             ->create([
-                'name' => 'Instrutor Sem Aulas',
                 'email' => 'instrutorsemaula@sig.com.br',
                 'password' => Hash::make('asdf'),
             ]);
@@ -47,7 +47,6 @@ class UserSeeder extends Seeder
         $noviceA = User::factory()
             ->hasRoles(1, ['name' => 'novice'])
             ->create([
-                'name' => 'Aprendiz 1',
                 'email' => 'aprendiz@sig.com.br',
                 'password' => Hash::make('asdf'),
             ]);
@@ -56,7 +55,6 @@ class UserSeeder extends Seeder
         $noviceB = User::factory()
             ->hasRoles(1, ['name' => 'novice'])
             ->create([
-                'name' => 'Aprendiz 2',
                 'email' => 'aprendiz2@sig.com.br',
                 'password' => Hash::make('asdf'),
             ]);
@@ -65,7 +63,6 @@ class UserSeeder extends Seeder
         $noviceC = User::factory()
             ->hasRoles(1, ['name' => 'novice'])
             ->create([
-                'name' => 'Aprendiz 3',
                 'email' => 'aprendiz3@sig.com.br',
                 'password' => Hash::make('asdf'),
             ]);
@@ -73,20 +70,23 @@ class UserSeeder extends Seeder
         // employer
         $employer = User::factory()
             ->hasRoles(1, ['name' => 'employer'])
-            ->forCompany()
             ->create([
-                'name' => 'Empresa 1',
                 'email' => 'empresa@sig.com.br',
                 'password' => Hash::make('asdf'),
             ]);
 
+        $company = Company::factory()->create();
+        $employer->registration()->update(['company_id' => $company->id]);
+        $employer->registration->invitation()->save(new Invitation([
+            'email' => $employer->email,
+            'code'  => InvitationCode::generate(),
+        ]));
         $employer->company->novices()->saveMany([$noviceA, $noviceB]);
 
         // coordinator
         $coordinator = User::factory()
             ->hasRoles(1, ['name' => 'coordinator'])
             ->create([
-                'name' => 'Coordenador 1',
                 'email' => 'coordenador@sig.com.br',
                 'password' => Hash::make('asdf'),
             ]);

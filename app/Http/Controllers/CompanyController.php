@@ -74,6 +74,8 @@ class CompanyController extends Controller
             'cep'       => request()->address['cep'],
         ]);
 
+        session()->flash('status', 'Empresa cadastrada com sucesso!');
+
         return view('companies.show', compact('company'));
     }
 }

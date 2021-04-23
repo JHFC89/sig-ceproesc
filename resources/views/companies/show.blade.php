@@ -48,9 +48,15 @@
         </x-slot>
     </x-card.list.description-layout>
 
-    <div class="flex justify-end mt-4">
+    <div class="flex justify-end mt-4 space-x-2">
         <a
-            href="#"
+            href="{{ route('companies.employers.index', ['company' => $company]) }}"
+            class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown"
+        >
+            ver representantes
+        </a>
+        <a
+            href="{{ route('companies.employers.create', ['company' => $company]) }}"
             class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown"
         >
             cadastrar representante

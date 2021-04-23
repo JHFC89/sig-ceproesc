@@ -23,7 +23,7 @@ class Company extends Model
 
     public function employers()
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(Registration::class, 'company_id');
     }
 
     public function novices()

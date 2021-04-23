@@ -1,18 +1,23 @@
 <?php
 
+use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LessonController;
-use App\Http\Controllers\CourseController;
-use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\HolidayController;
-use App\Http\Controllers\EvaluationController;
-use App\Http\Controllers\DisciplineController;
-use App\Http\Controllers\CourseClassController;
-use App\Http\Controllers\LessonRequestController;
-use App\Http\Controllers\LessonRegisterController;
-use App\Http\Controllers\EvaluationGradeController;
-use App\Http\Controllers\ForWeekLessonListController;
-use App\Http\Controllers\ForTodayLessonListController;
+use App\Http\Controllers\{
+    LessonController,
+    CourseController,
+    CompanyController,
+    HolidayController,
+    EmployerController,
+    EvaluationController,
+    DisciplineController,
+    InvitationController,
+    CourseClassController,
+    LessonRequestController,
+    LessonRegisterController,
+    EvaluationGradeController,
+    ForWeekLessonListController,
+    ForTodayLessonListController,
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +29,12 @@ use App\Http\Controllers\ForTodayLessonListController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('invitations/{code}', [InvitationController::class, 'show'])
+    ->name('invitations.show');
+
+Route::post('register', [RegisterController::class, 'store'])
+    ->name('register.store');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/lessons/today', ForTodayLessonListController::class)->name('lessons.today');
@@ -94,6 +105,20 @@ Route::middleware(['auth'])->group(function () {
         ->name('companies.store');
     Route::get('companies/{company}', [CompanyController::class, 'show'])
         ->name('companies.show');
+
+    Route::get('companies/{company}/employers', [
+        EmployerController::class, 'index'
+    ])->name('companies.employers.index');
+    Route::get('companies/{company}/employer/create', [
+        EmployerController::class,
+        'create'
+    ])->name('companies.employers.create');
+    Route::post('companies/{company}/employer', [
+        EmployerController::class,
+        'store'
+    ])->name('companies.employers.store');
+    Route::get('employers/{registration}', [EmployerController::class, 'show'])
+        ->name('employers.show');
 });
 
 Route::get('/dashboard', function () {

@@ -111,7 +111,11 @@ class Schedule extends Component
     public function dateType($date)
     {
         if (! $date) {
-            return;
+            return [
+                'date'  => null,
+                'style' => null,
+                'type'  => null,
+            ];
         }
 
         $dayType = $this->dayType($date);

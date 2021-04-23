@@ -26,7 +26,10 @@ class ViewRequestToRegisterExpiredLessonTest extends TestCase
         $this->lesson = Lesson::factory()->expired()->hasNovices(3)->create();
         $this->lesson->setTestData();
 
-        $this->request = LessonRequest::for($this->lesson, 'Test Justification'); 
+        $this->request = LessonRequest::for(
+            $this->lesson,
+            'Test Justification'
+        ); 
 
         $this->instructor = $this->lesson->instructor;
     }
@@ -95,13 +98,19 @@ class ViewRequestToRegisterExpiredLessonTest extends TestCase
     /** @test */
     public function instructor_cannot_view_the_link_to_release_a_request()
     {
+        $this->withoutExceptionHandling();
         $this->request->release();
 
-        $response = $this->actingAs($this->instructor)->get(route('requests.show', ['request' => $this->request]));
+        $response = $this->actingAs($this->instructor)
+                         ->get(route('requests.show', [
+                             'request' => $this->request
+                         ]));
 
         $response
             ->assertOk()
-            ->assertDontSee(route('requests.update', ['request' => $this->request]));
+            ->assertDontSee(route('requests.update', [
+                'request' => $this->request
+            ]));
     }
 
     /** @test */

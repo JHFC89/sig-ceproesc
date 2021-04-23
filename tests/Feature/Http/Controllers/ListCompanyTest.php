@@ -45,6 +45,16 @@ class ListCompanyTest extends TestCase
     }
 
     /** @test */
+    public function user_without_role_cannot_view_a_list_of_companies()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('companies.index'));
+
+        $response->assertUnauthorized();
+    }
+
+    /** @test */
     public function instructor_cannot_view_a_list_of_companies()
     {
         $instructor = User::fakeInstructor();

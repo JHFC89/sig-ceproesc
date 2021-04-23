@@ -51,7 +51,8 @@ class StoreCompanyTest extends TestCase
 
         $response->assertOk()
                  ->assertViewHas('company')
-                 ->assertViewIs('companies.show');
+                 ->assertViewIs('companies.show')
+                 ->assertSessionHas('status', 'Empresa cadastrada com sucesso!');
         $this->assertCount($companies + 1, Company::all());
         $company = Company::where('cnpj', $data['cnpj'])->first();
         $this->assertEquals($data['name'], $company->name);
