@@ -70,9 +70,7 @@ class AcceptInvitationTest extends TestCase
         $registration = Registration::factory()->create([
             'name'          => 'Test User Name',
             'rg'            => '123-123-12',
-            'role_id'       => Role::factory()->create([
-                'name' => 'employer'
-            ]),
+            'role_id'       => Role::factory()->create(['name' => 'employer']),
             'company_id'    => Company::factory()->create(),
         ]);
         $invitation = Invitation::factory()->make([
@@ -101,6 +99,45 @@ class AcceptInvitationTest extends TestCase
         $this->assertAuthenticatedAs($user);
         $this->assertTrue($user->isEmployer());
         $this->assertTrue($user->company->is($registration->company));
+    }
+
+    /** @test */
+    public function instructor_registering_with_a_valid_registration_code()
+    {
+        $registration = Registration::factory()->create([
+            'name'      => 'Fake Instructor',
+            'role_id'   => Role::factory()->create(['name' => 'instructor']),
+            'rg'        => '12-123-123',
+            'cpf'       => '123.123.123-12',
+            'ctps'      => '12-123-12',
+        ]);
+        $invitation = Invitation::factory()->make([
+            'email'             => 'fakeinstructor@test.com',
+            'user_id'           => null,
+            'code'              => 'TESTCODE1234',
+        ]);
+        $registration->invitation()->save($invitation);
+        $data = [
+            'email'                 => 'fakeinstructor@test.com',
+            'password'              => 'Secret1',
+            'password_confirmation' => 'Secret1',
+            'confirmation_code'     => 'TESTCODE1234',
+        ];
+
+        $response = $this->post(route('register.store', $data));
+
+        $response->assertRedirect(route('dashboard'));
+        $this->assertEquals(1, User::count());
+        $user = User::first();
+        $this->assertEquals($registration->name, $user->name);
+        $this->assertEquals($registration->email, $user->email);
+        $this->assertEquals($registration->rg, $user->registration->rg);
+        $this->assertEquals($registration->cpf, $user->registration->cpf);
+        $this->assertEquals($registration->ctps, $user->registration->ctps);
+        $this->assertTrue(Hash::check('Secret1', $user->password));
+        $this->assertTrue($invitation->fresh()->user->is($user));
+        $this->assertAuthenticatedAs($user);
+        $this->assertTrue($user->isInstructor());
     }
 
     /** @test */

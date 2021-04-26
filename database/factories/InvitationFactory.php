@@ -24,6 +24,7 @@ class InvitationFactory extends Factory
     {
         return [
             'email'             => $this->faker->unique()->safeEmail,
+            'code'              => 'TESTCODE1234',
             'registration_id'   => Registration::factory()->create(),
         ];
     }

@@ -148,12 +148,14 @@
             </li>
             @endcan
 
-            @can('create', \App\Models\Company::class)
+            @if (Auth::user()->isCoordinator())
             <li>
                 <span 
                     class="
                         flex items-center px-2 py-2 group rounded-md cursor-default
-                        {{ request()->routeIs('companies.*') || request()->routeIs('employers.*')
+                        {{ request()->routeIs('companies.*')
+                        || request()->routeIs('employers.*')
+                        || request()->routeIs('instructors.*')
                         ? 'font-medium text-gray-100' : '' }}
                     "
                 >
@@ -161,30 +163,58 @@
                     <span class="ml-4 group-hover:text-gray-400">Usuários</span>
                 </span>
             </li>
-            <li>
-                <a
-                    href="{{ route('companies.index') }}"
-                    class="
-                        flex items-center px-2 py-1 text-sm group rounded-md
-                        {{ request()->routeIs('companies.index')
-                        ? 'font-medium text-gray-100' : '' }}
-                    "
-                >
-                    <span class="ml-10 group-hover:text-gray-400">empresas</span>
-                </a>
-                <a
-                    href="{{ route('companies.create') }}"
-                    class="
-                        flex items-center px-2 py-1 text-sm group rounded-md
-                        {{ request()->routeIs('companies.create')
-                        ? 'font-medium text-gray-100' : '' }}
-                    "
-                >
-                    <span class="ml-10 group-hover:text-gray-400">nova empresa</span>
-                </a>
-            </li>
-            @endcan
 
+                @can('create', \App\Models\Company::class)
+                <li>
+                    <a
+                        href="{{ route('companies.index') }}"
+                        class="
+                            flex items-center px-2 py-1 text-sm group rounded-md
+                            {{ request()->routeIs('companies.index')
+                            ? 'font-medium text-gray-100' : '' }}
+                        "
+                    >
+                        <span class="ml-10 group-hover:text-gray-400">empresas</span>
+                    </a>
+                    <a
+                        href="{{ route('companies.create') }}"
+                        class="
+                            flex items-center px-2 py-1 text-sm group rounded-md
+                            {{ request()->routeIs('companies.create')
+                            ? 'font-medium text-gray-100' : '' }}
+                        "
+                    >
+                        <span class="ml-10 group-hover:text-gray-400">nova empresa</span>
+                    </a>
+                </li>
+                @endcan
+
+                @can('create', \App\Models\Registration::class)
+                <li>
+                    <a
+                        href="{{ route('instructors.index') }}"
+                        class="
+                            flex items-center px-2 py-1 text-sm group rounded-md
+                            {{ request()->routeIs('instructors.index')
+                            ? 'font-medium text-gray-100' : '' }}
+                        "
+                    >
+                        <span class="ml-10 group-hover:text-gray-400">instrutores</span>
+                    </a>
+                    <a
+                        href="{{ route('instructors.create') }}"
+                        class="
+                            flex items-center px-2 py-1 text-sm group rounded-md
+                            {{ request()->routeIs('instructors.create')
+                            ? 'font-medium text-gray-100' : '' }}
+                        "
+                    >
+                        <span class="ml-10 group-hover:text-gray-400">novo instrutor</span>
+                    </a>
+                </li>
+                @endcan
+
+            @endif
         </ul>
     </nav>
 </aside>

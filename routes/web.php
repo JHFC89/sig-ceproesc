@@ -8,6 +8,7 @@ use App\Http\Controllers\{
     CompanyController,
     HolidayController,
     EmployerController,
+    InstructorController,
     EvaluationController,
     DisciplineController,
     InvitationController,
@@ -119,6 +120,15 @@ Route::middleware(['auth'])->group(function () {
     ])->name('companies.employers.store');
     Route::get('employers/{registration}', [EmployerController::class, 'show'])
         ->name('employers.show');
+
+    Route::get('instructors', [InstructorController::Class, 'index'])
+        ->name('instructors.index');
+    Route::get('instructors/create', [InstructorController::Class, 'create'])
+        ->name('instructors.create');
+    Route::post('instructors/store', [InstructorController::class, 'store'])
+        ->name('instructors.store');
+    Route::get('instructors/{registration}', [InstructorController::class, 'show'])
+        ->name('instructors.show');
 });
 
 Route::get('/dashboard', function () {

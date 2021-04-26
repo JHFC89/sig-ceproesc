@@ -30,8 +30,6 @@ class RegisterController extends Controller
 
         $user = $invitation->createUserFromArray($validatedData);
 
-        $invitation->registration->attachUser($user);
-
         Auth::login($user);
 
         return redirect()->route('dashboard');

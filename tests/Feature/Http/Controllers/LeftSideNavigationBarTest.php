@@ -94,6 +94,18 @@ class LeftSideNavigationBarTest extends TestCase
     }
 
     /** @test */
+    public function coordinator_can_view_links_related_to_instructors()
+    {
+        $response = $this
+            ->actingAs($this->coordinator)
+            ->get(route('dashboard'));
+
+        $response
+            ->assertSee(route('instructors.index'))
+            ->assertSee(route('instructors.create'));
+    }
+
+    /** @test */
     public function instructors_cannot_view_links_related_to_disciplines()
     {
         $response = $this
@@ -127,6 +139,18 @@ class LeftSideNavigationBarTest extends TestCase
         $response
             ->assertDontSee(route('companies.index'))
             ->assertDontSee(route('companies.create'));
+    }
+
+    /** @test */
+    public function instructor_cannot_view_links_related_to_instructors()
+    {
+        $response = $this
+            ->actingAs($this->instructor)
+            ->get(route('dashboard'));
+
+        $response
+            ->assertDontSee(route('instructors.index'))
+            ->assertDontSee(route('instructors.create'));
     }
 
     /** @test */
@@ -166,6 +190,18 @@ class LeftSideNavigationBarTest extends TestCase
     }
 
     /** @test */
+    public function novice_cannot_view_links_related_to_instructors()
+    {
+        $response = $this
+            ->actingAs($this->novice)
+            ->get(route('dashboard'));
+
+        $response
+            ->assertDontSee(route('instructors.index'))
+            ->assertDontSee(route('instructors.create'));
+    }
+
+    /** @test */
     public function employer_cannot_view_links_related_to_disciplines()
     {
         $response = $this
@@ -200,4 +236,17 @@ class LeftSideNavigationBarTest extends TestCase
             ->assertDontSee(route('companies.index'))
             ->assertDontSee(route('companies.create'));
     }
+
+    /** @test */
+    public function employer_cannot_view_links_related_to_instructors()
+    {
+        $response = $this
+            ->actingAs($this->employer)
+            ->get(route('dashboard'));
+
+        $response
+            ->assertDontSee(route('instructors.index'))
+            ->assertDontSee(route('instructors.create'));
+    }
+
 }

@@ -32,6 +32,8 @@ class Invitation extends Model
 
         $this->user()->associate($user)->save();
 
+        $this->registration->attachUser($user);
+
         return $user;
     }
 

@@ -20,7 +20,10 @@ class CreateRegistrationsTable extends Migration
             $table->foreignId('company_id')->nullable();
             $table->foreignId('course_class_id')->nullable();
             $table->string('name');
+            $table->date('birthdate')->nullable();
             $table->string('rg')->nullable();
+            $table->string('cpf')->nullable();
+            $table->string('ctps')->nullable();
             $table->timestamps();
         });
     }

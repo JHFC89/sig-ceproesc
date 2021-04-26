@@ -28,7 +28,7 @@ class RegistrationFactory extends Factory
         ];
     }
 
-    public function forEmployer(int $company_id)
+    public function forEmployer(int $company_id = 1)
     {
         return $this->state(function (array $attributes) use ($company_id) {
             return [
@@ -38,4 +38,50 @@ class RegistrationFactory extends Factory
             ];
         });
     }
+
+    public function forInstructor()
+    {
+        return $this->state(function (array $attributes) {
+           return [
+                'birthdate' => now()->subYears(30)->format('Y-m-d'),
+                'rg'        => $this->faker->randomNumber(8),
+                'cpf'       => $this->fakeCpf(),
+                'ctps'      => $this->faker->randomNumber(7),
+                'role_id'   => Role::factory()->create(['name' => 'instructor']),
+            ];
+        });
+    }
+
+    public function forCoordinator()
+    {
+        return $this->state(function (array $attributes) {
+           return [
+               'role_id' => Role::factory()->create([
+                   'name' => Role::COORDINADOR,
+               ]),
+            ];
+        });
+    }
+
+    public function forNovice()
+    {
+        return $this->state(function (array $attributes) {
+           return [
+               'role_id' => Role::factory()->create([
+                   'name' => Role::NOVICE,
+               ]),
+            ];
+        });
+    }
+
+    private function fakeCpf()
+    {
+        $cpfA = $this->faker->randomNumber(3);
+        $cpfB = $this->faker->randomNumber(3);
+        $cpfC = $this->faker->randomNumber(3);
+        $cpfD = $this->faker->randomNumber(2);
+
+        return "{$cpfA}.{$cpfB}.{$cpfC}-{$cpfD}";
+    }
+
 }
