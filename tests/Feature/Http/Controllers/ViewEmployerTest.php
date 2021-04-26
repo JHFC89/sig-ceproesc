@@ -2,12 +2,8 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use App\Facades\InvitationCode;
-use App\Models\Invitation;
-use App\Models\Registration;
 use Tests\TestCase;
-use App\Models\User;
-use App\Models\Company;
+use App\Models\{Invitation, Registration, User, Company};
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ViewEmployerTest extends TestCase
@@ -28,7 +24,7 @@ class ViewEmployerTest extends TestCase
 
         $this->company = Company::factory()->create();
 
-        $this->registration = Registration::factory()->create([
+        $this->registration = Registration::factory()->forEmployer()->create([
             'name'          => 'Fake Employer',
             'rg'            => '123-123-12',
             'company_id'    => $this->company->id,
@@ -36,7 +32,7 @@ class ViewEmployerTest extends TestCase
 
         $this->registration->invitation()->save(new Invitation([
             'email' => 'fakeemployer@test.com',
-            'code' => InvitationCode::generate(),
+            'code' => 'TESTCODE1234',
         ]));
     }
 
@@ -55,6 +51,45 @@ class ViewEmployerTest extends TestCase
                  ->assertSee($this->registration->name)
                  ->assertSee($this->registration->email)
                  ->assertSee($this->registration->rg);
+    }
+
+    /** @test */
+    public function cannot_view_a_registration_for_coordinator()
+    {
+        $registration = Registration::factory()->forCoordinator()->create();
+
+        $response = $this->actingAs($this->coordinator)
+                         ->get(route('employers.show', [
+                             'registration' => $registration
+                         ]));
+
+        $response->assertNotFound();
+    }
+
+    /** @test */
+    public function cannot_view_a_registration_for_instructor()
+    {
+        $registration = Registration::factory()->forInstructor()->create();
+
+        $response = $this->actingAs($this->coordinator)
+                         ->get(route('employers.show', [
+                             'registration' => $registration
+                         ]));
+
+        $response->assertNotFound();
+    }
+
+    /** @test */
+    public function cannot_view_a_registration_for_novice()
+    {
+        $registration = Registration::factory()->forNovice()->create();
+
+        $response = $this->actingAs($this->coordinator)
+                         ->get(route('employers.show', [
+                             'registration' => $registration
+                         ]));
+
+        $response->assertNotFound();
     }
 
     /** @test */

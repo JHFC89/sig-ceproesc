@@ -2,9 +2,8 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use App\Facades\InvitationCode;
-use App\Models\{User, Company, Invitation, Registration};
 use Tests\TestCase;
+use App\Models\{User, Company, Invitation, Registration};
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -33,7 +32,7 @@ class ListEmployerTest extends TestCase
         $this->registrations->each(function ($registration) {
             $registration->invitation()->save(new Invitation([
                 'email' => $this->faker->unique()->safeEmail,
-                'code' => InvitationCode::generate(),
+                'code' => 'TESTCODE1234',
             ]));
         });
 

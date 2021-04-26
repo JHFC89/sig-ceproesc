@@ -19,6 +19,8 @@ class EmployerController extends Controller
     {
         abort_if(request()->user()->cannot('viewAny', Company::class), 401);
 
+        abort_unless($registration->isForEmployer(), 404);
+
         return view('employers.show', compact('registration'));
     }
 
@@ -35,7 +37,12 @@ class EmployerController extends Controller
 
         $data = request()->validate([
             'name'  => ['required'],
-            'email' => ['required', 'email', 'unique:users'],
+            'email' => [
+                'required',
+                'email',
+                'unique:users',
+                'unique:invitations'
+            ],
             'rg'    => ['required', 'unique:registrations'],
         ]);
 

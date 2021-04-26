@@ -235,9 +235,34 @@ class StoreEmployerTest extends TestCase
     }
 
     /** @test */
-    public function email_must_be_unique()
+    public function email_must_be_unique_in_users_table()
     {
         $existingUser = User::factory()->create(['email' => 'used@test.com']);
+        $data = [
+            'name'  => 'Test Employer Name',
+            'email' => 'used@test.com',
+            'rg'    => '123-123-12',
+        ];
+        $from = route('companies.employers.create', [
+            'company' => $this->company
+        ]);
+
+        $response = $this->actingAs($this->coordinator)
+                         ->from($from)
+                         ->post(route('companies.employers.store', [
+                             'company' => $this->company
+                         ]), $data);
+
+        $response->assertSessionHasErrors('email')
+                 ->assertRedirect($from);
+    }
+
+    /** @test */
+    public function email_must_be_unique_in_invitations_table()
+    {
+        $existingInvitation = Invitation::factory()->create([
+            'email' => 'used@test.com'
+        ]);
         $data = [
             'name'  => 'Test Employer Name',
             'email' => 'used@test.com',
