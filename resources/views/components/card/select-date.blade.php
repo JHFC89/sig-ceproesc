@@ -6,6 +6,10 @@
 'wireMonth' => '',
 'wireYear' => '',
 'disabled' => false,
+'minYear' => true,
+'dayValue' => 1,
+'monthValue' => 1,
+'yearValue' => now()->format('Y'),
 ])
 
 <div class="space-x-4">
@@ -19,7 +23,7 @@
             min="1"
             max="31"
             name="{{ $dayName }}"
-            value="1"
+            value="{{ $dayValue }}"
             required
         >
     </label>
@@ -32,18 +36,18 @@
             name="{{ $monthName }}"
             required
         >
-            <option value="1">Janeiro</option>
-            <option value="2">Fevereiro</option>
-            <option value="3">Março</option>
-            <option value="4">Abril</option>
-            <option value="5">Maio</option>
-            <option value="6">Junho</option>
-            <option value="7">Julho</option>
-            <option value="8">Agosto</option>
-            <option value="9">Setembro</option>
-            <option value="10">Outrubro</option>
-            <option value="11">Novembro</option>
-            <option value="12">Dezembro</option>
+            <option value="1" @if ($monthValue == 1) selected @endif>Janeiro</option>
+            <option value="2" @if ($monthValue == 2) selected @endif>Fevereiro</option>
+            <option value="3" @if ($monthValue == 3) selected @endif>Março</option>
+            <option value="4" @if ($monthValue == 4) selected @endif>Abril</option>
+            <option value="5" @if ($monthValue == 5) selected @endif>Maio</option>
+            <option value="6" @if ($monthValue == 6) selected @endif>Junho</option>
+            <option value="7" @if ($monthValue == 7) selected @endif>Julho</option>
+            <option value="8" @if ($monthValue == 8) selected @endif>Agosto</option>
+            <option value="9" @if ($monthValue == 9) selected @endif>Setembro</option>
+            <option value="10" @if ($monthValue == 10) selected @endif>Outrubro</option>
+            <option value="11" @if ($monthValue == 11) selected @endif>Novembro</option>
+            <option value="12" @if ($monthValue == 12) selected @endif>Dezembro</option>
         </select>
     </label>
     <label class="inline-flex items-center space-x-2">
@@ -53,9 +57,9 @@
             @if ($disabled) disabled @endif
             class="form-input block w-24 @if ($disabled) bg-gray-100 @endif"
             type="number"
-            min="{{ now()->format('Y') }}"
+            min="{{ $minYear ? now()->format('Y') : '1900' }}"
             name="{{ $yearName }}"
-            value="{{ now()->format('Y') }}"
+            value="{{ $yearValue }}"
             required
         >
     </label>
