@@ -35,7 +35,6 @@ class ListEmployerTest extends TestCase
                 'code' => 'TESTCODE1234',
             ]));
         });
-
     }
 
     /** @test */

@@ -17,7 +17,7 @@ class EmployerController extends Controller
 
     public function show(Registration $registration)
     {
-        abort_if(request()->user()->cannot('viewAny', Company::class), 401);
+        abort_if(request()->user()->cannot('view', $registration), 401);
 
         abort_unless($registration->isForEmployer(), 404);
 
