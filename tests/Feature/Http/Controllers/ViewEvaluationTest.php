@@ -187,8 +187,8 @@ class ViewEvaluationTest extends TestCase
     {
         $employer = User::fakeEmployer();
         $employer->company->novices()->saveMany([
-            $this->novices[0],
-            $this->novices[1]
+            $this->novices[0]->registration,
+            $this->novices[1]->registration
         ]);
 
         $response = $this->actingAs($employer)

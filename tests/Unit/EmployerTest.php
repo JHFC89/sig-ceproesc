@@ -28,7 +28,7 @@ class EmployerTest extends TestCase
         $noviceNotForEmployer = User::fakeNovice();
         $company = Company::factory()->create();
         $company->employers()->save($employer->registration);
-        $company->novices()->save($noviceForEmployer);
+        $company->novices()->save($noviceForEmployer->registration);
 
         $noviceForEmployerResult = $employer->isEmployerOf($noviceForEmployer);
         $noviceNotForEmployerResult = $employer->isEmployerOf($noviceNotForEmployer);
@@ -47,9 +47,9 @@ class EmployerTest extends TestCase
         $company = Company::factory()->create();
         $company->employers()->save($employer->registration);
         $company->novices()->saveMany([
-            $novices[0],
-            $novices[1],
-            $novices[2],
+            $novices[0]->registration,
+            $novices[1]->registration,
+            $novices[2]->registration,
         ]);
 
         $result = $employer->refresh()->novices;
@@ -68,7 +68,7 @@ class EmployerTest extends TestCase
             $employerB->registration,
         ]);
         $novice = User::fakeNovice();
-        $company->novices()->save($novice);
+        $company->novices()->save($novice->registration);
 
         $resultA = $employerA->isEmployerOf($novice);
         $resultB = $employerB->isEmployerOf($novice);

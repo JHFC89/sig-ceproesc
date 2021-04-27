@@ -11,6 +11,11 @@ class Company extends Model
 
     protected $guarded = [];
 
+    public function allNovices()
+    {
+        return $this->novices->map->user;
+    }
+
     public function phones()
     {
         return $this->hasMany(Phone::class);
@@ -28,6 +33,6 @@ class Company extends Model
 
     public function novices()
     {
-        return $this->hasMany(User::class, 'employer_id');
+        return $this->hasMany(Registration::class, 'employer_id');
     }
 }

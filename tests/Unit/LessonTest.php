@@ -519,7 +519,7 @@ class LessonTest extends TestCase
         $lessonNotForEmployer = Lesson::factory()->hasNovices(1)->create();
         $noviceForEmployer = $lessonForEmployer->novices()->first();
         $employer = User::fakeEmployer();
-        $employer->company->novices()->save($noviceForEmployer);
+        $employer->company->novices()->save($noviceForEmployer->registration);
 
         $lessonForEmployerResult = $lessonForEmployer->hasNovicesForEmployer($employer);
         $lessonNotForEmployerResult = $lessonNotForEmployer->hasNovicesForEmployer($employer);
@@ -666,7 +666,7 @@ class LessonTest extends TestCase
     {
         $employer = User::fakeEmployer();
         $novice = User::fakeNovice();
-        $employer->company->novices()->save($novice);
+        $employer->company->novices()->save($novice->registration);
         $lessons = Lesson::factory()->count(3)->create();
         $lessons->each(function ($lesson) use ($novice) {
             $lesson->enroll($novice);

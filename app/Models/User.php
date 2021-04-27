@@ -93,7 +93,7 @@ class User extends Authenticatable
 
     public function novices()
     {
-        return self::where('employer_id', $this->company->id)->get();
+        return $this->company->allNovices();
     }
 
     public function courseClass()

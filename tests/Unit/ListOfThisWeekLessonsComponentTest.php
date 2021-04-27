@@ -72,7 +72,7 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
         $lessons->each(function ($lesson) {
             $lesson->enroll($this->novice);
         });
-        $this->employer->company->novices()->save($this->novice);
+        $this->employer->company->novices()->save($this->novice->registration);
 
         $componentForInstructor = $this->forThisWeekListComponent(
             'Week',
@@ -344,7 +344,10 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     {
         $noviceA = User::fakeNovice();
         $noviceB = User::fakeNovice();
-        $this->employer->company->novices()->saveMany([$noviceA, $noviceB]);
+        $this->employer->company->novices()->saveMany([
+            $noviceA->registration,
+            $noviceB->registration
+        ]);
         $lesson = Lesson::factory()->thisWeek()
                                    ->notRegistered()
                                    ->instructor($this->instructor)
@@ -362,7 +365,7 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     {
         $noviceA = User::fakeNovice();
         $employerA = User::fakeEmployer();
-        $employerA->company->novices()->save($noviceA);
+        $employerA->company->novices()->save($noviceA->registration);
         $lessonForNoviceA = Lesson::factory()->thisWeek()
                                              ->notRegistered()
                                              ->instructor($this->instructor)
@@ -370,7 +373,7 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
         $lessonForNoviceA->enroll($noviceA);
         $noviceB = User::fakeNovice();
         $employerB = User::fakeEmployer();
-        $employerB->company->novices()->save($noviceB);
+        $employerB->company->novices()->save($noviceB->registration);
         $lessonForNoviceB = Lesson::factory()->thisWeek()
                                              ->notRegistered()
                                              ->instructor($this->instructor)
@@ -389,7 +392,7 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     /** @test */
     public function employer_cannot_see_link_to_register_class()
     {
-        $this->employer->company->novices()->save($this->novice);
+        $this->employer->company->novices()->save($this->novice->registration);
         $lesson = Lesson::factory()->thisWeek()
                                    ->notRegistered()
                                    ->instructor($this->instructor)
@@ -408,7 +411,7 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     /** @test */
     public function employer_cannot_see_link_to_request_to_register_an_expired_lesson()
     {
-        $this->employer->company->novices()->save($this->novice);
+        $this->employer->company->novices()->save($this->novice->registration);
         $experiredLesson = Lesson::factory()->expired()
                                             ->instructor($this->instructor)
                                             ->create();
@@ -426,7 +429,7 @@ class ListOfThisWeekLessonsComponentTest extends TestCase
     /** @test */
     public function employer_cannot_see_a_warning_when_a_lesson_has_a_pending_request_to_register()
     {
-        $this->employer->company->novices()->save($this->novice);
+        $this->employer->company->novices()->save($this->novice->registration);
         $lesson = Lesson::factory()->expired()
                                    ->instructor($this->instructor)
                                    ->hasRequests(1)

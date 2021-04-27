@@ -133,7 +133,7 @@ class ListLessonTest extends TestCase
     {
         $employer = User::fakeEmployer();
         $novice = User::fakeNovice();
-        $employer->company->novices()->save($novice);
+        $employer->company->novices()->save($novice->registration);
         $courseClass = CourseClass::factory()->hasLessons(3)->create();
         $courseClass->subscribe($novice);
 
@@ -151,7 +151,7 @@ class ListLessonTest extends TestCase
         $courseClass = CourseClass::factory()->hasLessons(3)->create();
         $employer = User::fakeEmployer();
         $novice = User::fakeNovice();
-        $employer->company->novices()->save($novice);
+        $employer->company->novices()->save($novice->registration);
 
         $response = $this->actingAs($employer)
                          ->get(route('classes.lessons.index', [

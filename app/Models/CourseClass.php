@@ -120,7 +120,7 @@ class CourseClass extends Model
 
     public function hasNovicesFor(User $employer)
     {
-        $novices = $employer->company->novices->pluck('id')->toArray();
+        $novices = $employer->company->allNovices()->pluck('id')->toArray();
 
         return $this->novices->whereIn('id', $novices)->count() > 0;
     }

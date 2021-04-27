@@ -22,7 +22,6 @@ class CreateUsersTable extends Migration
                   ->unique()
                   ->nullable()
                   ->default(null);
-            $table->foreignId('employer_id')->nullable();
             $table->foreignId('course_class_id')->nullable();
             $table->rememberToken();
             $table->timestamps();

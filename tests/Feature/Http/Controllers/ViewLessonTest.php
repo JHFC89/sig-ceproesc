@@ -155,7 +155,7 @@ class ViewLessonTest extends TestCase
         $lesson->setTestData();
         $novice = $lesson->novices->first();
         $employer = User::fakeEmployer();
-        $employer->company->novices()->save($novice);
+        $employer->company->novices()->save($novice->registration);
         
         $response = $this->actingAs($this->instructor)
                          ->get(route('lessons.show', ['lesson' => $lesson]));
@@ -238,7 +238,7 @@ class ViewLessonTest extends TestCase
         $lesson->setTestData();
         $novice = $lesson->novices->first();
         $employer = User::fakeEmployer();
-        $employer->company->novices()->save($novice);
+        $employer->company->novices()->save($novice->registration);
 
 
         $coordinatorResponse = $this->actingAs($this->coordinator)
@@ -486,7 +486,7 @@ class ViewLessonTest extends TestCase
                                    ->create();
         $lesson->setTestData();
         $employer = User::fakeEmployer();
-        $employer->company->novices()->save($lesson->novices->first());
+        $employer->company->novices()->save($lesson->novices->first()->registration);
         
         $responseForInstructor = $this->actingAs($this->instructor)
                                       ->get(route('lessons.show', [
@@ -825,7 +825,7 @@ class ViewLessonTest extends TestCase
                                   ->count(3)
                                   ->create();
         $employer = User::fakeEmployer();
-        $employer->company->novices()->saveMany($novices->all());
+        $employer->company->novices()->saveMany($novices->map->registration->all());
         $lesson = Lesson::factory()->notRegistered()->create();
         $novices->each(function ($novice) use ($lesson, $courseClass) {
             $courseClass->subscribe($novice);
@@ -853,7 +853,7 @@ class ViewLessonTest extends TestCase
                                   ->count(3)
                                   ->create();
         $employer = User::fakeEmployer();
-        $employer->company->novices()->saveMany($novices->all());
+        $employer->company->novices()->saveMany($novices->map->registration->all());
         $lesson = Lesson::factory()->notRegistered()->create();
         $novices->each(function ($novice) use ($lesson, $courseClass) {
             $lesson->enroll($novice);
@@ -895,12 +895,12 @@ class ViewLessonTest extends TestCase
                                               ->count(3)
                                               ->create();
         $employerA = User::fakeEmployer();
-        $employerA->company->novices()->saveMany($novicesForEmployerA->all());
+        $employerA->company->novices()->saveMany($novicesForEmployerA->map->registration->all());
         $novicesForEmployerB = User::factory()->hasRoles(1, ['name' => 'novice'])
                                               ->count(3)
                                               ->create();
         $employerB = User::fakeEmployer();
-        $employerB->company->novices()->saveMany($novicesForEmployerB->all());
+        $employerB->company->novices()->saveMany($novicesForEmployerB->map->registration->all());
         $lesson = Lesson::factory()->notRegistered()->create();
         collect([$novicesForEmployerA, $novicesForEmployerB])->flatten()->each(function ($novice) use ($lesson, $courseClass) {
             $courseClass->subscribe($novice);
@@ -940,7 +940,7 @@ class ViewLessonTest extends TestCase
                                   ->count(3)
                                   ->create();
         $employer = User::fakeEmployer();
-        $employer->company->novices()->saveMany($novices->all());
+        $employer->company->novices()->saveMany($novices->map->registration->all());
         $lesson = Lesson::factory()->expired()->hasRequests(1)->create();
         $novices->each(function ($novice) use ($lesson, $courseClass) {
             $courseClass->subscribe($novice);
