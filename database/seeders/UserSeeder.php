@@ -81,7 +81,10 @@ class UserSeeder extends Seeder
             'email' => $employer->email,
             'code'  => InvitationCode::generate(),
         ]));
-        $employer->company->novices()->saveMany([$noviceA, $noviceB]);
+        $employer->company->novices()->saveMany([
+            $noviceA->registration,
+            $noviceB->registration,  
+        ]);
 
         // coordinator
         $coordinator = User::factory()
