@@ -59,6 +59,11 @@ class User extends Authenticatable
         return $this->registration->company;
     }
 
+    public function getEmployerAttribute()
+    {
+        return $this->registration->employer;
+    }
+
     public function getCodeAttribute()
     {
         return '2021' . $this->id;

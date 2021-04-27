@@ -2,8 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Role;
-use App\Models\Registration;
+use App\Models\{Role, Registration, Company};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class RegistrationFactory extends Factory
@@ -63,13 +62,23 @@ class RegistrationFactory extends Factory
         });
     }
 
-    public function forNovice()
+    public function forNovice(int $company_id = 0)
     {
-        return $this->state(function (array $attributes) {
+        $company_id = $company_id ?? Company::factory()->create()->id;
+
+        return $this->state(function (array $attributes) use ($company_id) {
            return [
-               'role_id' => Role::factory()->create([
+                'name'              => $this->faker->name,
+                'birthdate'         => now()->subYears(30)->format('Y-m-d'),
+                'rg'                => $this->faker->randomNumber(8),
+                'cpf'               => $this->fakeCpf(),
+                'ctps'              => $this->faker->randomNumber(7),
+                'responsable_name'  => $this->faker->name,
+                'responsable_cpf'   => $this->fakeCpf(),
+               'role_id'        => Role::factory()->create([
                    'name' => Role::NOVICE,
                ]),
+               'employer_id'    => $company_id,
             ];
         });
     }

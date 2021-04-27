@@ -18,12 +18,15 @@ class CreateRegistrationsTable extends Migration
             $table->foreignId('user_id')->nullable();
             $table->foreignId('role_id');
             $table->foreignId('company_id')->nullable();
+            $table->foreignId('employer_id')->nullable();
             $table->foreignId('course_class_id')->nullable();
             $table->string('name');
             $table->date('birthdate')->nullable();
             $table->string('rg')->nullable();
             $table->string('cpf')->nullable();
             $table->string('ctps')->nullable();
+            $table->string('responsable_name')->nullable();
+            $table->string('responsable_cpf')->nullable();
             $table->timestamps();
         });
     }

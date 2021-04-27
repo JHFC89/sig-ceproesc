@@ -61,5 +61,17 @@
         >
             cadastrar representante
         </a>
+        <a
+            href="{{ route('companies.novices.index', ['company' => $company]) }}"
+            class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown"
+        >
+            ver apredizes
+        </a>
+        <a
+            href="{{ route('companies.novices.create', ['company' => $company]) }}"
+            class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown"
+        >
+            cadastrar aprediz
+        </a>
     </div>
 @endsection

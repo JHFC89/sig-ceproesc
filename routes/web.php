@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     LessonController,
     CourseController,
+    NoviceController,
     CompanyController,
     HolidayController,
     EmployerController,
@@ -110,16 +111,29 @@ Route::middleware(['auth'])->group(function () {
     Route::get('companies/{company}/employers', [
         EmployerController::class, 'index'
     ])->name('companies.employers.index');
-    Route::get('companies/{company}/employer/create', [
+    Route::get('companies/{company}/employers/create', [
         EmployerController::class,
         'create'
     ])->name('companies.employers.create');
-    Route::post('companies/{company}/employer', [
+    Route::post('companies/{company}/employers', [
         EmployerController::class,
         'store'
     ])->name('companies.employers.store');
     Route::get('employers/{registration}', [EmployerController::class, 'show'])
         ->name('employers.show');
+
+    Route::get('companies/{company}/novices', [NoviceController::class, 'index'])
+        ->name('companies.novices.index');
+    Route::get('companies/{company}/novices/create', [
+        NoviceController::class,
+        'create'
+    ])->name('companies.novices.create');
+    Route::post('companies/{company}/novices', [
+        NoviceController::class,
+        'store'
+    ])->name('companies.novices.store');
+    Route::get('novices/{registration}', [NoviceController::class, 'show'])
+        ->name('novices.show');
 
     Route::get('instructors', [InstructorController::Class, 'index'])
         ->name('instructors.index');

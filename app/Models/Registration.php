@@ -48,7 +48,6 @@ class Registration extends Model
         ]));
 
         $invitation->send();
-
     }
 
     public static function employersForCompany(Company $company)
@@ -90,6 +89,11 @@ class Registration extends Model
         });
     }
 
+    public static function scopeWhereEmployer($query, int $employer_id)
+    {
+        return $query->where('employer_id', $employer_id);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -101,6 +105,11 @@ class Registration extends Model
     }
 
     public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function employer()
     {
         return $this->belongsTo(Company::class);
     }

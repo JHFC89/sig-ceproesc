@@ -141,6 +141,41 @@ class AcceptInvitationTest extends TestCase
     }
 
     /** @test */
+    public function novice_registering_with_a_valid_registration_code()
+    {
+        $employer = Company::factory()->create();
+        $registration = Registration::factory()->forNovice($employer->id)
+                                               ->create([
+            'name'          => 'Fake Novice',
+        ]);
+        $invitation = Invitation::factory()->make([
+            'email'             => 'fakenovice@test.com',
+            'user_id'           => null,
+            'code'              => 'TESTCODE1234',
+        ]);
+        $registration->invitation()->save($invitation);
+        $data = [
+            'email'                 => 'fakenovice@test.com',
+            'password'              => 'Secret1',
+            'password_confirmation' => 'Secret1',
+            'confirmation_code'     => 'TESTCODE1234',
+        ];
+
+        $response = $this->post(route('register.store', $data));
+
+        $response->assertRedirect(route('dashboard'));
+        $this->assertEquals(1, User::count());
+        $user = User::first();
+        $this->assertEquals('Fake Novice', $user->name);
+        $this->assertEquals('fakenovice@test.com', $user->email);
+        $this->assertTrue(Hash::check('Secret1', $user->password));
+        $this->assertTrue($invitation->fresh()->user->is($user));
+        $this->assertAuthenticatedAs($user);
+        $this->assertTrue($user->isNovice());
+        $this->assertTrue($user->employer->is($employer));
+    }
+
+    /** @test */
     public function registering_with_a_used_registration_code()
     {
         $invitation = Invitation::factory()->create([
