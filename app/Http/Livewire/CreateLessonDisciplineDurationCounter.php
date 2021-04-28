@@ -44,7 +44,7 @@ class CreateLessonDisciplineDurationCounter extends Component
 
     public function durationDiff($discipline)
     {
-        $diff = $this->disciplinesDuration[$discipline->id];
+        $diff = $this->disciplinesDuration[$discipline->id] ?? null;
 
         return $diff === null ? $discipline->duration : $diff; 
     }
