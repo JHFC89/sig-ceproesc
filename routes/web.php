@@ -3,6 +3,7 @@
 use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
+    AdminController,
     LessonController,
     CourseController,
     NoviceController,
@@ -161,6 +162,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('coordinators/{registration}', [
         CoordinatorController::class, 'show'
     ])->name('coordinators.show');
+
+    Route::get('admins', [AdminController::class, 'index'])
+        ->name('admins.index');
+    Route::get('admins/create', [AdminController::class, 'create'])
+        ->name('admins.create');
+    Route::post('admins', [AdminController::class, 'store'])
+        ->name('admins.store');
+    Route::get('admins/{registration}', [
+        AdminController::class, 'show'
+    ])->name('admins.show');
 });
 
 Route::get('/dashboard', function () {

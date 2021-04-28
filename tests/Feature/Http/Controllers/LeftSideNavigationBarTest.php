@@ -46,6 +46,16 @@ class LeftSideNavigationBarTest extends TestCase
     }
 
     /** @test */
+    public function admin_can_view_links_related_to_admins()
+    {
+        $response = $this
+            ->actingAs($this->admin)->get(route('dashboard'));
+
+        $response->assertSee(route('admins.index'))
+                 ->assertSee(route('admins.create'));
+    }
+
+    /** @test */
     public function coordinator_can_view_links_related_to_disciplines()
     {
         $response = $this
@@ -126,6 +136,16 @@ class LeftSideNavigationBarTest extends TestCase
     }
 
     /** @test */
+    public function coordinator_cannot_view_links_related_to_admins()
+    {
+        $response = $this
+            ->actingAs($this->coordinator)->get(route('dashboard'));
+
+        $response->assertDontSee(route('admins.index'))
+                 ->assertDontSee(route('admins.create'));
+    }
+
+    /** @test */
     public function instructors_cannot_view_links_related_to_disciplines()
     {
         $response = $this
@@ -181,6 +201,16 @@ class LeftSideNavigationBarTest extends TestCase
 
         $response->assertDontSee(route('coordinators.index'))
                  ->assertDontSee(route('coordinators.create'));
+    }
+
+    /** @test */
+    public function instructor_cannot_view_links_related_to_admins()
+    {
+        $response = $this
+            ->actingAs($this->instructor)->get(route('dashboard'));
+
+        $response->assertDontSee(route('admins.index'))
+                 ->assertDontSee(route('admins.create'));
     }
 
     /** @test */
@@ -242,6 +272,16 @@ class LeftSideNavigationBarTest extends TestCase
     }
 
     /** @test */
+    public function novice_cannot_view_links_related_to_admins()
+    {
+        $response = $this
+            ->actingAs($this->novice)->get(route('dashboard'));
+
+        $response->assertDontSee(route('admins.index'))
+                 ->assertDontSee(route('admins.create'));
+    }
+
+    /** @test */
     public function employer_cannot_view_links_related_to_disciplines()
     {
         $response = $this
@@ -298,4 +338,15 @@ class LeftSideNavigationBarTest extends TestCase
         $response->assertDontSee(route('coordinators.index'))
                  ->assertDontSee(route('coordinators.create'));
     }
+
+    /** @test */
+    public function employer_cannot_view_links_related_to_admins()
+    {
+        $response = $this
+            ->actingAs($this->employer)->get(route('dashboard'));
+
+        $response->assertDontSee(route('admins.index'))
+                 ->assertDontSee(route('admins.create'));
+    }
+
 }

@@ -211,6 +211,42 @@ class AcceptInvitationTest extends TestCase
     }
 
     /** @test */
+    public function admin_registering_with_a_valid_registration_code()
+    {
+        $registration = Registration::factory()->create([
+            'name'      => 'Fake Admin',
+            'role_id'   => Role::factory()->create([
+                'name' => Role::ADMIN
+            ]),
+        ]);
+        $invitation = Invitation::factory()->make([
+            'email'             => 'fakeadmin@test.com',
+            'user_id'           => null,
+            'code'              => 'TESTCODE1234',
+        ]);
+        $registration->invitation()->save($invitation);
+        $data = [
+            'email'                 => 'fakeadmin@test.com',
+            'password'              => 'Secret1',
+            'password_confirmation' => 'Secret1',
+            'confirmation_code'     => 'TESTCODE1234',
+        ];
+
+        $response = $this->post(route('register.store', $data));
+
+        $response->assertRedirect(route('dashboard'));
+        $this->assertEquals(1, User::count());
+        $user = User::first();
+        $this->assertEquals($registration->name, $user->name);
+        $this->assertEquals($registration->email, $user->email);
+        $this->assertTrue(Hash::check('Secret1', $user->password));
+        $this->assertTrue($invitation->fresh()->user->is($user));
+        $this->assertAuthenticatedAs($user);
+        $this->assertTrue($user->isAdmin());
+        $this->assertTrue($user->isCoordinator());
+    }
+
+    /** @test */
     public function registering_with_a_used_registration_code()
     {
         $invitation = Invitation::factory()->create([

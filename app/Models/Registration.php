@@ -37,6 +37,10 @@ class Registration extends Model
 
         $user->roles()->attach($this->role_id);
 
+        if ($this->role->name === Role::ADMIN) {
+            $user->roles()->attach(Role::whereRole(Role::COORDINATOR)->id);
+        }
+
         return $user->refresh();
     }
 
@@ -80,6 +84,18 @@ class Registration extends Model
     public function isForCoordinator()
     {
         return $this->role->name == Role::COORDINATOR;
+    }
+
+    public function isForAdmin()
+    {
+        return $this->role->name == Role::ADMIN;
+    }
+
+    public static function scopeWhereAdmin($query)
+    {
+        return $query->whereHas('role', function (Builder $query) {
+            $query->where('name', Role::ADMIN);
+        });
     }
 
     public static function scopeWhereCoordinator($query)

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\{User, Role, Invitation, Registration};
 
-class StoreCoordinatorTest extends TestCase
+class StoreAdminTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -26,16 +26,16 @@ class StoreCoordinatorTest extends TestCase
         $this->admin = User::fakeAdmin();
 
         $this->data = [
-            'name'      => 'Test Coordinator Name',
-            'email'     => 'coordinator@test.com',
+            'name'      => 'Test Admin Name',
+            'email'     => 'admin@test.com',
             'phone'     => '1234567',
         ];
 
-        $this->from = route('coordinators.create');
+        $this->from = route('admins.create');
     }
 
     /** @test */
-    public function admin_can_store_an_coordinator()
+    public function admin_can_store_an_admin()
     {
         Mail::fake();
         InvitationCode::shouldReceive('generate')->andReturn('TESTCODE1234');
@@ -43,32 +43,31 @@ class StoreCoordinatorTest extends TestCase
         $data = $this->data;
 
         $response = $this->actingAs($this->admin)
-                         ->post(route('coordinators.store'), $data);
+                         ->post(route('admins.store'), $data);
 
         $response->assertOk()
                  ->assertViewHas('registration')
-                 ->assertViewIs('coordinators.show')
-                 ->assertSessionHas('status', 'Coordenador cadastrado com sucesso!');
+                 ->assertViewIs('admins.show')
+                 ->assertSessionHas('status', 'Administrador cadastrado com sucesso!');
 
-        $registration = Registration::where('name', 'Test Coordinator Name')->first();
+        $registration = Registration::where('name', 'Test Admin Name')->first();
         $this->assertEquals($data['name'], $registration->name);
-        $this->assertEquals($data['phone'], $registration->phones[0]->number);
-        $this->assertEquals(Role::COORDINATOR, $registration->role->name);
+        $this->assertEquals(Role::ADMIN, $registration->role->name);
 
-        $invitation = Invitation::where('email', 'coordinator@test.com')->first();
+        $invitation = Invitation::where('email', 'admin@test.com')->first();
         $this->assertTrue($registration->invitation->is($invitation));
         $this->assertEquals('TESTCODE1234', $invitation->code);
 
         Mail::assertSent(InvitationEmail::class, function ($mail) use ($invitation) {
-            return $mail->hasTo('coordinator@test.com')
+            return $mail->hasTo('admin@test.com')
                 && $mail->invitation->is($invitation);
         });
     }
 
     /** @test */
-    public function guest_cannot_store_an_coordinator()
+    public function guest_cannot_store_an_admin()
     {
-        $response = $this->post(route('coordinators.store'), $this->data);
+        $response = $this->post(route('admins.store'), $this->data);
 
         $response->assertRedirect('login');
         $this->assertNull(Registration::where('name', $this->data['name'])->first());
@@ -76,12 +75,12 @@ class StoreCoordinatorTest extends TestCase
     }
 
     /** @test */
-    public function user_without_role_cannot_store_an_coordinator()
+    public function user_without_role_cannot_store_an_admin()
     {
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)
-                         ->post(route('coordinators.store'), $this->data);
+                         ->post(route('admins.store'), $this->data);
 
         $response->assertUnauthorized();
         $this->assertNull(Registration::where('name', $this->data['name'])->first());
@@ -89,12 +88,12 @@ class StoreCoordinatorTest extends TestCase
     }
 
     /** @test */
-    public function coordinator_cannot_store_an_coordinator()
+    public function coordinator_cannot_store_an_admin()
     {
         $coordinator = User::fakeCoordinator();
 
         $response = $this->actingAs($coordinator)
-                         ->post(route('coordinators.store'), $this->data);
+                         ->post(route('admins.store'), $this->data);
 
         $response->assertUnauthorized();
         $this->assertNull(Registration::where('name', $this->data['name'])->first());
@@ -102,12 +101,12 @@ class StoreCoordinatorTest extends TestCase
     }
 
     /** @test */
-    public function instructor_cannot_store_an_coordinator()
+    public function instructor_cannot_store_an_admin()
     {
         $instructor = User::fakeInstructor();
 
         $response = $this->actingAs($instructor)
-                         ->post(route('coordinators.store'), $this->data);
+                         ->post(route('admins.store'), $this->data);
 
         $response->assertUnauthorized();
         $this->assertNull(Registration::where('name', $this->data['name'])->first());
@@ -115,12 +114,12 @@ class StoreCoordinatorTest extends TestCase
     }
 
     /** @test */
-    public function novice_cannot_store_an_coordinator()
+    public function novice_cannot_store_an_admin()
     {
         $novice = User::fakeNovice();
 
         $response = $this->actingAs($novice)
-                         ->post(route('coordinators.store'), $this->data);
+                         ->post(route('admins.store'), $this->data);
 
         $response->assertUnauthorized();
         $this->assertNull(Registration::where('name', $this->data['name'])->first());
@@ -128,12 +127,12 @@ class StoreCoordinatorTest extends TestCase
     }
 
     /** @test */
-    public function employer_cannot_store_an_coordinator()
+    public function employer_cannot_store_an_admin()
     {
         $employer = User::fakeEmployer();
 
         $response = $this->actingAs($employer)
-                         ->post(route('coordinators.store'), $this->data);
+                         ->post(route('admins.store'), $this->data);
 
         $response->assertUnauthorized();
         $this->assertNull(Registration::where('name', $this->data['name'])->first());
@@ -147,7 +146,7 @@ class StoreCoordinatorTest extends TestCase
 
         $response = $this->actingAs($this->admin)
                          ->from($this->from)
-                         ->post(route('coordinators.store'), $this->data);
+                         ->post(route('admins.store'), $this->data);
 
         $response->assertSessionHasErrors('name')
                  ->assertRedirect($this->from);
@@ -160,7 +159,7 @@ class StoreCoordinatorTest extends TestCase
 
         $response = $this->actingAs($this->admin)
                          ->from($this->from)
-                         ->post(route('coordinators.store'), $this->data);
+                         ->post(route('admins.store'), $this->data);
 
         $response->assertSessionHasErrors('email')
                  ->assertRedirect($this->from);
@@ -173,7 +172,7 @@ class StoreCoordinatorTest extends TestCase
 
         $response = $this->actingAs($this->admin)
                          ->from($this->from)
-                         ->post(route('coordinators.store'), $this->data);
+                         ->post(route('admins.store'), $this->data);
 
         $response->assertSessionHasErrors('email')
                  ->assertRedirect($this->from);
@@ -187,7 +186,7 @@ class StoreCoordinatorTest extends TestCase
 
         $response = $this->actingAs($this->admin)
                          ->from($this->from)
-                         ->post(route('coordinators.store'), $this->data);
+                         ->post(route('admins.store'), $this->data);
 
         $response->assertSessionHasErrors('email')
                  ->assertRedirect($this->from);
@@ -203,22 +202,9 @@ class StoreCoordinatorTest extends TestCase
 
         $response = $this->actingAs($this->admin)
                          ->from($this->from)
-                         ->post(route('coordinators.store'), $this->data);
+                         ->post(route('admins.store'), $this->data);
 
         $response->assertSessionHasErrors('email')
-                 ->assertRedirect($this->from);
-    }
-
-    /** @test */
-    public function phone_is_required()
-    {
-        unset($this->data['phone']);
-
-        $response = $this->actingAs($this->admin)
-                         ->from($this->from)
-                         ->post(route('coordinators.store'), $this->data);
-
-        $response->assertSessionHasErrors('phone')
                  ->assertRedirect($this->from);
     }
 }

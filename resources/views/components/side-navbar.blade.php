@@ -157,6 +157,7 @@
                         || request()->routeIs('employers.*')
                         || request()->routeIs('instructors.*')
                         || request()->routeIs('coordinators.*')
+                        || request()->routeIs('admins.*')
                         ? 'font-medium text-gray-100' : '' }}
                     "
                 >
@@ -236,6 +237,31 @@
                         "
                     >
                         <span class="ml-10 group-hover:text-gray-400">novo coordenador</span>
+                    </a>
+                </li>
+                @endif
+
+                @if(Auth::user()->isAdmin())
+                <li>
+                    <a
+                        href="{{ route('admins.index') }}"
+                        class="
+                            flex items-center px-2 py-1 text-sm group rounded-md
+                            {{ request()->routeIs('admins.index')
+                            ? 'font-medium text-gray-100' : '' }}
+                        "
+                    >
+                        <span class="ml-10 group-hover:text-gray-400">administradores</span>
+                    </a>
+                    <a
+                        href="{{ route('admins.create') }}"
+                        class="
+                            flex items-center px-2 py-1 text-sm group rounded-md
+                            {{ request()->routeIs('admins.create')
+                            ? 'font-medium text-gray-100' : '' }}
+                        "
+                    >
+                        <span class="ml-10 group-hover:text-gray-400">novo administrador</span>
                     </a>
                 </li>
                 @endif

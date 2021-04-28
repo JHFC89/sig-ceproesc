@@ -38,6 +38,17 @@ class RegistrationFactory extends Factory
         });
     }
 
+    public function forAdmin()
+    {
+        return $this->state(function (array $attributes) {
+           return [
+               'role_id' => Role::factory()->create([
+                   'name' => Role::ADMIN,
+               ]),
+            ];
+        });
+    }
+
     public function forInstructor()
     {
         return $this->state(function (array $attributes) {
