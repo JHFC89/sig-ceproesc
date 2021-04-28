@@ -30,7 +30,7 @@ class CreateInstructorTest extends TestCase
     }
 
     /** @test */
-    public function guest_cannot_create_an_employer()
+    public function guest_cannot_create_an_instructor()
     {
         $response = $this->get(route('instructors.create'));
 
@@ -38,7 +38,7 @@ class CreateInstructorTest extends TestCase
     }
 
     /** @test */
-    public function user_without_role_cannot_create_an_employer()
+    public function user_without_role_cannot_create_an_instructor()
     {
         $user = User::factory()->create();
 
@@ -48,7 +48,7 @@ class CreateInstructorTest extends TestCase
     }
 
     /** @test */
-    public function instructor_cannot_create_an_employer()
+    public function instructor_cannot_create_an_instructor()
     {
         $instructor = User::fakeInstructor();
 
@@ -59,7 +59,7 @@ class CreateInstructorTest extends TestCase
     }
 
     /** @test */
-    public function novice_cannot_create_an_employer()
+    public function novice_cannot_create_an_instructor()
     {
         $novice = User::fakeNovice();
 
@@ -69,7 +69,7 @@ class CreateInstructorTest extends TestCase
     }
 
     /** @test */
-    public function employer_cannot_create_an_employer()
+    public function employer_cannot_create_an_instructor()
     {
         $employer = User::fakeEmployer();
 
