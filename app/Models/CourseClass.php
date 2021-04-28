@@ -105,6 +105,19 @@ class CourseClass extends Model
         );
 
         $this->novices()->save($novice);
+
+        $this->enrollNoviceToLessons($novice);
+    }
+
+    private function enrollNoviceToLessons(User $novice)
+    {
+        $lessons = $this->lessons;
+
+        if ($lessons->count() === 0) {
+            return;
+        }
+
+        $lessons->each->enroll($novice);
     }
 
     public function isSubscribed(User $novice)

@@ -14,6 +14,7 @@ use App\Http\Controllers\{
     DisciplineController,
     InvitationController,
     CourseClassController,
+    SubscriptionController,
     LessonRequestController,
     LessonRegisterController,
     EvaluationGradeController,
@@ -143,6 +144,13 @@ Route::middleware(['auth'])->group(function () {
         ->name('instructors.store');
     Route::get('instructors/{registration}', [InstructorController::class, 'show'])
         ->name('instructors.show');
+
+    Route::get('classes/{courseClass}/subscriptions/create', [
+        SubscriptionController::class, 'create'
+    ])->name('classes.subscriptions.create');
+    Route::post('subscriptions', [SubscriptionController::class, 'store'])
+        ->name('subscriptions.store');
+
 });
 
 Route::get('/dashboard', function () {

@@ -326,6 +326,22 @@ class CourseClassTest extends TestCase
     }
 
     /** @test */
+    public function subscribing_a_novice_will_enroll_him_in_all_course_class_lessons()
+    {
+        $courseClass = $this->testCourseClassWithLessons();
+        $lessons = $courseClass->lessons;
+        $this->assertCount(2, $lessons);
+        $novice = User::fakeNovice();
+
+        $courseClass->subscribe($novice);
+
+        $novice->refresh();
+        $this->assertCount(2, $novice->lessons);
+        $this->assertTrue($novice->lessons[0]->is($lessons[0]));
+        $this->assertTrue($novice->lessons[1]->is($lessons[1]));
+    }
+
+    /** @test */
     public function can_check_a_novice_is_subscribed()
     {
         $noviceA = User::fakeNovice();
@@ -580,5 +596,41 @@ class CourseClassTest extends TestCase
         $courseClass->course_id = 1; 
 
         return $courseClass;
+    }
+
+    private function testCourseClassWithLessons()
+    {
+        $instructorA = User::fakeInstructor();
+        $instructorB = User::fakeInstructor();
+
+        $disciplineA = Discipline::factory()->create();
+        $disciplineB = Discipline::factory()->create();
+
+        $dateA = now()->addDays(1)->format('Y-m-d');
+        $dateB = now()->addDays(2)->format('Y-m-d');
+
+        $lessonsArray = [
+            [
+                'id' => 'lesson A',
+                'date' => $dateA,
+                'type' => 'first',
+                'duration' => 2,
+                'instructor_id' => $instructorA->id,
+                'discipline_id' => $disciplineA->id,
+            ],
+            [
+                'id' => 'Lesson B',
+                'date' => $dateB,
+                'type' => 'second',
+                'duration' => 3,
+                'instructor_id' => $instructorB->id,
+                'discipline_id' => $disciplineB->id,
+            ],
+        ];
+
+        $courseClass = CourseClass::factory()->create();
+        $courseClass->createLessonsFromArray($lessonsArray);
+
+        return $courseClass->fresh();
     }
 }

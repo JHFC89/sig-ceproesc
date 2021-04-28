@@ -319,7 +319,7 @@ class Lesson extends Model
     {
         $courseClass = CourseClass::factory()->create();
         $this->novices->each(function ($novice) use ($courseClass) {
-            $novice->turnIntoNovice();
+            $novice->turnIntoNovice()->refresh();
             $courseClass->subscribe($novice);
         });
     }

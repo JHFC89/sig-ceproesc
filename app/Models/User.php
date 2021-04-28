@@ -79,6 +79,20 @@ class User extends Authenticatable
         return $this->novices();
     }
 
+    public function isSubscribed()
+    {
+        return ! empty($this->courseClass);
+    }
+
+    public function subscribeToClass(CourseClass $courseClass)
+    {
+        if ($this->isSubscribed() || ! $this->isNovice()) {
+            return;
+        }
+
+        $courseClass->subscribe($this);
+    }
+
     public function lessons()
     {
         return $this->belongsToMany(Lesson::class)
@@ -175,7 +189,19 @@ class User extends Authenticatable
     public function scopeWhereInstructor($query)
     {
         return $query->whereHas('roles', function (\Illuminate\Database\Eloquent\Builder $query) {
-            $query->where('name', 'instructor');
+            $query->where('name', Role::INSTRUCTOR);
         });
+    }
+
+    public function scopeWhereNovice($query)
+    {
+        return $query->whereHas('roles', function (\Illuminate\Database\Eloquent\Builder $query) {
+            $query->where('name', Role::NOVICE);
+        });
+    }
+
+    public function scopeWhereAvailableToSubscribe($query)
+    {
+        return $query->doesntHave('courseClass');
     }
 }
