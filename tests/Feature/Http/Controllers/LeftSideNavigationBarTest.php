@@ -12,25 +12,21 @@ class LeftSideNavigationBarTest extends TestCase
 
     protected $instructor;
 
+    protected $novice;
+
+    protected $empoyer;
+
     protected function setUp():void
     {
         parent::setUp();
 
-        $this->coordinator = User::factory()
-            ->hasRoles(1, ['name' => 'coordinator'])
-            ->create();
+        $this->coordinator = User::fakeCoordinator();
 
-        $this->instructor = User::factory()
-            ->hasRoles(1, ['name' => 'instructor'])
-            ->create();
+        $this->instructor = User::fakeInstructor();
 
-        $this->novice = User::factory()
-            ->hasRoles(1, ['name' => 'novice'])
-            ->create();
+        $this->novice = User::fakeNovice();
 
-        $this->employer = User::factory()
-            ->hasRoles(1, ['name' => 'employer'])
-            ->create();
+        $this->employer = User::fakeEmployer();
     }
 
     use RefreshDatabase;
