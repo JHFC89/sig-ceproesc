@@ -164,6 +164,13 @@ class User extends Authenticatable
         });
     }
 
+    public function isAdmin()
+    {
+        return $this->roles->contains(function ($role) {
+            return $role->name == 'admin';
+        });
+    }
+
     public function hasNoRole()
     {
         return $this->roles->isEmpty();

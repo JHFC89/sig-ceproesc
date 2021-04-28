@@ -148,7 +148,7 @@
             </li>
             @endcan
 
-            @if (Auth::user()->isCoordinator())
+            @if (Auth::user()->isCoordinator() || Auth::user()->isAdmin())
             <li>
                 <span 
                     class="
@@ -156,6 +156,7 @@
                         {{ request()->routeIs('companies.*')
                         || request()->routeIs('employers.*')
                         || request()->routeIs('instructors.*')
+                        || request()->routeIs('coordinators.*')
                         ? 'font-medium text-gray-100' : '' }}
                     "
                 >
@@ -213,6 +214,31 @@
                     </a>
                 </li>
                 @endcan
+
+                @if(Auth::user()->isAdmin())
+                <li>
+                    <a
+                        href="{{ route('coordinators.index') }}"
+                        class="
+                            flex items-center px-2 py-1 text-sm group rounded-md
+                            {{ request()->routeIs('coordinators.index')
+                            ? 'font-medium text-gray-100' : '' }}
+                        "
+                    >
+                        <span class="ml-10 group-hover:text-gray-400">coordenadores</span>
+                    </a>
+                    <a
+                        href="{{ route('coordinators.create') }}"
+                        class="
+                            flex items-center px-2 py-1 text-sm group rounded-md
+                            {{ request()->routeIs('coordinators.create')
+                            ? 'font-medium text-gray-100' : '' }}
+                        "
+                    >
+                        <span class="ml-10 group-hover:text-gray-400">novo coordenador</span>
+                    </a>
+                </li>
+                @endif
 
             @endif
         </ul>

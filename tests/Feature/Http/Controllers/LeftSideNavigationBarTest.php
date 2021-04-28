@@ -8,6 +8,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LeftSideNavigationBarTest extends TestCase
 {
+    protected $admin;
+
     protected $coordinator;
 
     protected $instructor;
@@ -20,6 +22,8 @@ class LeftSideNavigationBarTest extends TestCase
     {
         parent::setUp();
 
+        $this->admin = User::fakeAdmin();
+
         $this->coordinator = User::fakeCoordinator();
 
         $this->instructor = User::fakeInstructor();
@@ -30,6 +34,16 @@ class LeftSideNavigationBarTest extends TestCase
     }
 
     use RefreshDatabase;
+
+    /** @test */
+    public function admin_can_view_links_related_to_coordinators()
+    {
+        $response = $this
+            ->actingAs($this->admin)->get(route('dashboard'));
+
+        $response->assertSee(route('coordinators.index'))
+                 ->assertSee(route('coordinators.create'));
+    }
 
     /** @test */
     public function coordinator_can_view_links_related_to_disciplines()
@@ -102,6 +116,16 @@ class LeftSideNavigationBarTest extends TestCase
     }
 
     /** @test */
+    public function coordinator_cannot_view_links_related_to_coordinators()
+    {
+        $response = $this
+            ->actingAs($this->coordinator)->get(route('dashboard'));
+
+        $response->assertDontSee(route('coordinators.index'))
+                 ->assertDontSee(route('coordinators.create'));
+    }
+
+    /** @test */
     public function instructors_cannot_view_links_related_to_disciplines()
     {
         $response = $this
@@ -147,6 +171,16 @@ class LeftSideNavigationBarTest extends TestCase
         $response
             ->assertDontSee(route('instructors.index'))
             ->assertDontSee(route('instructors.create'));
+    }
+
+    /** @test */
+    public function instructor_cannot_view_links_related_to_coordinators()
+    {
+        $response = $this
+            ->actingAs($this->instructor)->get(route('dashboard'));
+
+        $response->assertDontSee(route('coordinators.index'))
+                 ->assertDontSee(route('coordinators.create'));
     }
 
     /** @test */
@@ -198,6 +232,16 @@ class LeftSideNavigationBarTest extends TestCase
     }
 
     /** @test */
+    public function novice_cannot_view_links_related_to_coordinators()
+    {
+        $response = $this
+            ->actingAs($this->novice)->get(route('dashboard'));
+
+        $response->assertDontSee(route('coordinators.index'))
+                 ->assertDontSee(route('coordinators.create'));
+    }
+
+    /** @test */
     public function employer_cannot_view_links_related_to_disciplines()
     {
         $response = $this
@@ -245,4 +289,13 @@ class LeftSideNavigationBarTest extends TestCase
             ->assertDontSee(route('instructors.create'));
     }
 
+    /** @test */
+    public function employer_cannot_view_links_related_to_coordinators()
+    {
+        $response = $this
+            ->actingAs($this->employer)->get(route('dashboard'));
+
+        $response->assertDontSee(route('coordinators.index'))
+                 ->assertDontSee(route('coordinators.create'));
+    }
 }

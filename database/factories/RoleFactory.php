@@ -22,7 +22,7 @@ class RoleFactory extends Factory
     public function definition()
     {
         return [
-            'name' => Role::COORDINADOR,
+            'name' => Role::COORDINATOR,
         ];
     }
 }

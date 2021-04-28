@@ -13,6 +13,7 @@ use App\Http\Controllers\{
     EvaluationController,
     DisciplineController,
     InvitationController,
+    CoordinatorController,
     CourseClassController,
     SubscriptionController,
     LessonRequestController,
@@ -151,6 +152,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('subscriptions', [SubscriptionController::class, 'store'])
         ->name('subscriptions.store');
 
+    Route::get('coordinators', [CoordinatorController::class, 'index'])
+        ->name('coordinators.index');
+    Route::get('coordinators/create', [CoordinatorController::class, 'create'])
+        ->name('coordinators.create');
+    Route::post('coordinators', [CoordinatorController::class, 'store'])
+        ->name('coordinators.store');
+    Route::get('coordinators/{registration}', [
+        CoordinatorController::class, 'show'
+    ])->name('coordinators.show');
 });
 
 Route::get('/dashboard', function () {

@@ -56,7 +56,7 @@ class RegistrationFactory extends Factory
         return $this->state(function (array $attributes) {
            return [
                'role_id' => Role::factory()->create([
-                   'name' => Role::COORDINADOR,
+                   'name' => Role::COORDINATOR,
                ]),
             ];
         });

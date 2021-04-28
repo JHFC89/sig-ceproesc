@@ -79,7 +79,14 @@ class Registration extends Model
 
     public function isForCoordinator()
     {
-        return $this->role->name == Role::COORDINADOR;
+        return $this->role->name == Role::COORDINATOR;
+    }
+
+    public static function scopeWhereCoordinator($query)
+    {
+        return $query->whereHas('role', function (Builder $query) {
+            $query->where('name', Role::COORDINATOR);
+        });
     }
 
     public static function scopeWhereInstructor($query)
