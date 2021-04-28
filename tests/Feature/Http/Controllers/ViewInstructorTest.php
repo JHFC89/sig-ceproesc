@@ -21,7 +21,7 @@ class ViewInstructorTest extends TestCase
         $this->coordinator = User::fakeCoordinator();
 
         $this->registration = Registration::factory()->forInstructor()->create([
-            'name'          => 'Fake Employer',
+            'name'          => 'Fake Instructor',
             'rg'            => '123-123-12',
         ]);
 
