@@ -47,7 +47,7 @@ class User extends Authenticatable
     *
     * @var array
     */
-    protected $with = ['registration'];
+    protected $with = ['registration', 'roles'];
 
     public function getNameAttribute()
     {
@@ -168,6 +168,8 @@ class User extends Authenticatable
     public function turnIntoNovice()
     {
         $this->roles()->attach(Role::firstOrCreate(['name' => 'novice']));
+
+        return $this;
     }
 
     public function scopeWhereInstructor($query)

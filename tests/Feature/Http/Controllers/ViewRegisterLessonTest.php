@@ -23,7 +23,7 @@ class ViewRegisterLessonTest extends TestCase
         $this->instructor = $this->lesson->instructor;
         $this->courseClass = CourseClass::factory()->create();
         $this->novices = $this->lesson->novices->map(function ($novice) {
-            $novice->turnIntoNovice();
+            $novice->turnIntoNovice()->refresh();
             $this->courseClass->subscribe($novice);
             return $novice;
         });

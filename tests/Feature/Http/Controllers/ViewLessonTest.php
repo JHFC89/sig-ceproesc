@@ -38,7 +38,7 @@ class ViewLessonTest extends TestCase
         $this->notRegisteredLesson = Lesson::factory()->notRegistered()->forToday()->instructor($this->instructor)->hasNovices(3)->create();
 
         $this->novices = $this->notRegisteredLesson->novices->each(function ($novice) {
-            $novice->turnIntoNovice();
+            $novice->turnIntoNovice()->refresh();
             $this->courseClass->subscribe($novice);
         });
     }
@@ -60,7 +60,7 @@ class ViewLessonTest extends TestCase
                 'hourly_load'   => '123hr',
         ]);
         $lesson->novices->each(function ($novice) {
-            $novice->turnIntoNovice();
+            $novice->turnIntoNovice()->refresh();
             $this->courseClass->subscribe($novice);
         });
         extract($lesson->novices->all(), EXTR_PREFIX_ALL, 'novice');
@@ -687,7 +687,7 @@ class ViewLessonTest extends TestCase
         $courseClass = CourseClass::factory()->create();
         $lesson = Lesson::factory()->hasNovices(1)->notRegistered()->create();
         $novice = $lesson->novices->first();
-        $novice->turnIntoNovice();
+        $novice->turnIntoNovice()->refresh();
         $courseClass->subscribe($novice);
         
         $response = $this->actingAs($novice)
@@ -708,7 +708,7 @@ class ViewLessonTest extends TestCase
     {
         $lesson = Lesson::factory()->hasNovices(1)->notRegistered()->create();
         $novice = $lesson->novices->first();
-        $novice->turnIntoNovice();
+        $novice->turnIntoNovice()->refresh();
         $courseClass = CourseClass::factory()->create();
         $courseClass->subscribe($novice);
         $lesson->registerFor($novice)
@@ -747,9 +747,9 @@ class ViewLessonTest extends TestCase
     {
         $lesson = Lesson::factory()->hasNovices(2)->notRegistered()->create();
         $noviceA = $lesson->novices->first();
-        $noviceA->turnIntoNovice();
+        $noviceA->turnIntoNovice()->refresh();
         $noviceB = $lesson->novices->last();
-        $noviceB->turnIntoNovice();
+        $noviceB->turnIntoNovice()->refresh();
         $courseClass = CourseClass::factory()->create();
         $courseClass->subscribe($noviceA);
         $courseClass->subscribe($noviceB);

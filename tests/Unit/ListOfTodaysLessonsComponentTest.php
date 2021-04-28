@@ -62,7 +62,7 @@ class ListOfTodaysLessonsComponentTest extends TestCase
                 'discipline_id' => $disciplineA,
             ]);
         $lessonA->novices->each(function ($novice) use ($courseClassA) {
-            $novice->turnIntoNovice();
+            $novice->turnIntoNovice()->refresh();
             $courseClassA->subscribe($novice);
         });
         $courseClassB = CourseClass::factory()->create([
@@ -80,7 +80,7 @@ class ListOfTodaysLessonsComponentTest extends TestCase
                 'discipline_id' => $disciplineB,
             ]);
         $lessonB->novices->each(function ($novice) use ($courseClassB) {
-            $novice->turnIntoNovice();
+            $novice->turnIntoNovice()->refresh();
             $courseClassB->subscribe($novice);
         });
 
