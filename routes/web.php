@@ -20,6 +20,7 @@ use App\Http\Controllers\{
     LessonRequestController,
     LessonRegisterController,
     EvaluationGradeController,
+    AdminCoordinatorController,
     ForWeekLessonListController,
     ForTodayLessonListController,
 };
@@ -172,6 +173,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('admins/{registration}', [
         AdminController::class, 'show'
     ])->name('admins.show');
+
+    Route::post('admin-coordinators', [AdminCoordinatorController::class, 'store'])
+        ->name('admin-coordinators.store');
 });
 
 Route::get('/dashboard', function () {

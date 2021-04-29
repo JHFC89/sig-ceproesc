@@ -21,4 +21,15 @@ class Role extends Model
     {
         return self::where('name', $role)->first();
     }
+
+    public static function promoteToAdmin($registration, $user)
+    {
+        if (empty($user)) {
+            $registration->role()
+                         ->associate(Self::whereRole(Self::ADMIN))
+                         ->save();
+        } else {
+            $user->roles()->attach(Self::whereRole(Self::ADMIN)->id);
+        }
+    }
 }

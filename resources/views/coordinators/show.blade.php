@@ -42,4 +42,19 @@
 
     </x-card.list.description-layout>
 
+    <div class="flex justify-end mt-4 space-x-2">
+        <form
+            action="{{ route('admin-coordinators.store') }}"
+            method="POST"
+        >
+            @csrf
+            <input type="hidden" name="registration_id" value="{{ $registration->id }}">
+            <button
+                type="submit"
+                class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown"
+            >
+                tornar administrador
+            </button>
+    </form>
+    </div>
 @endsection
