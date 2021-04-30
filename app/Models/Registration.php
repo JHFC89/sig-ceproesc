@@ -66,6 +66,17 @@ class Registration extends Model
         return "{$birthdate['year']}-{$birthdate['month']}-{$birthdate['day']}";
     }
 
+    public function canBeDemotedToCoordinator()
+    {
+        $user = $this->user;
+
+        if (empty($user)) {
+            return $this->isForAdmin(); 
+        }
+
+        return $user->isCoordinator() && $user->isAdmin();
+    }
+
     public function isForNovice()
     {
         return $this->role->name == Role::NOVICE;

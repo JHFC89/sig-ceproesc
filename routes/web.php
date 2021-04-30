@@ -174,8 +174,14 @@ Route::middleware(['auth'])->group(function () {
         AdminController::class, 'show'
     ])->name('admins.show');
 
-    Route::post('admin-coordinators', [AdminCoordinatorController::class, 'store'])
-        ->name('admin-coordinators.store');
+    Route::post('admin-coordinators', [
+        AdminCoordinatorController::class,
+        'store'
+    ])->name('admin-coordinators.store');
+    Route::delete('admin-coordinators/{registration}', [
+        AdminCoordinatorController::class,
+        'delete'
+    ])->name('admin-coordinators.destroy');
 });
 
 Route::get('/dashboard', function () {

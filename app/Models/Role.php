@@ -32,4 +32,15 @@ class Role extends Model
             $user->roles()->attach(Self::whereRole(Self::ADMIN)->id);
         }
     }
+
+    public static function demoteToCoordinator($registration, $user)
+    {
+        if (empty($user)) {
+            $registration->role()
+                         ->associate(Self::whereRole(Self::COORDINATOR))
+                         ->save();
+        } else {
+            $user->roles()->detach(Self::whereRole(Self::ADMIN)->id);
+        }
+    }
 }

@@ -26,10 +26,12 @@
                 :description="$registration->email"
             />
 
+            @if($registration->phones->count() > 0)
             <x-card.list.description-item
                 label="telefone"
                 :description="$registration->phones->first()->number"
             />
+            @endif
 
             <x-card.list.description-item
                 label="registrado"
@@ -55,6 +57,6 @@
             >
                 tornar administrador
             </button>
-    </form>
+        </form>
     </div>
 @endsection

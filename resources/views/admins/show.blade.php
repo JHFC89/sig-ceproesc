@@ -37,4 +37,22 @@
 
     </x-card.list.description-layout>
 
+    @if ($registration->canBeDemotedToCoordinator())
+    <div class="flex justify-end mt-4 space-x-2">
+        <form
+            action="{{ route('admin-coordinators.destroy', ['registration' => $registration->id]) }}"
+            method="POST"
+        >
+            @method('DELETE')
+            @csrf
+            <button
+                type="submit"
+                class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-red-600 hover:bg-red-500 hover:text-red-100 rounded-md shadown"
+            >
+                remover acesso administrativo
+            </button>
+        </form>
+    </div>
+    @endif
+
 @endsection

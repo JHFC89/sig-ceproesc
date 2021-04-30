@@ -23,7 +23,7 @@ class AdminCoordinatorController extends Controller
 
         $coordinator = $registration->user;
 
-        $this->checkRoleConditions($registration, $coordinator);
+        abort_if($this->invalidPromotion($registration, $coordinator), 404);
 
         Role::promoteToAdmin($registration, $coordinator);
 
@@ -34,18 +34,44 @@ class AdminCoordinatorController extends Controller
         return view('admins.show', compact('registration'));
     }
 
-    private function checkRoleConditions($registration, $coordinator)
+    public function delete(Registration $registration)
+    {
+        abort_unless(request()->user()->isAdmin(), 401);
+
+        $adminCoordinator = $registration->user;
+
+        abort_if($this->invalidDemotion($registration, $adminCoordinator), 404);
+
+        Role::demoteToCoordinator($registration, $adminCoordinator);
+
+        session()->flash('status', 'Coordenador não é mais Administrador.');
+
+        return view('coordinators.show', compact('registration'));
+    }
+
+    private function invalidPromotion($registration, $coordinator)
     {
         if (empty($coordinator)) {
-            $abort = ! $registration->isForCoordinator();
+            $invalid = ! $registration->isForCoordinator();
         } else {
             $isCoordinator = $coordinator->isCoordinator();
 
             $isAdmin = $coordinator->isAdmin();
 
-            $abort = ! $isCoordinator || $isCoordinator && $isAdmin;
+            $invalid = ! $isCoordinator || $isCoordinator && $isAdmin;
         }
 
-        abort_if($abort, 404);
+        return $invalid;
+    }
+
+    private function invalidDemotion($registration, $user)
+    {
+        if (empty($user)) {
+            $invalid = ! $registration->isForAdmin();
+        } else {
+            $invalid = ! ($user->isCoordinator() && $user->isAdmin());
+        }
+
+        return $invalid;
     }
 }
