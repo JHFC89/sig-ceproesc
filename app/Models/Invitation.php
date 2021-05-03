@@ -26,7 +26,7 @@ class Invitation extends Model
     public function createUserFromArray(array $data)
     {
         $user = User::create([
-            'email'     => $data['email'],
+            'email'     => $this->email,
             'password'  => bcrypt($data['password']),
         ]);
 
