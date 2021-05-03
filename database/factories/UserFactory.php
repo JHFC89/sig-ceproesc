@@ -41,4 +41,13 @@ class UserFactory extends Factory
             $registration->user()->associate($user)->save();
         });
     }
+
+    public function inactive()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'active' => false,
+            ];
+        });
+    }
 }

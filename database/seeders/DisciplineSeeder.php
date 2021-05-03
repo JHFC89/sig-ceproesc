@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Facades\InvitationCode;
+use App\Models\Invitation;
+use App\Models\Registration;
 use App\Models\User;
 use App\Models\Discipline;
 use Illuminate\Database\Seeder;
@@ -15,10 +18,27 @@ class DisciplineSeeder extends Seeder
      */
     public function run()
     {
-        $instructors = User::factory()->count(4)->create();
-        $instructors->each(function ($instructor) {
-            $instructor->turnIntoInstructor();
-        });
+        $instructors = collect([]);
+
+        for ($i = 1; $i < 4; $i++) {
+            $registration = Registration::factory()->forInstructor()->create();
+            $registration->phones()->create(['number' => '123456789']);
+            $registration->address()->create([
+                'street'    => 'Fake Street',
+                'number'    => '123',
+                'district'  => 'Fake Garden',
+                'city'      => 'Fake City',
+                'state'     => 'Fake State',
+                'country'   => 'Fake Country',
+                'cep'       => '12.123-123',
+        ]);
+            $invitation = $registration->invitation()->save(new Invitation([
+                'email' => "instrutor-{$i}@sig.com.br",
+                'code' => InvitationCode::generate(),
+            ]));
+            $instructor = $invitation->createUserFromArray(['password' => 'asdf']);
+            $instructors->push($instructor);
+        }
 
         $this->disciplines()->each(function ($discipline) use ($instructors){
             $discipline = Discipline::factory()->create([

@@ -18,6 +18,7 @@ use App\Http\Controllers\{
     CourseClassController,
     SubscriptionController,
     LessonRequestController,
+    ActivatedUserController,
     LessonRegisterController,
     EvaluationGradeController,
     AdminCoordinatorController,
@@ -42,7 +43,7 @@ Route::get('invitations/{code}', [InvitationController::class, 'show'])
 Route::post('register', [RegisterController::class, 'store'])
     ->name('register.store');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/lessons/today', ForTodayLessonListController::class)->name('lessons.today');
     Route::get('/lessons/week', ForWeekLessonListController::class)->name('lessons.week');
     Route::get('/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
@@ -182,6 +183,13 @@ Route::middleware(['auth'])->group(function () {
         AdminCoordinatorController::class,
         'delete'
     ])->name('admin-coordinators.destroy');
+
+    Route::post('activated-users', [ActivatedUserController::class, 'store'])
+        ->name('activated-users.store');
+    Route::delete('activated-users/{user}', [
+        ActivatedUserController::class,
+        'destroy'
+    ])->name('activated-users.destroy');
 });
 
 Route::get('/dashboard', function () {

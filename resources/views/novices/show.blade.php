@@ -118,4 +118,10 @@
 
     </x-card.list.description-layout>
 
+    <div class="flex justify-end mt-4 space-x-2">
+
+        <x-user-management :user="$registration->user"/>
+
+    </div>
+
 @endsection

@@ -40,6 +40,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'active'            => 'boolean',
     ];
 
     /**
@@ -77,6 +78,32 @@ class User extends Authenticatable
     public function getNovicesAttribute()
     {
         return $this->novices();
+    }
+
+    public function activate()
+    {
+        if ($this->active) {
+            return false;
+        }
+
+        $this->active = true;
+
+        $this->save();
+
+        return true;
+    }
+
+    public function deactivate()
+    {
+        if (! $this->active) {
+            return false;
+        }
+
+        $this->active = false;
+
+        $this->save();
+
+        return true;
     }
 
     public function isSubscribed()

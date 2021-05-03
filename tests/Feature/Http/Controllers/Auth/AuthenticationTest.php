@@ -58,4 +58,18 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
         $this->assertNull($user->fresh()->api_token);
     }
+
+    /** @test */
+    public function inactivated_user_cannot_login()
+    {
+        $user = User::factory()->inactive()->create();
+        $this->assertFalse($user->active);
+
+        $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        $this->assertGuest();
+    }
 }
