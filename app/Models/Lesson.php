@@ -45,8 +45,6 @@ class Lesson extends Model
 
     public static function fromArray(array $lesson)
     {
-        // TODO: if same date, same type, same instructor and same discipline
-        // of another lesson, unify then
         return Self::create([
             'date'          => $lesson['date'],
             'type'          => $lesson['type'],
