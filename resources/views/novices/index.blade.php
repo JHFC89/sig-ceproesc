@@ -21,9 +21,10 @@
 
         <x-slot name="header">
             <x-card.list.table-header class="col-span-4" name="nome"/>
-            <x-card.list.table-header class="col-span-4" name="e-mail"/>
+            <x-card.list.table-header class="col-span-3" name="e-mail"/>
+            <x-card.list.table-header class="col-span-2" name="turma"/>
             <x-card.list.table-header class="col-span-2 text-center" name="registrado"/>
-            <x-card.list.table-header class="col-span-2" name=""/>
+            <x-card.list.table-header class="col-span-1" name=""/>
         </x-slot>
 
         <x-slot name="body">
@@ -38,9 +39,15 @@
                         </x-slot>
                     </x-card.list.table-body-item>
 
-                    <x-card.list.table-body-item class="flex items-center col-span-4">
+                    <x-card.list.table-body-item class="flex items-center col-span-3">
                         <x-slot name="item">
                             <span class="normal-case">{{ $registration->email }}</span>
+                        </x-slot>
+                    </x-card.list.table-body-item>
+
+                    <x-card.list.table-body-item class="flex items-center col-span-2">
+                        <x-slot name="item">
+                            <span class="normal-case">{{ optional($registration->user)->class ?? 'Não matriculado' }}</span>
                         </x-slot>
                     </x-card.list.table-body-item>
 
@@ -52,7 +59,7 @@
                         </x-slot>
                     </x-card.list.table-body-item>
 
-                    <x-card.list.table-body-item class="flex items-center col-span-2">
+                    <x-card.list.table-body-item class="flex items-center col-span-1">
                         <x-slot name="item">
                             <div class="flex justify-end space-x-2 w-full">
                                 <a 

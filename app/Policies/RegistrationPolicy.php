@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Company;
 use App\Models\Registration;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -16,8 +17,12 @@ class RegistrationPolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user, Company $company = null)
     {
+        if ($user->isEmployer()) {
+            return $user->registration->company->is($company);
+        }
+
         return $user->isCoordinator();
     }
 
@@ -30,6 +35,10 @@ class RegistrationPolicy
      */
     public function view(User $user, Registration $registration)
     {
+        if ($user->isEmployer()) {
+            return $user->registration->company->is($registration->employer);
+        }
+
         return $user->isCoordinator();
     }
 

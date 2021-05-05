@@ -306,14 +306,17 @@ class LeftSideNavigationBarTest extends TestCase
     }
 
     /** @test */
-    public function employer_cannot_view_links_related_to_companies()
+    public function employer_can_view_links_related_to_his_company()
     {
         $response = $this
             ->actingAs($this->employer)
             ->get(route('dashboard'));
 
         $response
-            ->assertDontSee(route('companies.index'))
+            ->assertSee(route('companies.show', [
+                'company' => $this->employer->registration->company
+            ]))
+            ->assertDontSeeText(route('companies.index'))
             ->assertDontSee(route('companies.create'));
     }
 
@@ -348,5 +351,4 @@ class LeftSideNavigationBarTest extends TestCase
         $response->assertDontSee(route('admins.index'))
                  ->assertDontSee(route('admins.create'));
     }
-
 }

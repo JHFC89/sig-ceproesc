@@ -165,6 +165,23 @@ class ViewNoviceTest extends TestCase
     }
 
     /** @test */
+    public function employer_can_view_his_novice()
+    {
+        $employer = User::fakeEmployer();
+        $employer->registration->company()->associate($this->company)->save();
+        $this->assertTrue($this->registration
+                               ->employer
+                               ->is($employer->company));
+
+        $response = $this->actingAs($employer)
+                         ->get(route('novices.show', [
+                             'registration' => $this->registration
+                         ]));
+
+        $response->assertOk();
+    }
+
+    /** @test */
     public function employer_cannot_view_a_novice()
     {
         $employer = User::fakeEmployer();

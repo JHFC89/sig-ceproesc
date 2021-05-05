@@ -98,9 +98,25 @@ class ViewCompanyTest extends TestCase
     }
 
     /** @test */
-    public function employer_cannot_view_a_company()
+    public function employer_can_view_his_company()
     {
-        $employer = User::fakeInstructor();
+        $employer = User::fakeEmployer();
+        $employer->registration->company()->associate($this->company)->save();
+        $this->assertTrue($employer->registration->company->is($this->company));
+
+        $response = $this->actingAs($employer)
+                         ->get(route('companies.show', [
+                             'company' => $this->company
+                         ]));
+
+
+        $response->assertOk();
+    }
+
+    /** @test */
+    public function employer_cannot_view_a_company_he_does_not_belong_to()
+    {
+        $employer = User::fakeEmployer();
 
         $response = $this->actingAs($employer)
                          ->get(route('companies.show', [

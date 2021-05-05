@@ -8,7 +8,10 @@ class NoviceController extends Controller
 {
     public function index(Company $company)
     {
-        abort_if(request()->user()->cannot('viewAny', Registration::class), 401);
+        abort_if(request()->user()->cannot('viewAny', [
+            Registration::class,
+            $company,
+        ]), 401);
 
         $registrations = Registration::whereEmployer($company->id)->get();
 

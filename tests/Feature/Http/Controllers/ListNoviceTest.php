@@ -105,9 +105,25 @@ class ListNoviceTest extends TestCase
     }
 
     /** @test */
-    public function employer_cannot_view_a_list_of_novices()
+    public function employer_can_view_a_list_of_his_novices()
     {
         $employer = User::fakeEmployer();
+        $employer->registration->company()->associate($this->company)->save();
+
+        $response = $this->actingAs($employer)
+                         ->get(route('companies.novices.index', [
+                             'company' => $this->company,
+                         ]));
+
+
+        $response->assertOk();
+    }
+
+    /** @test */
+    public function employer_cannot_view_a_list_of_novices_from_another_company()
+    {
+        $employer = User::fakeEmployer();
+        $this->assertFalse($this->company->is($employer->registration->company));
 
         $response = $this->actingAs($employer)
                          ->get(route('companies.novices.index', [

@@ -18,6 +18,18 @@
                     <span class="ml-10 group-hover:text-gray-400">conta</span>
                 </a>
             </li>
+            @if (Auth::user()->isEmployer())
+            <li>
+                <a href="{{ route('companies.novices.index', ['company' => Auth::user()->registration->company ]) }}" class="flex items-center px-2 py-1 text-sm group rounded-md {{ request()->routeIs('companies.novices.index') || request()->routeIs('novices.*') ? 'font-medium text-gray-100' : '' }}">
+                    <span class="ml-10 group-hover:text-gray-400">aprendizes</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('companies.show', ['company' => Auth::user()->registration->company ]) }}" class="flex items-center px-2 py-1 text-sm group rounded-md {{ request()->routeIs('companies.show') ? 'font-medium text-gray-100' : '' }}">
+                    <span class="ml-10 group-hover:text-gray-400">empresa</span>
+                </a>
+            </li>
+            @endif
 
             <li>
                 <a href="#" class="flex items-center px-2 py-2 group rounded-md {{ request()->routeIs('lessons.*') ? 'font-medium text-gray-100' : '' }}">

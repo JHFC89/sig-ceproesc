@@ -30,6 +30,10 @@ class CompanyPolicy
      */
     public function view(User $user, Company $company)
     {
+        if ($user->isEmployer()) {
+            return $user->registration->company->is($company);
+        }
+
         return $user->isCoordinator();
     }
 

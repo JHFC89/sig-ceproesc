@@ -49,29 +49,37 @@
     </x-card.list.description-layout>
 
     <div class="flex justify-end mt-4 space-x-2">
+        @can('viewAny', App\Models\Company::class)
         <a
             href="{{ route('companies.employers.index', ['company' => $company]) }}"
             class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown"
         >
             ver representantes
         </a>
+        @endcan
+        @can('create', App\Models\Company::class)
         <a
             href="{{ route('companies.employers.create', ['company' => $company]) }}"
             class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown"
         >
             cadastrar representante
         </a>
+        @endcan
+        @can('viewAny', [App\Models\Registration::class, $company])
         <a
             href="{{ route('companies.novices.index', ['company' => $company]) }}"
             class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown"
         >
             ver apredizes
         </a>
+        @endcan
+        @can('create', App\Models\Registration::class)
         <a
             href="{{ route('companies.novices.create', ['company' => $company]) }}"
             class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown"
         >
             cadastrar aprediz
         </a>
+        @endcan
     </div>
 @endsection
