@@ -31,8 +31,9 @@
             </li>
             @endif
 
+            @if (Auth::user()->isNovice() && Auth::user()->courseClass !== null)
             <li>
-                <a href="#" class="flex items-center px-2 py-2 group rounded-md {{ request()->routeIs('lessons.*') ? 'font-medium text-gray-100' : '' }}">
+                <a href="#" class="flex items-center px-2 py-2 group rounded-md {{ request()->routeIs('lessons.*') || request()->routeIs('classes.lessons.index') ? 'font-medium text-gray-100' : '' }}">
                     <x-icons.register-lesson class="w-6 group-hover:text-gray-400"/>
                     <span class="ml-4 group-hover:text-gray-400">aulas</span>
                 </a>
@@ -47,6 +48,19 @@
                     <span class="ml-10 group-hover:text-gray-400">semana</span>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('classes.lessons.index', ['courseClass' => Auth::user()->courseClass]) }}" class="flex items-center px-2 py-1 text-sm group rounded-md {{ request()->routeIs('classes.lessons.index') ? 'font-medium text-gray-100' : '' }}">
+                    <span class="ml-10 group-hover:text-gray-400">todas</span>
+                </a>
+            </li>
+            @else
+            <li>
+                <a href="#" class="flex items-center px-2 py-2 group rounded-md {{ request()->routeIs('lessons.*') ? 'font-medium text-gray-100' : '' }}">
+                    <x-icons.register-lesson class="w-6 group-hover:text-gray-400"/>
+                    <span class="ml-4 group-hover:text-gray-400">aulas</span>
+                </a>
+            </li>
+            @endif
 
             @can('viewAny', \App\Models\Discipline::class)
             <li>
