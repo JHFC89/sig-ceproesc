@@ -129,7 +129,22 @@ class ViewCourseClassTest extends TestCase
     }
     
     /** @test */
-    public function novice_cannot_view_a_course_class()
+    public function novice_can_view_a_course_class_he_is_subscribed_to()
+    {
+        $novice = User::factory()
+            ->hasRoles(1, ['name' => 'novice'])
+            ->create();
+        $this->courseClass->subscribe($novice);
+
+        $response = $this->actingAs($novice)->get(route('classes.show', [
+            'courseClass' => $this->courseClass
+        ]));
+
+        $response->assertOk();
+    }
+    
+    /** @test */
+    public function novice_cannot_view_a_course_class_he_is_not_subscribed_to_()
     {
         $novice = User::factory()
             ->hasRoles(1, ['name' => 'novice'])

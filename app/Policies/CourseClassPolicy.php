@@ -30,6 +30,10 @@ class CourseClassPolicy
      */
     public function view(User $user, CourseClass $courseClass)
     {
+        if ($user->isNovice()) {
+            return $courseClass->isSubscribed($user);
+        }
+
         return $user->isCoordinator();
     }
 

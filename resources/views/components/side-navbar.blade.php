@@ -180,6 +180,19 @@
                 </a>
             </li>
             @endcan
+            @if (Auth::user()->isNovice() && Auth::user()->courseClass !== null)
+            <li>
+                <a href="{{ route('classes.show', ['courseClass' => Auth::user()->courseClass]) }}"
+                    class="
+                        flex items-center px-2 py-2 group rounded-md
+                        {{ request()->routeIs('classes.*') ? 'font-medium text-gray-100' : '' }}
+                    "
+                >
+                    <x-icons.user-group class="w-6 group-hover:text-gray-400"/>
+                    <span class="ml-4 group-hover:text-gray-400">Turma</span>
+                </a>
+            </li>
+            @endif
 
             @if (Auth::user()->isCoordinator() || Auth::user()->isAdmin())
             <li>
