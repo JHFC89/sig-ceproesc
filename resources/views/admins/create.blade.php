@@ -41,18 +41,6 @@
                         </x-slot>
                     </x-card.form-input>
 
-                    <x-card.form-input name="phone" label="Telefone">
-                            <x-slot name="input">
-                                <input 
-                                    class="block w-full form-textarea @error('phone') border-red-500 @enderror" 
-                                    name="phone" 
-                                    value="{{ old('phone') }}"
-                                    placeholder="Digite o telefone do administrador"
-                                >
-                    <x-validation-error name="phone"/>
-                            </x-slot>
-                    </x-card.form-input>
-
                 </x-slot>
 
             </x-card.panel-layout>
