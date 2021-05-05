@@ -39,7 +39,8 @@ class ViewRegisterLessonTest extends TestCase
         $response
             ->assertOk()
             ->assertViewHas('lesson', $this->lesson)
-            ->assertSee($this->lesson->discipline)
+            ->assertSee($this->lesson->discipline->name)
+            ->assertDontSee($this->lesson->discipline)
             ->assertSee($this->lesson->hourly_load)
             ->assertSee($novice_0->code)
             ->assertSee($novice_0->name)

@@ -28,7 +28,8 @@ class ViewLessonListingTest extends TestCase
             ->assertOk()
             ->assertSee('Hoje')
             ->assertSee($lesson->class)
-            ->assertSee($lesson->discipline);
+            ->assertSee($lesson->discipline->name)
+            ->assertDontSee($lesson->discipline);
     }
 
     /** @test */
@@ -92,11 +93,14 @@ class ViewLessonListingTest extends TestCase
             ->assertOk()
             ->assertSee('Esta Semana')
             ->assertSee($mondayLesson->class)
-            ->assertSee($mondayLesson->discipline)
+            ->assertSee($mondayLesson->discipline->name)
+            ->assertDontSee($mondayLesson->discipline)
             ->assertSee($tuesdayLesson->class)
-            ->assertSee($tuesdayLesson->discipline)
+            ->assertSee($tuesdayLesson->discipline->name)
+            ->assertDontSee($tuesdayLesson->discipline)
             ->assertSee($wednesdayLesson->class)
-            ->assertSee($wednesdayLesson->discipline);
+            ->assertSee($wednesdayLesson->discipline->name)
+            ->assertDontSee($wednesdayLesson->discipline);
 
         Carbon::setTestNow();
     }

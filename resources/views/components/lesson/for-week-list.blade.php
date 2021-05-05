@@ -29,7 +29,7 @@
 
                 <x-card.list.table-body-item class="{{ $columnSize['discipline'] }}">
                     <x-slot name="item">
-                        <span>{{ $lesson->discipline }}</span>
+                        <span>{{ $lesson->discipline->name }}</span>
                     </x-slot>
                 </x-card.list.table-body-item>
 

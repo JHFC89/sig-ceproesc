@@ -9,6 +9,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class DashboardTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @test */
     public function viewing_dashboard()
     {
@@ -38,6 +40,7 @@ class DashboardTest extends TestCase
         $response
             ->assertOk()
             ->assertSee('aulas de hoje')
-            ->assertSee($lessons->first()->discipline);
+            ->assertSee($lessons->first()->discipline->name)
+            ->assertDontSee($lessons->first()->discipline);
     }
 }
