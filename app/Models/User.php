@@ -205,7 +205,7 @@ class User extends Authenticatable
 
     public function isEmployerOf(User $novice)
     {
-        return $this->novices->contains($novice);
+        return $this->novices->pluck('id')->contains($novice->id);
     }
 
     public function turnIntoInstructor()

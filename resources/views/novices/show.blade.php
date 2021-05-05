@@ -122,6 +122,17 @@
 
     <div class="flex justify-end mt-4 space-x-2">
 
+        @if ((Auth::user()->isCoordinator() || Auth::user()->isEmployer()) && $registration->user !== null)
+            @if ($registration->user->courseClass !== null)
+            <a
+                href="{{ route('classes.lessons.index', ['courseClass' => $registration->user->courseClass]) }}"
+                class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown"
+            >
+                ver aulas
+            </a>
+            @endif
+        @endif
+
         <x-user-management :user="$registration->user"/>
 
     </div>
