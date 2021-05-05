@@ -8,6 +8,8 @@
 
         <x-slot name="items">
             <x-card.list.description-item
+                type="link"
+                :href="route('companies.show', ['company' => $company])"
                 label="razão social"
                 :description="$company->name"
             />

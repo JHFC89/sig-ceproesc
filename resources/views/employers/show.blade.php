@@ -15,6 +15,8 @@
 
         <x-slot name="items">
             <x-card.list.description-item
+                type="link"
+                :href="route('companies.show', ['company' => $registration->company])"
                 label="razão social"
                 :description="$registration->company->name"
             />
