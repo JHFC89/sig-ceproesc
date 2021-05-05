@@ -6,9 +6,16 @@
         <ul class="text-gray-300 capitalize">
 
             <li>
-                <a href="{{ route('dashboard') }}" class="flex items-center px-2 py-2 group rounded-md {{ request()->routeIs('dashboard') ? 'font-medium text-gray-100' : '' }}">
+                <a href="{{ route('dashboard') }}" class="flex items-center px-2 py-2 group rounded-md {{ request()->routeIs('dashboard')
+|| request()->routeIs('profiles.*') 
+? 'font-medium text-gray-100' : '' }}">
                     <x-icons.home class="w-6 group-hover:text-gray-400"/>
                     <span class="ml-4 group-hover:text-gray-400">início</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('profiles.show', ['user' => Auth::user() ]) }}" class="flex items-center px-2 py-1 text-sm group rounded-md {{ request()->routeIs('profiles.*') ? 'font-medium text-gray-100' : '' }}">
+                    <span class="ml-10 group-hover:text-gray-400">conta</span>
                 </a>
             </li>
 

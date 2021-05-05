@@ -7,6 +7,7 @@ use App\Http\Controllers\{
     LessonController,
     CourseController,
     NoviceController,
+    ProfileController,
     CompanyController,
     HolidayController,
     EmployerController,
@@ -19,11 +20,15 @@ use App\Http\Controllers\{
     SubscriptionController,
     LessonRequestController,
     ActivatedUserController,
+    AccountProfileController,
     LessonRegisterController,
+    PersonalProfileController,
     EvaluationGradeController,
     AdminCoordinatorController,
     ForWeekLessonListController,
     ForTodayLessonListController,
+    ProfessionalProfileController,
+    ComplementaryProfileController,
 };
 
 /*
@@ -190,6 +195,21 @@ Route::middleware(['auth', 'active'])->group(function () {
         ActivatedUserController::class,
         'destroy'
     ])->name('activated-users.destroy');
+
+    Route::get('profiles/{user}', [ProfileController::class, 'show'])
+        ->name('profiles.show');
+    Route::patch('account-profiles/{user}', [
+        AccountProfileController::class,'update'
+    ])->name('account-profiles.update');
+    Route::patch('personal-profiles/{user}', [
+        PersonalProfileController::class,'update'
+    ])->name('personal-profiles.update');
+    Route::patch('professional-profiles/{user}', [
+        ProfessionalProfileController::class, 'update'
+    ])->name('professional-profiles.update');
+    Route::patch('complementary-profiles/{user}', [
+        ComplementaryProfileController::class, 'update'
+    ])->name('complementary-profiles.update');
 });
 
 Route::get('/dashboard', function () {
