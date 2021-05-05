@@ -42,6 +42,10 @@ use App\Http\Controllers\{
 |
 */
 
+Route::get('/', function () {
+    return redirect()->route('dashboard');
+});
+
 Route::get('invitations/{code}', [InvitationController::class, 'show'])
     ->name('invitations.show');
 
