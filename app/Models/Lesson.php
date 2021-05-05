@@ -36,11 +36,11 @@ class Lesson extends Model
     {
         $relatedCourseClasses = $this->relatedCourseClasses();
 
-        if ($relatedCourseClasses === null) {
-            return null;
+        if (gettype($relatedCourseClasses) === 'array') {
+            return implode(' | ', $relatedCourseClasses);
         }
 
-        return implode(' | ', $relatedCourseClasses);
+        return $relatedCourseClasses;
     }
 
     public static function fromArray(array $lesson)
@@ -211,7 +211,11 @@ class Lesson extends Model
     {
         $relatedCourseClasses = $this->novices->pluck('class')->unique();
 
-        return $relatedCourseClasses->contains(null) ? null : $relatedCourseClasses->values()->all();
+        if ($relatedCourseClasses->count() === 0) {
+            return optional($this->courseClasses->first())->name;
+        }
+
+        return $relatedCourseClasses->values()->all();
     }
 
     public function hasOpenRequest()
