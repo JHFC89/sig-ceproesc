@@ -19,9 +19,7 @@
                         name="name" 
                         placeholder="Digite o nome da disciplina"
                     >
-                    @error('name')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="name"/>
                 </x-slot>
             </x-card.form-input>
 
@@ -37,9 +35,7 @@
                             <span>específico</span>
                         </label>
                     </div>
-                    @error('basic')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="basic"/>
                 </x-slot>
             </x-card.form-input>
 
@@ -50,9 +46,7 @@
                         name="duration" 
                         type="number"
                     >
-                    @error('duration')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="duration"/>
                 </x-slot>
             </x-card.form-input>
 
@@ -71,9 +65,7 @@
                             </label>
                         </div>
                     @endforeach
-                    @error('instructors')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="instructors"/>
                 </x-slot>
             </x-card.form-input>
         </x-slot>

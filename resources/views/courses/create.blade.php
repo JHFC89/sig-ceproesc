@@ -20,9 +20,7 @@
                         name="name" 
                         placeholder="Digite o nome do programa"
                     >
-                    @error('name')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="name"/>
                 </x-slot>
             </x-card.form-input>
 
@@ -42,9 +40,7 @@
                             *Sobraram <span x-text="data.durationDiff * -1"></span> horas</span>
                         </span>
                     </div>
-                    @error('duration')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="duration"/>
                 </x-slot>
             </x-card.form-input>
 
@@ -91,9 +87,7 @@
                             </label>
                         </div>
                     @endforeach
-                    @error('disciplines')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="disciplines"/>
                 </x-slot>
             </x-card.form-input>
 
@@ -116,9 +110,7 @@
                             </label>
                         </div>
                     @endforeach
-                    @error('disciplines')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="disciplines"/>
                 </x-slot>
             </x-card.form-input>
 

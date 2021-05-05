@@ -21,9 +21,7 @@
                         value="{{ old('name') }}"
                         placeholder="Digite a razão social da empresa"
                     >
-                    @error('name')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="name"/>
                 </x-slot>
             </x-card.form-input>
 
@@ -35,9 +33,7 @@
                         value="{{ old('cnpj') }}"
                         placeholder="Digite o CNPJ (12.123.123/0001-12)"
                     >
-                    @error('cnpj')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="cnpj"/>
                 </x-slot>
             </x-card.form-input>
 
@@ -49,9 +45,7 @@
                         value="{{ old('phone') }}"
                         placeholder="Digite o telefone da empresa"
                     >
-                    @error('phone')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="phone"/>
                 </x-slot>
             </x-card.form-input>
 
@@ -63,9 +57,7 @@
                         value="{{ old('address.street') }}"
                         placeholder="Digite o logradouro do endereço da empresa"
                     >
-                    @error('address.street')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="address.street"/>
                 </x-slot>
             </x-card.form-input>
 
@@ -77,9 +69,7 @@
                         value="{{ old('address.number') }}"
                         placeholder="Digite o número do endereço da empresa"
                     >
-                    @error('address.number')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="address.number"/>
                 </x-slot>
             </x-card.form-input>
 
@@ -91,9 +81,7 @@
                         value="{{ old('address.district') }}"
                         placeholder="Digite o bairro do endereço da empresa"
                     >
-                    @error('address.district')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="address.district"/>
                 </x-slot>
             </x-card.form-input>
 
@@ -105,9 +93,7 @@
                         value="{{ old('address.city') }}"
                         placeholder="Digite a cidade do endereço da empresa"
                     >
-                    @error('address.city')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="address.city"/>
                 </x-slot>
             </x-card.form-input>
 
@@ -119,9 +105,7 @@
                         value="{{ old('address.cep') }}"
                         placeholder="Digite o CEP do endereço da empresa (12.123-123)"
                     >
-                    @error('address.cep')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="address.cep"/>
                 </x-slot>
             </x-card.form-input>
 
@@ -133,9 +117,7 @@
                         value="{{ old('address.state') }}"
                         placeholder="Digite o estado do endereço da empresa"
                     >
-                    @error('address.state')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="address.state"/>
                 </x-slot>
             </x-card.form-input>
 
@@ -147,9 +129,7 @@
                         value="{{ old('address.country') }}"
                         placeholder="Digite o país do endereço da empresa"
                     >
-                    @error('address.country')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="address.country"/>
                 </x-slot>
             </x-card.form-input>
 

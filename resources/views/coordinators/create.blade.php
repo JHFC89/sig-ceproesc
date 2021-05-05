@@ -25,9 +25,7 @@
                                 value="{{ old('name') }}"
                                 placeholder="Digite o nome do coordenador"
                             >
-                            @error('name')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                    <x-validation-error name="name"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -39,9 +37,7 @@
                                 value="{{ old('email') }}"
                                 placeholder="Digite o e-mail do coordenador"
                             >
-                            @error('email')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                    <x-validation-error name="email"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -53,9 +49,7 @@
                                     value="{{ old('phone') }}"
                                     placeholder="Digite o telefone do coordenador"
                                 >
-                                @error('phone')
-                                    <span class="block text-sm text-red-500">{{ $message }}</span>
-                                @enderror
+                    <x-validation-error name="phone"/>
                             </x-slot>
                     </x-card.form-input>
 

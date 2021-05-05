@@ -25,9 +25,7 @@
                                 value="{{ old('name') }}"
                                 placeholder="Digite o nome do instrutor"
                             >
-                            @error('name')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                    <x-validation-error name="name"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -39,9 +37,7 @@
                                 value="{{ old('email') }}"
                                 placeholder="Digite o e-mail do instrutor"
                             >
-                            @error('email')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                    <x-validation-error name="email"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -56,9 +52,7 @@
                                 :yearValue="old('birthdate.year') ?? now()->format('Y')"
                                 :minYear="false"
                             />
-                            @error('birthdate')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                    <x-validation-error name="birthdate"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -70,9 +64,7 @@
                                 value="{{ old('rg') }}"
                                 placeholder="Digite o RG do instrutor"
                             >
-                            @error('rg')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                    <x-validation-error name="rg"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -84,9 +76,7 @@
                                 value="{{ old('cpf') }}"
                                 placeholder="Digite o CPF do instrutor (123.123.123-12)"
                             >
-                            @error('cpf')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                    <x-validation-error name="cpf"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -98,9 +88,7 @@
                                 value="{{ old('ctps') }}"
                                 placeholder="Digite a CTPS do instrutor"
                             >
-                            @error('ctps')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                    <x-validation-error name="ctps"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -112,9 +100,7 @@
                                     value="{{ old('phone') }}"
                                     placeholder="Digite o telefone do instrutor"
                                 >
-                                @error('phone')
-                                    <span class="block text-sm text-red-500">{{ $message }}</span>
-                                @enderror
+                    <x-validation-error name="phone"/>
                             </x-slot>
                     </x-card.form-input>
 
@@ -134,9 +120,7 @@
                                 value="{{ old('address.street') }}"
                                 placeholder="Digite o logradouro do endereço do instrutor"
                             >
-                            @error('address.street')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                    <x-validation-error name="address.street"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -148,9 +132,7 @@
                                 value="{{ old('address.number') }}"
                                 placeholder="Digite o número do endereço do instrutor"
                             >
-                            @error('address.number')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                    <x-validation-error name="address.number"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -162,9 +144,7 @@
                                 value="{{ old('address.district') }}"
                                 placeholder="Digite o bairro do endereço do instrutor"
                             >
-                            @error('address.district')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                    <x-validation-error name="address.district"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -176,9 +156,7 @@
                                 value="{{ old('address.city') }}"
                                 placeholder="Digite a cidade do endereço do instrutor"
                             >
-                            @error('address.city')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                    <x-validation-error name="address.city"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -190,9 +168,7 @@
                                 value="{{ old('address.cep') }}"
                                 placeholder="Digite o CEP do endereço do instrutor (12.123-123)"
                             >
-                            @error('address.cep')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                    <x-validation-error name="address.cep"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -204,9 +180,7 @@
                                 value="{{ old('address.state') }}"
                                 placeholder="Digite o estado do endereço do instrutor"
                             >
-                            @error('address.state')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                    <x-validation-error name="address.state"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -218,9 +192,7 @@
                                 value="{{ old('address.country') }}"
                                 placeholder="Digite o país do endereço do instrutor"
                             >
-                            @error('address.country')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                    <x-validation-error name="address.country"/>
                         </x-slot>
                     </x-card.form-input>
 

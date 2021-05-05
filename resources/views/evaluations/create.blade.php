@@ -30,9 +30,7 @@
                         rows="4"
                         placeholder="Digite a descrição da atividade"
                     >
-                    @error('label')
-                    <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="label"/>
                 </x-slot>
             </x-card.form-input>
 
@@ -44,9 +42,7 @@
                         rows="4"
                         placeholder="Digite a descrição da atividade"
                     ></textarea>
-                    @error('description')
-                    <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="description"/>
                 </x-slot>
             </x-card.form-input>
 

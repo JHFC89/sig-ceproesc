@@ -65,9 +65,7 @@
                             </label>
                         </div>
                     @endforeach
-                    @error('novices')
-                        <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="novices"/>
                 </x-slot>
             </x-card.form-input>
         </x-slot>
