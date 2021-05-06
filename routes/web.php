@@ -20,6 +20,7 @@ use App\Http\Controllers\{
     SubscriptionController,
     LessonRequestController,
     ActivatedUserController,
+    SendInvitationController,
     AccountProfileController,
     LessonRegisterController,
     PersonalProfileController,
@@ -214,6 +215,9 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::patch('complementary-profiles/{user}', [
         ComplementaryProfileController::class, 'update'
     ])->name('complementary-profiles.update');
+
+    Route::get('send-invitation/{invitation}', SendInvitationController::class)
+        ->name('send-invitation');
 });
 
 Route::get('/dashboard', function () {

@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Invitation;
 use App\Models\Registration;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class InvitationFactory extends Factory
@@ -27,5 +28,14 @@ class InvitationFactory extends Factory
             'code'              => 'TESTCODE1234',
             'registration_id'   => Registration::factory()->create(),
         ];
+    }
+
+    public function used()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'user_id' => User::factory()->create(),
+            ];
+        });
     }
 }

@@ -78,8 +78,8 @@
             <x-card.list.description-item
                 label="registrado"
                 :type="$registration->invitation->hasBeenUsed() ? 'title' : 'link'"
-                :description="$registration->invitation->hasBeenUsed() ? 'sim' : 'não: reenviar link de registro'"
-                :link="'#'"
+                :description="$registration->invitation->hasBeenUsed() ? 'Sim' : 'Não: reenviar e-mail de registro'"
+                :href="route('send-invitation', ['invitation' => $registration->invitation])"
             />
             @endif
 
