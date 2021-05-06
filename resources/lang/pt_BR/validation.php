@@ -201,6 +201,15 @@ return [
         'address.state'     => 'estado',
         'address.country'   => 'país',
         'address.cep'       => 'CEP',
+        'class.name'        => 'nome da turma',
+        'course'            => 'programa',
+        'intro_end'         => 'término da introdução',
+        'class.first_day'   => 'primeiro dia da semana',
+        'class.second_day'  => 'segundo dia da semana',
+        'class.first_day_duration' => 'carga horária do primeiro dia da semana',
+        'class.second_day_duration' => 'carga horária do segundo dia da semana',
+        'class.practical_duration.hours' => 'horas de carga horária prática',
+        'class.practical_duration.minutes' => 'minutos de carga horária prática',
     ],
 
 ];

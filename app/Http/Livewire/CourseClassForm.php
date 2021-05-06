@@ -21,6 +21,8 @@ class CourseClassForm extends Component
 
     public $offdays;
 
+    public $extraLessonDays;
+
     public $duration = null;
 
     public $basicDuration = null;
@@ -28,8 +30,6 @@ class CourseClassForm extends Component
     public $specificDuration = null;
 
     public $showSchedule = false;
-
-    protected $listeners = ['toggledoffday' => 'toggleOffday'];
 
     protected $run = false;
 
@@ -54,6 +54,8 @@ class CourseClassForm extends Component
         $this->class = $this->setClassFields();
 
         $this->offdays = collect([]);
+
+        $this->extraLessonDays = collect([]);
     }
 
     public function render()
@@ -169,7 +171,7 @@ class CourseClassForm extends Component
         return $hoursInMinutes + $minutes;
     }
 
-    public function toggleOffday($date)
+    public function toggleDateType($type, $date)
     {
         if (! $this->haveRun()) {
             return;
@@ -177,10 +179,13 @@ class CourseClassForm extends Component
 
         $this->generateSchedule();
 
-        if ($this->offdays->contains($date)) {
-            $this->removeOffday($date);
-        } else {
+        if ($type === 'theoretical') {
             $this->addOffday($date);
+        } elseif ($type === 'offday') {
+            $this->removeOffday($date);
+            $this->addExtraLessonDay($date);
+        } elseif ($type === 'extra') {
+            $this->removeExtraLessonDay($date);
         }
 
         $this->run = true;
@@ -189,6 +194,11 @@ class CourseClassForm extends Component
     public function offdayDates()
     {
         return $this->offdays->mapInto(Carbon::class);
+    }
+
+    public function extraLessonDaysDates()
+    {
+        return $this->extraLessonDays->mapInto(Carbon::class);
     }
 
     private function haveRun()
@@ -202,12 +212,27 @@ class CourseClassForm extends Component
         $this->offdays->forget($key);
     }
 
+    private function removeExtraLessonDay($date)
+    {
+        $key = $this->extraLessonDays->search($date);
+        $this->extraLessonDays->forget($key);
+    }
+
     private function addOffday($date)
     {
         $formattedDate = Carbon::parse($date)->format('d-m-Y');
 
         if ($this->courseClass->allTheoreticalDays()->has($formattedDate)) {
             $this->offdays->push($date);
+        }
+    }
+
+    private function addExtraLessonDay($date)
+    {
+        $formattedDate = Carbon::parse($date)->format('d-m-Y');
+
+        if ($this->courseClass->allTheoreticalDays()->has($formattedDate)) {
+            $this->extraLessonDays->push($date);
         }
     }
 
@@ -224,6 +249,8 @@ class CourseClassForm extends Component
         $allDays = $courseClass->allTheoreticalDays();
 
         $allDays = $this->filterOffdays($allDays);
+
+        $allDays = $this->filterExtraLessonDays($allDays);
 
         $firstDays = $allDays->filter->is($courseClass->first_day);
         $secondDays = $allDays->filter->is($courseClass->second_day);
@@ -251,6 +278,16 @@ class CourseClassForm extends Component
     {
         $this->offdays->each(function ($offday) use ($days) {
             $date = Carbon::parse($offday)->format('d-m-Y');
+            $days->forget($date);
+        });
+
+        return $days;
+    }
+
+    private function filterExtraLessonDays($days)
+    {
+        $this->extraLessonDays->each(function ($extraDay) use ($days) {
+            $date = Carbon::parse($extraDay)->format('d-m-Y');
             $days->forget($date);
         });
 
@@ -287,13 +324,13 @@ class CourseClassForm extends Component
 
         if ($begin->equalTo($end)) {
             throw ValidationException::withMessages([
-                'duration' => 'begin is equal to end.'
+                'duration' => __('begin is equal to end.')
             ]);
         }
 
         if ($begin->greaterThan($end)) {
             throw ValidationException::withMessages([
-                'duration' => 'begin is greater than end.'
+                'duration' => __('begin is greater than end.')
             ]);
         }
 
@@ -311,25 +348,25 @@ class CourseClassForm extends Component
 
         if ($vacation_begin->equalTo($vacation_end)) {
             throw ValidationException::withMessages([
-                'vacation_duration' => 'begin is equal to end.'
+                'vacation_duration' => __('begin is equal to end.')
             ]);
         }
 
         if ($vacation_begin->greaterThan($vacation_end)) {
             throw ValidationException::withMessages([
-                'vacation_duration' => 'begin is greater than end.'
+                'vacation_duration' => __('begin is greater than end.')
             ]);
         }
 
         if ($vacation_begin->lessThan($begin)) {
             throw ValidationException::withMessages([
-                'vacation_begin' => 'vacation must begin after class begin.'
+                'vacation_begin' => __('vacation must begin after class begin.')
             ]);
         }
 
         if ($vacation_end->greaterThan($end)) {
             throw ValidationException::withMessages([
-                'vacation_duration' => 'vacation must end before class end.'
+                'vacation_duration' => __('vacation must end before class end.')
             ]);
         }
     }
@@ -350,6 +387,14 @@ class CourseClassForm extends Component
             $courseClass->offdays()->createMany($offdays);
         }
 
+        if ($this->extraLessonDays->count() > 0) {
+            $extraLessonDays = $this->extraLessonDaysDates()->map(function ($date) {
+                return ['date' => $date];
+            });
+
+            $courseClass->extraLessonDays()->createMany($extraLessonDays);
+        }
+
         return redirect()->route('classes.show', [
             'courseClass' => $courseClass,
         ]);
@@ -359,7 +404,7 @@ class CourseClassForm extends Component
     {
         if ($this->theoreticalDurationDiff() !== 0) {
             throw ValidationException::withMessages([
-                'theoretical_duration' => 'value is not equal to course duration.'
+                'theoretical_duration' => __('O valor não é igual à carga horária total do programa.')
             ]);
         }
     }

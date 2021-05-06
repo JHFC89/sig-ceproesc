@@ -10,7 +10,9 @@
 
         <x-card.list.table-body-item class="col-span-1">
             <x-slot name="item">
-                <span class="flex items-center h-full">{{ $duration }} Hrs</span>
+                <div class="flex items-center h-full">
+                    <x-badge :text="$duration . ' Hrs'" :color="$this->extra ? 'red' : 'blue'"/>
+                </div>
             </x-slot>
         </x-card.list.table-body-item>
 

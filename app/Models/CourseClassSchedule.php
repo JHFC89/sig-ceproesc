@@ -7,12 +7,12 @@ use Carbon\CarbonPeriod;
 
 trait CourseClassSchedule
 {
-    public function allTheoreticalDays()
+    public function allTheoreticalDays($withoutExtraLessons = true)
     {
-        return $this->formattedDates($this->allTheoreticalPeriod());
+        return $this->formattedDates($this->allTheoreticalPeriod($withoutExtraLessons));
     }
 
-    private function allTheoreticalPeriod()
+    private function allTheoreticalPeriod($withoutExtraLessons = true)
     {
         $days = $this->allDurationDays();
 
@@ -23,6 +23,10 @@ trait CourseClassSchedule
         $days->filter($this->vacationFilter(), 'vacation');
 
         $days->filter($this->holidaysFilter(), 'holidays');
+
+        if ($withoutExtraLessons) {
+            $days->filter($this->extraLessonDaysFilter(), 'extra');
+        }
 
         return $days;
     }
@@ -104,9 +108,26 @@ trait CourseClassSchedule
         };
     }
 
+    private function extraLessonDaysFilter()
+    {
+        $extraDays = $this->extraLessonDays;
+
+        return function ($date) use ($extraDays) {
+            return ! $extraDays->contains(function ($extraDay) use ($date) {
+                return $date->format('d-m-Y') 
+                    == $extraDay->format('d-m-Y');
+            });
+        };
+    }
+
     public function allOffdays()
     {
         return $this->formattedDates($this->offdays);
+    }
+
+    public function allExtraLessonDays()
+    {
+        return $this->formattedDates($this->extraLessonDays);
     }
 
     public function allVacationDays()
@@ -156,11 +177,11 @@ trait CourseClassSchedule
         return collect($months);
     }
 
-    public function theoreticalDaysForMonth(int $month, int $year)
+    public function theoreticalDaysForMonth(int $month, int $year, $withoutExtraLessons = true)
     {
         $month = Carbon::createFromDate($year, $month, 1);
 
-        $days = $this->allTheoreticalPeriod();
+        $days = $this->allTheoreticalPeriod($withoutExtraLessons);
 
         $days->filter(function($date) use ($month) {
             return $date->isSameMonth($month);

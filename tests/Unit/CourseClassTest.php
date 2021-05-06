@@ -57,7 +57,7 @@ class CourseClassTest extends TestCase
     }
 
     /** @test */
-    public function can_get_all_theoretical_activity_days()
+    public function can_get_all_theoretical_activity_days_without_extra_lessons()
     {
         $courseClass = $this->testCourseClass();
         $courseClass->begin = Carbon::create(2021, 4, 1); 
@@ -74,8 +74,64 @@ class CourseClassTest extends TestCase
         Holiday::factory()->create([
             'date' => Carbon::create(2021, 5, 1),
         ]);
+        $courseClass->extraLessonDays()->createMany([
+            ['date' => Carbon::create(2021, 4, 5)],
+            ['date' => Carbon::create(2021, 6, 5)],
+        ]);
 
         $result = $courseClass->allTheoreticalDays();
+
+        $expectedResult = collect([
+            Carbon::create(2021, 4, 1),
+            Carbon::create(2021, 4, 2),
+            Carbon::create(2021, 4, 3),
+            Carbon::create(2021, 4, 6),
+            Carbon::create(2021, 4, 7),
+            Carbon::create(2021, 4, 9),
+            Carbon::create(2021, 4, 10),
+            Carbon::create(2021, 4, 16),
+            Carbon::create(2021, 4, 17),
+            Carbon::create(2021, 4, 23),
+            Carbon::create(2021, 4, 24),
+            Carbon::create(2021, 5, 21),
+            Carbon::create(2021, 5, 22),
+            Carbon::create(2021, 5, 28),
+            Carbon::create(2021, 5, 29),
+            Carbon::create(2021, 6, 4),
+            Carbon::create(2021, 6, 12),
+            Carbon::create(2021, 6, 18),
+            Carbon::create(2021, 6, 19),
+            Carbon::create(2021, 6, 25),
+            Carbon::create(2021, 6, 26),
+        ])->keyBy->format('d-m-Y');
+
+        $this->assertEquals($expectedResult->keys(), $result->keys());
+    }
+
+    /** @test */
+    public function can_get_all_theoretical_activity_days_with_extra_lessons()
+    {
+        $courseClass = $this->testCourseClass();
+        $courseClass->begin = Carbon::create(2021, 4, 1); 
+        $courseClass->end = Carbon::create(2021, 7, 1); 
+        $courseClass->intro_begin = Carbon::create(2021, 4, 1); 
+        $courseClass->intro_end = Carbon::create(2021, 4, 7); 
+        $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
+        $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->save(); 
+        $courseClass->offdays()->createMany([
+            ['date' => Carbon::create(2021, 4, 30)],
+            ['date' => Carbon::create(2021, 6, 11)],
+        ]);
+        Holiday::factory()->create([
+            'date' => Carbon::create(2021, 5, 1),
+        ]);
+        $courseClass->extraLessonDays()->createMany([
+            ['date' => Carbon::create(2021, 4, 5)],
+            ['date' => Carbon::create(2021, 6, 5)],
+        ]);
+
+        $result = $courseClass->allTheoreticalDays(false);
 
         $expectedResult = collect([
             Carbon::create(2021, 4, 1),
@@ -254,6 +310,32 @@ class CourseClassTest extends TestCase
         ]);
 
         $result = $courseClass->allOffdays();
+
+        $expectedResult = collect([
+            Carbon::create(2021, 4, 30),
+            Carbon::create(2021, 6, 11),
+        ])->keyBy->format('d-m-Y');
+
+        $this->assertEquals($expectedResult->keys(), $result->keys());
+    }
+
+    /** @test */
+    public function can_get_all_extra_lesson_days()
+    {
+        $courseClass = $this->testCourseClass();
+        $courseClass->begin = Carbon::create(2021, 4, 1); 
+        $courseClass->end = Carbon::create(2021, 7, 30); 
+        $courseClass->intro_begin = Carbon::create(2021, 4, 1); 
+        $courseClass->intro_end = Carbon::create(2021, 4, 7); 
+        $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
+        $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->save(); 
+        $courseClass->extraLessonDays()->createMany([
+            ['date' => Carbon::create(2021, 4, 30)],
+            ['date' => Carbon::create(2021, 6, 11)],
+        ]);
+
+        $result = $courseClass->allExtraLessonDays();
 
         $expectedResult = collect([
             Carbon::create(2021, 4, 30),

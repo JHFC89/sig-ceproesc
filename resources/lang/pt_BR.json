@@ -51,5 +51,10 @@
     "If you already have an account, you may accept this invitation by clicking the button below:": "Se já tiver uma conta, você pode aceitar esse convite através do botão abaixo:",
     "Accept Invitation": "Aceitar Convite",
     "If you did not expect to receive an invitation to this team, you may discard this email.": "Se você não sabe porque está recebendo um convite para esse time, pode descartar esse email",
-    "Whoops! Something went wrong.": "Algo deu errado."
+    "Whoops! Something went wrong.": "Algo deu errado.",
+    "begin is equal to end.": "Início é igual ao término.",
+    "begin is greater than end.": "Início é maior que o término.",
+    "vacation must begin after class begin.": "O início das férias deve ser após o início do programa.",
+    "value is not equal to course duration.": "O valor não é igual à carga horária do programa.",
+    "vacation must end before class end.": "O término das férias deve ser antes do término do programa."
 }

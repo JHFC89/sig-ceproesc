@@ -52,7 +52,7 @@
                         <x-card.list.table-body-item class="flex items-center col-span-2">
                             <x-slot name="item">
                                 <div class="flex items-center justify-center h-full w-full">
-                                    <span>{{ $discipline->duration }} hrs</span>
+                                    <x-badge :text="$discipline->duration . ' hrs'" color="blue"/>
                                 </div>
                             </x-slot>
                         </x-card.list.table-body-item>
@@ -61,17 +61,11 @@
                             <x-slot name="item">
                                 <div class="flex items-center justify-center h-full w-full">
                                     @if ($this->durationDiff($discipline) > 0)
-                                        <span class="flex items-center justify-center rounded-full tracking-wide text-xs font-bold px-3 py-1 bg-pink-100 text-red-700">
-                                            {{ $this->durationDiff($discipline) }} hrs
-                                        </span>
+                                        <x-badge :text="$this->durationDiff($discipline) . ' hrs'" color="red"/>
                                     @elseif ($this->durationDiff($discipline) < 0)
-                                        <span class="flex items-center justify-center rounded-full tracking-wide text-xs font-bold px-3 py-1 bg-pink-100 text-red-700">
-                                            {{ $this->durationDiff($discipline) }} hrs
-                                        </span>
+                                        <x-badge :text="$this->durationDiff($discipline) . ' hrs'" color="red"/>
                                     @else
-                                        <span class="flex items-center justify-center rounded-full tracking-wide text-xs font-bold px-3 py-1 bg-blue-100 text-blue-700">
-                                            OK
-                                        </span>
+                                        <x-badge text="OK" color="blue"/>
                                     @endif
                                 </div>
                             </x-slot>
@@ -138,7 +132,7 @@
                         <x-card.list.table-body-item class="flex items-center col-span-2">
                             <x-slot name="item">
                                 <div class="flex items-center justify-center h-full w-full">
-                                    <span>{{ $discipline->duration }} hrs</span>
+                                    <x-badge :text="$discipline->duration . ' hrs'" color="blue"/>
                                 </div>
                             </x-slot>
                         </x-card.list.table-body-item>
@@ -147,17 +141,11 @@
                             <x-slot name="item">
                                 <div class="flex items-center justify-center h-full w-full">
                                     @if ($this->durationDiff($discipline) > 0)
-                                        <span class="flex items-center justify-center rounded-full tracking-wide text-xs font-bold px-3 py-1 bg-pink-100 text-red-700">
-                                            {{ $this->durationDiff($discipline) }} hrs
-                                        </span>
+                                        <x-badge :text="$this->durationDiff($discipline) . ' hrs'" color="red"/>
                                     @elseif ($this->durationDiff($discipline) < 0)
-                                        <span class="flex items-center justify-center rounded-full tracking-wide text-xs font-bold px-3 py-1 bg-pink-100 text-red-700">
-                                            {{ $this->durationDiff($discipline) }} hrs
-                                        </span>
+                                        <x-badge :text="$this->durationDiff($discipline) . ' hrs'" color="red"/>
                                     @else
-                                        <span class="flex items-center justify-center rounded-full tracking-wide text-xs font-bold px-3 py-1 bg-blue-100 text-blue-700">
-                                            OK
-                                        </span>
+                                        <x-badge text="OK" color="blue"/>
                                     @endif
                                 </div>
                             </x-slot>

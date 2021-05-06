@@ -18,6 +18,8 @@ class Schedule extends Component
 
     public $holidays;
 
+    public $extra;
+
     private $clickable;
 
     private $begin;
@@ -29,7 +31,7 @@ class Schedule extends Component
      *
      * @return void
      */
-    public function __construct($group, $offdays = false)
+    public function __construct($group, $clickable = false, $offdays = false, $extra = false)
     {
         $this->courseClass = $group;
 
@@ -37,11 +39,15 @@ class Schedule extends Component
         
         $this->vacation = $group->allVacationDays();
 
+        $this->clickable = $clickable;
+
         $this->offdays = $offdays 
             ? $this->allOffdays($offdays) 
             : $group->allOffdays();
 
-        $this->clickable = $offdays ? true : false;
+        $this->extra = $extra
+            ? $this->allExtraLessonDays($extra)
+            : $group->allExtraLessonDays();
 
         $this->holidays = Holiday::allForCity($group->city)
              ->keyBy
@@ -141,6 +147,10 @@ class Schedule extends Component
             case 'out':
                 $style = 'bg-white';
                 break;
+            case 'extra':
+                $style = 'bg-teal-500 text-white';
+                $style = $this->clickable ? $style . ' cursor-pointer' : $style;
+                break;
             default:
                 $style = 'bg-blue-500 text-white';
         }
@@ -157,6 +167,11 @@ class Schedule extends Component
         if ($this->offdays->has($date->format('d-m-Y'))) {
             $this->offdays->forget($date->format('d-m-Y'));
             return 'offday';
+        }
+
+        if ($this->extra->has($date->format('d-m-Y'))) {
+            $this->extra->forget($date->format('d-m-Y'));
+            return 'extra';
         }
 
         if ($this->theoreticalDays->has($date->format('d-m-Y'))) {
@@ -188,6 +203,11 @@ class Schedule extends Component
         return $offdays->keyBy->format('d-m-Y');
     }
 
+    private function allExtraLessonDays($extra)
+    {
+        return $extra->keyBy->format('d-m-Y');
+    }
+
     public function dateFormat($date, $format)
     {
         return $date ? $date->format($format) : '';
@@ -199,7 +219,7 @@ class Schedule extends Component
             return false;
         }
 
-        if ($type == 'offday' || $type == 'theoretical') {
+        if ($type == 'offday' || $type == 'theoretical' || $type == 'extra') {
             return true;
         }
 

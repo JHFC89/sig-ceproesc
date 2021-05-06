@@ -12,6 +12,8 @@ class CreateLessonRow extends Component
 
     public $type;
 
+    public $extra = false;
+
     public $duration;
 
     public $disciplines;
@@ -38,6 +40,7 @@ class CreateLessonRow extends Component
         if (isset($this->lesson)) {
             $this->selectedDiscipline = $this->lesson['discipline_id'];
             $this->selectedInstructor = $this->lesson['instructor_id'];
+            $this->extra = $this->lesson['extra'];
             $this->showSelectedDisciplineInstructors($this->selectedDiscipline);
         }
     }
@@ -80,6 +83,7 @@ class CreateLessonRow extends Component
             'duration'      => $this->duration,
             'discipline_id' => $this->selectedDiscipline,
             'instructor_id' => $this->selectedInstructor,
+            'extra'         => $this->extra,
         ];
 
         $this->emitUp('lessonAdded', $this->lesson);

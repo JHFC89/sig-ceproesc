@@ -162,4 +162,9 @@ class CourseClass extends Model
     {
         return $this->belongsToMany(Lesson::class);
     }
+
+    public function extraLessonDays()
+    {
+        return $this->hasMany(ExtraLessonDay::class);
+    }
 }

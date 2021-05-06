@@ -20,9 +20,7 @@
                                 placeholder="Digite o nome da turma"
                                 required
                             >
-                            @error('class.name')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                            <x-validation-error name="class.name"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -44,9 +42,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                            @error('class.city')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                            <x-validation-error name="class.city"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -74,9 +70,7 @@
                                     </a>
                                 @endif
                             </div>
-                            @error('course')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                            <x-validation-error name="course"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -137,9 +131,7 @@
                                 wireMonth="class.end.month"
                                 wireYear="class.end.year"
                             />
-                            @error('duration')
-                                <span class="mt-2 block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                            <x-validation-error name="duration"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -161,9 +153,7 @@
                                 wireMonth="class.intro_end.month"
                                 wireYear="class.intro_end.year"
                             />
-                            @error('intro_end')
-                                <span class="mt-2 block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                            <x-validation-error name="intro_end"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -175,9 +165,7 @@
                                 wireMonth="class.vacation_begin.month"
                                 wireYear="class.vacation_begin.year"
                             />
-                            @error('vacation_begin')
-                                <span class="mt-2 block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                            <x-validation-error name="vacation_begin"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -188,9 +176,7 @@
                                 wireMonth="class.vacation_end.month"
                                 wireYear="class.vacation_end.year"
                             />
-                            @error('vacation_duration')
-                                <span class="mt-2 block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                            <x-validation-error name="vacation_duration"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -232,12 +218,8 @@
                                         max="8"
                                     >
                                 </label>
-                                @error('class.first_day')
-                                    <span class="block text-sm text-red-500">{{ $message }}</span>
-                                @enderror
-                                @error('class.first_day_duration')
-                                    <span class="block text-sm text-red-500">{{ $message }}</span>
-                                @enderror
+                                <x-validation-error name="class.first_day"/>
+                                <x-validation-error name="class.first_day_duration"/>
 
                             </div>
                         </x-slot>
@@ -274,13 +256,8 @@
                                         value="5"
                                     >
                                 </label>
-                                @error('class.second_day')
-                                    <span class="block text-sm text-red-500">{{ $message }}</span>
-                                @enderror
-                                @error('class.second_day_duration')
-                                    <span class="block text-sm text-red-500">{{ $message }}</span>
-                                @enderror
-
+                                <x-validation-error name="class.first_day"/>
+                                <x-validation-error name="class.first_day_duration"/>
                             </div>
                         </x-slot>
                     </x-card.form-input>
@@ -308,12 +285,8 @@
                                     >
                                     <span>Minutos</span>
                                 </label>
-                                @error('class.practical_duration.hours')
-                                    <span class="block text-sm text-red-500">{{ $message }}</span>
-                                @enderror
-                                @error('class.practical_duration.minutes')
-                                    <span class="block text-sm text-red-500">{{ $message }}</span>
-                                @enderror
+                                <x-validation-error name="class.practical_duration.hours"/>
+                                <x-validation-error name="class.practical_duration.minutes"/>
                             </div>
                         </x-slot>
                     </x-card.form-input>
@@ -326,20 +299,17 @@
                                 value="{{ $this->totalTheoreticalDuration() }}"
                                 disabled
                             >
-                            <div class="inline-block text-red-500 pl-2 text-sm">
+                            <div class="inline-flex space-x-2 text-red-500 pl-2 text-sm">
                                 @if ($this->theoreticalDurationDiff() > 0)
-                                    <span>
-                                        *Faltam <span>{{ $this->theoreticalDurationDiff() }}</span> horas</span>
-                                    </span>
+                                    <x-badge :text="'Faltam ' . $this->theoreticalDurationDiff() . ' hrs'" color="red"/>
                                 @elseif ($this->theoreticalDurationDiff() < 0)
-                                    <span>
-                                        *Sobraram <span>{{ $this->theoreticalDurationDiff() * -1 }}</span> horas</span>
-                                    </span>
+                                    <x-badge :text="'Sobraram ' . $this->theoreticalDurationDiff() * -1 . ' hrs'" color="red"/>
+                                @endif
+                                @if ($this->extraLessonDays->count() > 0)
+                                    <x-badge :text="$this->extraLessonDays->count() . ' aulas extras'" color="blue"/>
                                 @endif
                             </div>
-                            @error('theoretical_duration')
-                                <span class="block text-sm text-red-500">{{ $message }}</span>
-                            @enderror
+                            <x-validation-error name="theoretical_duration"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -363,9 +333,11 @@
 
                         <x-course-class.schedule 
                             class="grid grid-cols-3 gap-6 py-4"
-                            wire:click="toggleOffday($event.target.attributes.datetime.value)"
+                            wire:click="toggleDateType($event.target.dataset.type, $event.target.attributes.datetime.value)"
                             :group="$courseClass"
+                            :clickable="true"
                             :offdays="$this->offdayDates()"
+                            :extra="$this->extraLessonDaysDates()"
                         />
 
                     </x-slot>

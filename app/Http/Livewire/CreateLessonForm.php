@@ -28,6 +28,10 @@ class CreateLessonForm extends Component
 
     public $lessons = [];
 
+    public $extraLessons;
+
+    public $extraLessonsDays;
+
     protected $listeners = [
         'preSelectedInstructorsUpdated',
         'lessonAdded', 
@@ -37,6 +41,8 @@ class CreateLessonForm extends Component
     public $createLessonsAvailable = false;
 
     public $createdLessons;
+
+    public $createdExtraLessons;
 
     public function mount($courseClass)
     {
@@ -50,12 +56,19 @@ class CreateLessonForm extends Component
         $this->months = $courseClass->allMonths();
 
         $this->month = $this->months->first();
+
+        $this->extraLessonsDays = $courseClass->allExtraLessonDays();
     }
 
-    public function lessonForDate($date, string $type)
+    public function lessonForDate($date, string $type, $extra = false)
     {
-        return collect($this->lessons)
-            ->filter(function ($lesson) use ($date, $type) {
+        if ($extra) {
+            $lessons = collect($this->extraLessons);
+        } else {
+            $lessons = collect($this->lessons);
+        }
+
+        return $lessons->filter(function ($lesson) use ($date, $type) {
                 return $lesson['type'] === $type 
                     && $lesson['date'] === $date->format('Y-m-d');
         })->first();
@@ -66,8 +79,14 @@ class CreateLessonForm extends Component
         return $this->courseClass
                     ->theoreticalDaysForMonth(
                         $this->month['month'], 
-                        $this->month['year']
+                        $this->month['year'],
+                        false
                     );
+    }
+
+    public function isExtraLesson($date)
+    {
+        return $this->extraLessonsDays->has($date->format('d-m-Y'));
     }
 
     public function nextMonth()
@@ -153,6 +172,12 @@ class CreateLessonForm extends Component
 
     public function lessonAdded($lesson)
     {
+        if ($lesson['extra']) {
+            $this->extraLessons[$lesson['id']] = $lesson;
+
+            return;
+        }
+
         $lesson_id = $lesson['id'];
 
         $prevDiscipline = $this->lessons[$lesson_id]['discipline_id'] ?? false; 
@@ -164,6 +189,12 @@ class CreateLessonForm extends Component
 
     public function lessonReseted($lesson)
     {
+        if ($lesson['extra']) {
+            unset($this->extraLessons[$lesson['id']]);
+
+            return;
+        }
+
         unset($this->lessons[$lesson['id']]);
 
         $this->setDisciplineDuration($lesson['discipline_id']);
@@ -258,6 +289,9 @@ class CreateLessonForm extends Component
     public function createLessons()
     {
         $lessons = $this->courseClass->createLessonsFromArray($this->lessons);
+
+        $this->createdExtraLessons = $this->courseClass
+                                          ->createLessonsFromArray($this->extraLessons);
 
         $this->createdLessons = $lessons;
     }

@@ -26,7 +26,7 @@
             <x-slot name="header">
 
                 <x-card.list.table-header class="col-span-2" name="data"/>
-                <x-card.list.table-header class="col-span-1" name="c.h."/>
+                <x-card.list.table-header class="col-span-1 text-center" name="c.h."/>
                 <x-card.list.table-header class="col-span-4 text-center" name="disciplina"/>
                 <x-card.list.table-header class="col-span-4 text-center" name="instrutor"/>
                 <x-card.list.table-header class="col-span-1" name=""/>
@@ -37,6 +37,19 @@
 
                 @foreach($this->dates() as $date)
 
+                    @if ($this->isExtraLesson($date))
+                    <livewire:create-lesson-row 
+                        :extra="true"
+                        type="first"
+                        :lesson="$this->lessonForDate($date, 'first', true)"
+                        :date="$date"
+                        :disciplines="$this->disciplines"
+                        :preSelectedInstructors="$this->preSelectedInstructors"
+                        :completedDisciplines="$this->completedDisciplines"
+                        :duration="$this->calculateDuration($date, 'first')"
+                        :key="'first-'.$date->format('Y-m-d')"
+                    />
+                    @else
                     <livewire:create-lesson-row 
                         type="first"
                         :lesson="$this->lessonForDate($date, 'first')"
@@ -47,6 +60,7 @@
                         :duration="$this->calculateDuration($date, 'first')"
                         :key="'first-'.$date->format('Y-m-d')"
                     />
+                    @endif
 
                 @endforeach
 
@@ -59,7 +73,7 @@
             <x-slot name="header">
 
                 <x-card.list.table-header class="col-span-2" name="data"/>
-                <x-card.list.table-header class="col-span-1" name="c.h."/>
+                <x-card.list.table-header class="col-span-1 text-center" name="c.h."/>
                 <x-card.list.table-header class="col-span-4 text-center" name="disciplina"/>
                 <x-card.list.table-header class="col-span-4 text-center" name="instrutor"/>
                 <x-card.list.table-header class="col-span-1" name=""/>
@@ -70,6 +84,19 @@
 
                 @foreach($this->dates() as $date)
 
+                    @if ($this->isExtraLesson($date))
+                    <livewire:create-lesson-row 
+                        :extra="true"
+                        type="second"
+                        :lesson="$this->lessonForDate($date, 'second', true)"
+                        :date="$date"
+                        :disciplines="$this->disciplines"
+                        :preSelectedInstructors="$this->preSelectedInstructors"
+                        :completedDisciplines="$this->completedDisciplines"
+                        :duration="$this->calculateDuration($date, 'second')"
+                        :key="'second-'.$date->format('Y-m-d')"
+                    />
+                    @else
                     <livewire:create-lesson-row 
                         type="second"
                         :lesson="$this->lessonForDate($date, 'second')"
@@ -80,6 +107,7 @@
                         :duration="$this->calculateDuration($date, 'second')"
                         :key="'second-'.$date->format('Y-m-d')"
                     />
+                    @endif
 
                 @endforeach
 
@@ -113,7 +141,7 @@
                         Aulas cadastradas com sucesso!
                     </h3>
                     <p class="text-base font-medium text-gray-500">
-                        Foram cadastradas <span class="text-blue-500 font-bold">{{ $createdLessons->count() }}</span> aulas no total.
+                        Foram cadastradas <span class="text-blue-500 font-bold">{{ $createdLessons->count() }}</span> aulas no total e mais <span class="text-blue-500 font-bold">{{ $createdExtraLessons->count() }}</span> aulas extras.
                     </p>
                     <a
                         href="{{ route('classes.lessons.index', ['courseClass' => $courseClass]) }}"
