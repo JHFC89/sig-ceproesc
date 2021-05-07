@@ -155,10 +155,10 @@ trait CourseClassSchedule
         return $firstDaysDuration + $secondDaysDuration + $introDaysDuration;
     }
 
-    public function totalPracticalDaysDuration()
+    public function totalPracticalDaysDuration($offdays = false)
     {
         // return minutes
-        return $this->allPracticalDays()->count() * $this->practical_duration;
+        return $this->allPracticalDays($offdays)->count() * $this->practical_duration;
     }
 
     public function allMonths()

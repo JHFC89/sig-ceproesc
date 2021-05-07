@@ -222,8 +222,7 @@ class CourseClassTest extends TestCase
         $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
         $courseClass->save(); 
         $courseClass->offdays()->createMany([
-            ['date' => Carbon::create(2021, 4, 30)],
-            ['date' => Carbon::create(2021, 6, 11)],
+            ['date' => Carbon::create(2021, 6, 1)],
         ]);
         Holiday::factory()->create(['date' => Carbon::create(2021, 4, 21)]);
         Holiday::factory()->create(['date' => Carbon::create(2021, 5, 1),]);
@@ -251,7 +250,6 @@ class CourseClassTest extends TestCase
             Carbon::create(2021, 5, 26),
             Carbon::create(2021, 5, 27),
             Carbon::create(2021, 5, 31),
-            Carbon::create(2021, 6, 1),
             Carbon::create(2021, 6, 2),
             Carbon::create(2021, 6, 3),
             Carbon::create(2021, 6, 7),

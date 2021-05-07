@@ -179,13 +179,15 @@ class CourseClassForm extends Component
 
         $this->generateSchedule();
 
-        if ($type === 'theoretical') {
+        if ($type === 'practical') {
             $this->addOffday($date);
-        } elseif ($type === 'offday') {
-            $this->removeOffday($date);
+        } elseif ($type === 'theoretical') {
             $this->addExtraLessonDay($date);
         } elseif ($type === 'extra') {
             $this->removeExtraLessonDay($date);
+            $this->addOffday($date);
+        } elseif ($type === 'offday') {
+            $this->removeOffday($date);
         }
 
         $this->run = true;
@@ -220,11 +222,7 @@ class CourseClassForm extends Component
 
     private function addOffday($date)
     {
-        $formattedDate = Carbon::parse($date)->format('d-m-Y');
-
-        if ($this->courseClass->allTheoreticalDays()->has($formattedDate)) {
-            $this->offdays->push($date);
-        }
+        $this->offdays->push($date);
     }
 
     private function addExtraLessonDay($date)
@@ -268,9 +266,11 @@ class CourseClassForm extends Component
         if (! isset($this->courseClass->begin)) {
             return;
         }
-        
+
         if ($this->showSchedule) {
-            return $this->courseClass->totalPracticalDaysDuration() / 60;
+            $offdays = $this->offdays->mapInto(Carbon::class);
+
+            return $this->courseClass->totalPracticalDaysDuration($offdays) / 60;
         }
     }
 

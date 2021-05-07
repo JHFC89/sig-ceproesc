@@ -151,8 +151,10 @@ class Schedule extends Component
                 $style = 'bg-teal-500 text-white';
                 $style = $this->clickable ? $style . ' cursor-pointer' : $style;
                 break;
-            default:
+            case 'practical':
                 $style = 'bg-blue-500 text-white';
+                $style = $this->clickable ? $style . ' cursor-pointer' : $style;
+                break;
         }
 
         return [
@@ -196,6 +198,8 @@ class Schedule extends Component
         if (! $date->between($this->begin, $this->end)) {
             return 'out';
         }
+
+        return 'practical';
     }
 
     private function allOffdays($offdays)
@@ -219,7 +223,7 @@ class Schedule extends Component
             return false;
         }
 
-        if ($type == 'offday' || $type == 'theoretical' || $type == 'extra') {
+        if (in_array($type, ['offday', 'theoretical', 'extra', 'practical'])) {
             return true;
         }
 
