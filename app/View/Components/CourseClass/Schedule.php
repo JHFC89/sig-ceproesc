@@ -70,8 +70,8 @@ class Schedule extends Component
 
     public function months()
     {
-        $months = $this->courseClass->begin->range(
-            $this->courseClass->end, 
+        $months = $this->courseClass->begin->startOfMonth()->range(
+            $this->courseClass->end->startOfMonth(), 
             1, 
             'month'
         );
