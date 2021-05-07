@@ -121,6 +121,7 @@
                                 wireMonth="class.begin.month"
                                 wireYear="class.begin.year"
                             />
+                            <x-validation-error name="class.begin.day"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -132,6 +133,7 @@
                                 wireYear="class.end.year"
                             />
                             <x-validation-error name="duration"/>
+                            <x-validation-error name="class.end.day"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -154,6 +156,7 @@
                                 wireYear="class.intro_end.year"
                             />
                             <x-validation-error name="intro_end"/>
+                            <x-validation-error name="class.intro_end.day"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -166,6 +169,7 @@
                                 wireYear="class.vacation_begin.year"
                             />
                             <x-validation-error name="vacation_begin"/>
+                            <x-validation-error name="class.vacation_begin.day"/>
                         </x-slot>
                     </x-card.form-input>
 
@@ -177,6 +181,7 @@
                                 wireYear="class.vacation_end.year"
                             />
                             <x-validation-error name="vacation_duration"/>
+                            <x-validation-error name="class.vacation_end.day"/>
                         </x-slot>
                     </x-card.form-input>
 

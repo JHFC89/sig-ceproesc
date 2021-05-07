@@ -38,6 +38,11 @@ class CourseClassForm extends Component
         'class.city'                        => 'required',
         'course'                            => 'required',
         'class.begin'                       => 'required',
+        'class.begin.day'                   => 'required|integer|min:1|max:31',
+        'class.end.day'                     => 'required|integer|min:1|max:31',
+        'class.intro_end.day'               => 'required|integer|min:1|max:31',
+        'class.vacation_begin.day'          => 'required|integer|min:1|max:31',
+        'class.vacation_end.day'            => 'required|integer|min:1|max:31',
         'class.first_day'                   => 'required|different:class.second_day',
         'class.second_day'                  => 'required|different:class.first_day',
         'class.first_day_duration'          => 'required|integer|between:1,6',
@@ -158,6 +163,10 @@ class CourseClassForm extends Component
 
     private function date(array $date)
     {
+        if ($date['day'] < 1) {
+            $date['day'] = 1;
+        }
+
         return Carbon::create($date['year'], $date['month'], $date['day']);
     }
 

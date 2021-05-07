@@ -210,6 +210,11 @@ return [
         'class.second_day_duration' => 'carga horária do segundo dia da semana',
         'class.practical_duration.hours' => 'horas de carga horária prática',
         'class.practical_duration.minutes' => 'minutos de carga horária prática',
+        'class.begin.day'   => 'dia de início da turma',
+        'class.end.day'     => 'dia do término da turma',
+        'class.intro_end.day' => 'dia do término da introdução',
+        'class.vacation_begin.day' => 'dia de início das férias',
+        'class.vacation_end.day' => 'dia do término das férias',
     ],
 
 ];
