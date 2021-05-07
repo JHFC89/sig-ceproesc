@@ -8,7 +8,7 @@
                             $date = $dateType($date);
                         @endphp
                         <td 
-                            class="py-3 px-4 border-2 border-white rounded-md {{ $date['style'] }}"
+                            class="py-2 px-3 border-2 border-white rounded-md {{ $date['style'] }}"
                             datetime="{{ $dateFormat($date['date'], 'Y-m-d') }}"
                             data-type="{{ $date['type'] }}"
                             @if ($isClickable($date['type']))

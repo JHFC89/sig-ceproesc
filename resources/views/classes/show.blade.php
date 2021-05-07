@@ -130,7 +130,7 @@
 
         <div class="px-6 py-6 mt-4 capitalize bg-white shadow divide-y rounded-md">
             <x-course-class.schedule 
-                class="grid grid-cols-3 gap-6"
+                class="mx-auto max-w-screen-xl grid gap-6 lg:grid-cols-2 xl:grid-cols-3"
                 :group="$courseClass"
             />
         </div>
