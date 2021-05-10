@@ -53,6 +53,14 @@
                     <x-card.list.table-body-item class="flex items-center col-span-2">
                         <x-slot name="item">
                             <div class="flex justify-end space-x-2 w-full">
+                                @can('update', $lesson)
+                                <a 
+                                    href="{{ route('lessons.edit', ['lesson' => $lesson]) }}"
+                                    class="text-gray-300 hover:text-blue-300"
+                                >
+                                    <x-icons.edit class="w-6"/>
+                                </a>
+                                @endcan
                                 <a 
                                     href="{{ route('lessons.show', ['lesson' => $lesson]) }}"
                                     class="text-gray-300 hover:text-blue-300"

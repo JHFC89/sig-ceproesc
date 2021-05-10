@@ -51,4 +51,13 @@ class LessonController extends Controller
 
         return view('classes.lessons.create', compact('courseClass'));
     }
+
+    public function edit(Lesson $lesson)
+    {
+        abort_if(request()->user()->cannot('update', $lesson), 401);
+
+        $lesson->load('discipline.instructors', 'instructor');
+
+        return view('lessons.edit', compact('lesson'));
+    }
 }

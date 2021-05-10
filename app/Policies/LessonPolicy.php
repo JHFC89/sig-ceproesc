@@ -79,7 +79,7 @@ class LessonPolicy
         return $user->isInstructor() || $user->isCoordinator();
     }
 
-    public function createRegister(user $user, lesson $lesson)
+    public function createRegister(User $user, Lesson $lesson)
     {
         if ($this->isNotAnInstructor($user)) {
             return response::deny($this->message, 401);
@@ -100,19 +100,24 @@ class LessonPolicy
         return true;
     }
 
-    public function storeDraft(user $user, lesson $lesson)
+    public function storeDraft(User $user, Lesson $lesson)
     {
         $this->draft = true;
         
         return $this->storeRegisterOrDraft($user, $lesson);
     }
 
-    public function storeRegister(user $user, lesson $lesson)
+    public function storeRegister(User $user, Lesson $lesson)
     {
         return $this->storeRegisterOrDraft($user, $lesson);
     }
 
-    private function storeRegisterOrDraft(user $user, lesson $lesson)
+    public function update(User $user, Lesson $lesson)
+    {
+        return $user->isCoordinator() && ! $lesson->isRegistered();
+    }
+
+    private function storeRegisterOrDraft(User $user, Lesson $lesson)
     {
         if ($this->isNotAnInstructor($user)) {
             return response::deny($this->message, 401);
@@ -133,7 +138,7 @@ class LessonPolicy
         return true;
     }
 
-    private function isNotAnInstructor(user $user)
+    private function isNotAnInstructor(User $user)
     {
         $this->message = 'Action not authorized for this user';
 

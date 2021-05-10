@@ -11,6 +11,7 @@ use App\Http\Controllers\{
     CompanyController,
     HolidayController,
     EmployerController,
+    LessonDateController,
     InstructorController,
     EvaluationController,
     DisciplineController,
@@ -26,6 +27,7 @@ use App\Http\Controllers\{
     NoviceFrequencyController,
     PersonalProfileController,
     EvaluationGradeController,
+    LessonInstructorController,
     AdminCoordinatorController,
     ForWeekLessonListController,
     ForTodayLessonListController,
@@ -223,6 +225,15 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('novices/{registration}/frequencies', [
         NoviceFrequencyController::class,'show'
     ])->name('novices.frequencies.show');
+
+    Route::get('lessons/{lesson}/edit', [LessonController::class, 'edit'])
+        ->name('lessons.edit');
+    Route::patch('lesson-dates/{lesson}', [
+        LessonDateController::class,'update'
+    ])->name('lesson-dates.update');
+    Route::patch('lesson-instructors/{lesson}', [
+        LessonInstructorController::class,'update'
+    ])->name('lesson-instructors.update');
 });
 
 Route::get('/dashboard', function () {

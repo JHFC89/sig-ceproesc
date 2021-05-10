@@ -162,4 +162,13 @@ class LessonFactory extends Factory
             ];
         });
     }
+
+    public function discipline(Discipline $discipline)
+    {
+        return $this->state(function (array $attributes) use ($discipline) {
+            return [
+                'discipline_id' => $discipline->id,
+            ];
+        });
+    }
 }
