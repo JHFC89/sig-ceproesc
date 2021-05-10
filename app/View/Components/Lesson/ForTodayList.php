@@ -9,11 +9,15 @@ class ForTodayList extends Component
 {
     public $lessons;
 
+    public $hasLesson;
+
     public $title;
 
     public $columnSize;
 
     public $hideRegistered;
+
+    public $alwaysShow;
 
     protected $user;
 
@@ -22,7 +26,7 @@ class ForTodayList extends Component
      *
      * @return void
      */
-    public function __construct($user, $title = '', $hideRegistered = false)
+    public function __construct($user, $title = '', $hideRegistered = false, $alwaysShow = true)
     {
         $this->user = $user;
 
@@ -30,9 +34,13 @@ class ForTodayList extends Component
 
         $this->setLessons();
 
+        $this->hasLesson = $this->lessons->count() > 0;
+
         $this->setTitle($title);
 
         $this->setColumnsSizes();
+
+        $this->alwaysShow = $alwaysShow;
     }
 
     /**
@@ -73,11 +81,13 @@ class ForTodayList extends Component
 
     private function setTitle(string $title)
     {
-        if ($this->lessons->count() === 0) {
-            $this->title = 'Nenhuma aula para hoje';
-        } else {
+        if ($this->hasLesson) {
             $this->title = $title;
+
+            return;
         }
+
+        $this->title = 'Nenhuma aula para hoje';
     }
     
     private function setColumnsSizes()

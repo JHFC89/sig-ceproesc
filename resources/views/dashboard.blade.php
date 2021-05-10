@@ -2,9 +2,6 @@
 
 @section('title', 'Início')
 @section('content')
-<div class="flex space-x-8">
-    <div class="w-1/2">
-        <x-lesson.for-today-list title="aulas de hoje" :hideRegistered="true" :user="request()->user()"/>
-    </div>
-</div>
+    <x-dashboard.novice :show="request()->user()->isNovice()"/> 
+    <x-dashboard.instructor :show="request()->user()->isInstructor()"/> 
 @endsection

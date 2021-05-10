@@ -143,6 +143,35 @@ class CourseClass extends Model
         return $this->lessons->isNotEmpty();
     }
 
+    public function noviceFrequency(User $novice)
+    {
+        if (! $this->isSubscribed($novice)) {
+            return;
+        };
+
+        $extraLessons = $this->extraLessonDays->map->format('Y-m-d')->all();
+
+        $registeredLessonsDuration = (int) $this->lessons()
+                                                ->registered()
+                                                ->notExtra($extraLessons)
+                                                ->totalDuration();
+
+        if ($registeredLessonsDuration === 0) {
+            return false;
+        }
+
+        $presenceDuration = (int) $novice->lessons()
+                                         ->registered()
+                                         ->wherePresent($novice->id)
+                                         ->totalDuration();
+
+        $frequency = ($presenceDuration * 100)/$registeredLessonsDuration;
+
+        $frequency = sig_format_decimal_number($frequency);
+
+        return number_format($frequency, 2, ',', '.');
+    }
+
     public function offdays()
     {
         return $this->hasMany(Offday::class);

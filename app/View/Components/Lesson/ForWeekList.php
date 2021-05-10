@@ -9,6 +9,8 @@ class ForWeekList extends Component
 {
     public $lessons;
 
+    public $hasLesson;
+
     public $title;
 
     public $columnSize;
@@ -25,6 +27,8 @@ class ForWeekList extends Component
         $this->user = $user;
 
         $this->setLessons();
+
+        $this->hasLesson = $this->lessons->count() > 0;
 
         $this->setTitle($title);
 
@@ -85,11 +89,13 @@ class ForWeekList extends Component
 
     private function setTitle(string $title)
     {
-        if ($this->lessons->count() === 0) {
-            $this->title = 'Nenhuma aula para esta semana';
-        } else {
+        if ($this->hasLesson) {
             $this->title = $title;
+
+            return;
         }
+
+        $this->title = 'Nenhuma aula para esta semana';
     }
 
     private function setColumnsSizes()

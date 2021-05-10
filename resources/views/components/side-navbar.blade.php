@@ -53,6 +53,11 @@
                     <span class="ml-10 group-hover:text-gray-400">todas</span>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('novices.frequencies.show', ['registration' => Auth::user()->registration]) }}" class="flex items-center px-2 py-1 text-sm group rounded-md {{ request()->routeIs('novices.frequencies.show') ? 'font-medium text-gray-100' : '' }}">
+                    <span class="ml-10 group-hover:text-gray-400">frequência</span>
+                </a>
+            </li>
             @else
             <li>
                 <a href="#" class="flex items-center px-2 py-2 group rounded-md {{ request()->routeIs('lessons.*') ? 'font-medium text-gray-100' : '' }}">

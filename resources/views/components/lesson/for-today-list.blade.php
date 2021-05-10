@@ -1,3 +1,4 @@
+@if ($hasLesson)
 <x-card.list.table-layout :title="$title">
     <x-slot name="header">
         <x-card.list.table-header class="{{ $columnSize['class'] }}" name="turma"/>
@@ -68,3 +69,9 @@
         @endforeach
     </x-slot>
 </x-card.list.table-layout>
+@elseif ($alwaysShow)
+<x-card.panel-layout :title="$title">
+    <x-slot name="content">
+    </x-slot>
+</x-card.panel-layout>
+@endif

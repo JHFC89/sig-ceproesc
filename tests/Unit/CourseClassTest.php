@@ -657,6 +657,107 @@ class CourseClassTest extends TestCase
         $this->fail('Trying to create Lessons for a CourseClass that already have Lessons should throw an exception.');
     }
 
+    /** @test */
+    public function can_get_a_novice_frequency()
+    {
+        $lessons = Lesson::factory()->duration(2)->count(5);
+        $courseClass = CourseClass::factory()->hasNovices(1)->has($lessons)->create();
+        $novice = $courseClass->novices->first()->turnIntoNovice()->refresh();
+        $courseClass->subscribe($novice);
+        $courseClass->lessons->each(function ($lesson, $key) use ($novice) {
+            if ($key == 4) {
+                $lesson->registerFor($novice)->absent()->complete()->register();
+
+                return;
+            }
+
+            $lesson->registerFor($novice)->present()->complete()->register();
+        });
+        $this->assertCount(5, $courseClass->lessons);
+        $this->assertEquals(10, $courseClass->lessons->sum('hourly_load'));
+        $this->assertTrue($courseClass->isSubscribed($novice));
+        $this->assertTrue($courseClass->lessons->every->isEnrolled($novice));
+        $this->assertTrue($courseClass->lessons->every->isRegistered());
+        
+        $result = $courseClass->noviceFrequency($novice);
+
+        $this->assertEquals('80,00', $result);
+    }
+
+    /** @test */
+    public function novice_frequency_must_ignore_extra_lessons()
+    {
+        $lessons = Lesson::factory()->duration(2)->count(5);
+        $courseClass = CourseClass::factory()->hasNovices(1)
+                                             ->has($lessons)
+                                             ->create();
+        $novice = $courseClass->novices->first()->turnIntoNovice()->refresh();
+        $courseClass->subscribe($novice);
+
+        // novice only present in the first lesson but have 100% frequency 
+        // because the others are extra lessons
+        $date = now()->subDays(3);
+        $courseClass->lessons[0]->update(['date' => $date]);
+        $courseClass->lessons[0]->registerFor($novice)
+                                ->present()
+                                ->complete()
+                                ->register();
+        $courseClass->lessons[1]->update(['date' => $date->addDay()]);
+        $courseClass->lessons[1]->registerFor($novice)
+                                ->absent()
+                                ->complete()
+                                ->register();
+        $courseClass->lessons[2]->update(['date' => $date->addDay()]);
+        $courseClass->lessons[2]->registerFor($novice)
+                                ->absent()
+                                ->complete()
+                                ->register();
+        $courseClass->lessons[3]->update(['date' => $date->addDay()]);
+        $courseClass->lessons[3]->registerFor($novice)
+                                ->absent()
+                                ->complete()
+                                ->register();
+        $courseClass->lessons[4]->update(['date' => $date->addDay()]);
+        $courseClass->lessons[4]->registerFor($novice)
+                                ->absent()
+                                ->complete()
+                                ->register();
+        $this->assertCount(5, $courseClass->lessons);
+        $this->assertEquals(10, $courseClass->lessons->sum('hourly_load'));
+        $this->assertTrue($courseClass->isSubscribed($novice));
+        $this->assertTrue($courseClass->lessons->every->isEnrolled($novice));
+        $this->assertTrue($courseClass->lessons->every->isRegistered());
+
+        // make the last 4 lessons be extra lessons
+        $lessons = $courseClass->lessons;
+        $courseClass->extraLessonDays()->createMany([
+            ['date' => $lessons[1]->date->toString()],
+            ['date' => $lessons[2]->date->toString()],
+            ['date' => $lessons[3]->date->toString()],
+            ['date' => $lessons[4]->date->toString()],
+        ]);
+        
+        $result = $courseClass->noviceFrequency($novice);
+
+        $this->assertEquals('100,00', $result);
+    }
+
+    /** @test */
+    public function novice_frequency_must_return_false_if_there_is_no_registered_lesson()
+    {
+        $lessons = Lesson::factory()->duration(2)->count(5);
+        $courseClass = CourseClass::factory()->hasNovices(1)->has($lessons)->create();
+        $novice = $courseClass->novices->first()->turnIntoNovice()->refresh();
+        $courseClass->subscribe($novice);
+        $this->assertCount(5, $courseClass->lessons);
+        $this->assertTrue($courseClass->lessons->every->isEnrolled($novice));
+        $this->assertFalse($courseClass->lessons->every->isRegistered());
+        
+        $result = $courseClass->noviceFrequency($novice);
+
+        $this->assertFalse($result);
+    }
+
     private function testCourseClass()
     {
         $courseClass = new CourseClass;

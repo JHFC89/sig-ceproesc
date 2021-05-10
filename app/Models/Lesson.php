@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Exceptions\LessonRegisteredException;
 use App\Exceptions\NoviceNotEnrolledException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 
 class Lesson extends Model
 {
@@ -180,7 +181,7 @@ class Lesson extends Model
         $this->presenceToRegister = null;
         $this->observationToRegister = null;
 
-        return;
+        return $this;
     }
 
     public function observationFor(User $novice)
@@ -315,6 +316,28 @@ class Lesson extends Model
     public function scopeForNovice($query, User $novice)
     {
         return $query->enrolled($novice->id);
+    }
+
+    public function scopeRegistered($query)
+    {
+        return $query->whereNotNull('registered_at');
+    }
+
+    public function scopeTotalDuration($query)
+    {
+        return $query->sum('hourly_load');
+    }
+
+    public function scopeNotExtra($query, array $dates)
+    {
+        return $query->whereNotIn(DB::raw("DATE(date)"), $dates);
+    }
+
+    public function scopeWherePresent($query, $novice)
+    {
+        return $query->whereHas('novices', function (Builder $query) use ($novice) {
+            $query->where('user_id', $novice)->where('present', true);
+        });
     }
 
     public function setTestData()

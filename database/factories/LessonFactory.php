@@ -30,7 +30,7 @@ class LessonFactory extends Factory
             ])->create(),
             'date'          => Carbon::parse('+2 weeks'),
             'discipline_id' => Discipline::factory()->create(),
-            'hourly_load'   => '123hr',
+            'hourly_load'   => 123,
             'type'          => 'first',
         ];
     }
@@ -141,6 +141,24 @@ class LessonFactory extends Factory
         return $this->state(function (array $attributes) use ($instructor) {
             return [
                 'instructor_id' => $instructor,
+            ];
+        });
+    }
+
+    public function duration(int $duration)
+    {
+        return $this->state(function (array $attributes) use ($duration) {
+            return [
+                'hourly_load' => $duration,
+            ];
+        });
+    }
+
+    public function date($date)
+    {
+        return $this->state(function (array $attributes) use ($date) {
+            return [
+                'date' => $date,
             ];
         });
     }

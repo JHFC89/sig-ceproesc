@@ -130,6 +130,12 @@
             >
                 ver aulas
             </a>
+            <a
+                href="{{ route('novices.frequencies.show', ['registration' => $registration]) }}"
+                class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown"
+            >
+                ver frequência
+            </a>
             @endif
         @endif
 

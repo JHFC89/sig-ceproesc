@@ -23,6 +23,7 @@ use App\Http\Controllers\{
     SendInvitationController,
     AccountProfileController,
     LessonRegisterController,
+    NoviceFrequencyController,
     PersonalProfileController,
     EvaluationGradeController,
     AdminCoordinatorController,
@@ -218,6 +219,10 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     Route::get('send-invitation/{invitation}', SendInvitationController::class)
         ->name('send-invitation');
+
+    Route::get('novices/{registration}/frequencies', [
+        NoviceFrequencyController::class,'show'
+    ])->name('novices.frequencies.show');
 });
 
 Route::get('/dashboard', function () {
