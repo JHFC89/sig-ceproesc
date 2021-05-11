@@ -52,4 +52,5 @@
         </x-slot>
 
     </x-card.list.table-layout>
+
 @endsection

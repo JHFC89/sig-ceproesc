@@ -55,7 +55,7 @@
 
     </x-card.list.description-layout>
 
-    <div class="flex justify-end mt-4 space-x-2">
+    <div class="flex flex-col space-y-3 justify-end text-center mt-4 lg:flex-row lg:space-y-0 lg:space-x-2">
 
         <x-user-management :user="$registration->user"/>
 

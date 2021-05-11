@@ -40,9 +40,9 @@
         </x-slot>
     </x-card.list.description-layout>
 
-    <div class="flex w-full space-x-4">
+    <div class="flex flex-col w-full space-y-8 lg:flex-row lg:space-x-4 lg:space-y-0">
 
-        <x-card.list.table-layout class="w-1/2" title="disciplinas módulo básico">
+        <x-card.list.table-layout class="lg:w-1/2" title="disciplinas módulo básico">
 
             <x-slot name="header">
 
@@ -82,7 +82,7 @@
 
         </x-card.list.table-layout>
 
-        <x-card.list.table-layout class="w-1/2" title="disciplinas módulo específico">
+        <x-card.list.table-layout class="lg:w-1/2" title="disciplinas módulo específico">
 
             <x-slot name="header">
 
@@ -128,7 +128,7 @@
 
         <h2 class="text-xl font-medium text-gray-700 capitalize">cronograma</h2>
 
-        <div class="px-6 py-6 mt-4 capitalize bg-white shadow divide-y rounded-md">
+        <div class="py-6 mt-4 capitalize bg-white shadow divide-y rounded-md lg:px-6">
             <x-course-class.schedule 
                 class="mx-auto max-w-screen-xl grid gap-6 lg:grid-cols-2 xl:grid-cols-3"
                 :group="$courseClass"

@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <x-card.list.table-layout title="aulas">
+    <x-card.list.table-layout title="aulas" class="hidden lg:block">
 
         <x-slot name="header">
             <x-card.list.table-header class="col-span-1" name="data"/>
@@ -78,6 +78,39 @@
         </x-slot>
 
     </x-card.list.table-layout>
+
+    <div class="lg:hidden">
+
+        <div class="mb-4 -mt-8">
+            {{ $lessons->links() }}
+        </div>
+
+        <x-card.list.description-layout title="aulas">
+
+
+            <x-slot name="items">
+
+
+                @foreach($lessons as $lesson)
+                <div class="pt-8 pb-2 font-medium text-center">
+                    <a href="{{ route('lessons.show', ['lesson' => $lesson]) }}" class="inline-block pr-2 font-medium text-blue-500 normal-case underline hover:text-blue-700">
+                        Aula: {{ $lesson->formatted_date }} - {{ $lesson->formattedType }} horário
+                    </a>
+                </div>
+                <x-card.list.description-item
+                    label="disciplina"
+                    :description="$lesson->discipline->name"
+                />
+                <x-card.list.description-item
+                    label="instrutor"
+                    :description="$lesson->instructor->name"
+                />
+                @endforeach
+
+            </x-slot>
+
+        </x-card.list.description-layout>
+    </div>
 
     {{ $lessons->links() }}
 

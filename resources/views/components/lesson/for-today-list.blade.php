@@ -1,5 +1,5 @@
 @if ($hasLesson)
-<x-card.list.table-layout :title="$title">
+<x-card.list.table-layout :title="$title" class="hidden lg:block">
     <x-slot name="header">
         <x-card.list.table-header class="{{ $columnSize['class'] }}" name="turma"/>
         <x-card.list.table-header class="{{ $columnSize['discipline'] }}" name="disciplina"/>
@@ -70,8 +70,31 @@
     </x-slot>
 </x-card.list.table-layout>
 @elseif ($alwaysShow)
-<x-card.panel-layout :title="$title">
-    <x-slot name="content">
-    </x-slot>
-</x-card.panel-layout>
+<div> 
+    <x-card.panel-layout :title="$title">
+        <x-slot name="content">
+        </x-slot>
+    </x-card.panel-layout>
+</div>
+@endif
+
+@if ($hasLesson)
+<div class="lg:hidden">
+    <x-card.list.description-layout :title="$title">
+
+        <x-slot name="items">
+
+            @foreach($lessons as $lesson)
+            <x-card.list.description-item
+                :label="$lesson->formatted_date"
+                type="link"
+                :href="route('lessons.show', ['lesson' => $lesson])"
+                :description="$lesson->discipline->name"
+            />
+            @endforeach
+
+        </x-slot>
+
+    </x-card.list.description-layout>
+</div>
 @endif

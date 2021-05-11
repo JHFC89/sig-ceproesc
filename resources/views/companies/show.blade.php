@@ -48,7 +48,7 @@
         </x-slot>
     </x-card.list.description-layout>
 
-    <div class="flex justify-end mt-4 space-x-2">
+    <div class="flex flex-col space-y-3 justify-end text-center mt-4 lg:flex-row lg:space-y-0 lg:space-x-2">
         @can('viewAny', App\Models\Company::class)
         <a
             href="{{ route('companies.employers.index', ['company' => $company]) }}"

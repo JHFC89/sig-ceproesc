@@ -14,15 +14,15 @@
 </head>
 <body class="flex h-screen overflow-hidden antialiased">
 
-    <x-side-navbar/>
+    <x-side-navbar class="hidden lg:block"/>
 
     <div class="w-full h-full overflow-y-auto bg-gray-200">
 
         @include('layouts.navigation')
 
-        <main class="w-full">
+        <main class="w-full mt-12 lg:mt-0">
 
-            <div class="px-10 py-10 space-y-8">
+            <div class="px-2 py-10 space-y-8 lg:px-10">
                 @yield('content')
             </div>
 

@@ -1,24 +1,17 @@
-<nav x-data="{ open: false }" class="bg-white shadow">
+<nav x-data="{ open: false }" class="w-full fixed z-10 bg-white shadow lg:static">
     <!-- Primary Navigation Menu -->
     <div class="px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
-                <div class="flex items-center flex-shrink-0">
-                    <a href="{{ route('dashboard') }}">
+                <div class="flex items-center flex-shrink-0 lg:hidden">
+                    <a href="{{ route('dashboard') }}" class="flex items-center">
                         <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
+                        <span class="ml-2 text-lg uppercase font-medium">- ceproesc</span>
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                        Início
-                    </x-nav-link>
-                    <x-nav-link href="#" :active="request()->routeIs('lessons.show')">
-                        Aulas
-                    </x-nav-link>
-                </div>
             </div>
 
             <!-- Settings Dropdown -->
@@ -65,11 +58,6 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                Início
-            </x-responsive-nav-link>
-        </div>
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
@@ -99,5 +87,8 @@
                 </form>
             </div>
         </div>
+
+        <x-side-navbar class="fixed w-full lg:hidden text-lg"/>
+
     </div>
 </nav>

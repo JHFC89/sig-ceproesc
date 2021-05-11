@@ -55,7 +55,7 @@
                         name="password" 
                         placeholder="Digite sua nova senha"
                     >
-                    <span class="ml-2 text-sm text-gray-600 normal-case">A senha deve ter pelo menos 6 caracteres e ao menos uma letra maiúscula, minúscula e um número.</span>
+                    <span class="text-sm text-gray-600 text-justify normal-case lg:text-left">A senha deve ter pelo menos 6 caracteres e ao menos uma letra maiúscula, minúscula e um número.</span>
                     <x-validation-error name="password"/>
                 </x-slot>
             </x-card.form-input>

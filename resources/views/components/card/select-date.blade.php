@@ -12,9 +12,9 @@
 'yearValue' => now()->format('Y'),
 ])
 
-<div class="space-x-4">
+<div class="flex flex-col space-y-2 lg:space-y-0 lg:flex-row lg:space-x-4">
     <label class="inline-flex items-center space-x-2">
-        <span>dia</span>
+        <span class="w-10 lg:w-auto">dia</span>
         <input 
             @if ($wireDay) wire:model="{{ $wireDay }}" @endif
             @if ($disabled) disabled @endif
@@ -28,7 +28,7 @@
         >
     </label>
     <label class="inline-flex items-center space-x-2">
-        <span>mês</span>
+        <span class="w-10 lg:w-auto">mês</span>
         <select 
             @if ($wireMonth) wire:model="{{ $wireMonth }}" @endif
             @if ($disabled) disabled @endif
@@ -51,7 +51,7 @@
         </select>
     </label>
     <label class="inline-flex items-center space-x-2">
-        <span>ano</span>
+        <span class="w-10 lg:w-auto">ano</span>
         <input
             @if ($wireYear) wire:model="{{ $wireYear }}" @endif
             @if ($disabled) disabled @endif
