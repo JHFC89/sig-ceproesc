@@ -115,7 +115,31 @@ class ViewCourseClassTest extends TestCase
     }
     
     /** @test */
-    public function instructor_cannot_view_a_course_class()
+    public function instructor_can_view_a_course_class_he_is_teaching_in()
+    {
+        $instructor = User::fakeInstructor();
+        $discipline = Discipline::factory()->create();
+        $courseClass = CourseClass::factory()->forCourse()->create();
+        $courseClass->createLessonsFromArray([
+            [
+                'id' => 'lesson A',
+                'date' => now(),
+                'type' => 'first',
+                'duration' => 2,
+                'instructor_id' => $instructor->id,
+                'discipline_id' => $discipline->id,
+            ],
+        ]);
+
+        $response = $this->actingAs($instructor)->get(route('classes.show', [
+            'courseClass' => $courseClass
+        ]));
+
+        $response->assertOk();
+    }
+    
+    /** @test */
+    public function instructor_cannot_view_a_course_class_he_is_not_teaching_in()
     {
         $instructor = User::factory()
             ->hasRoles(1, ['name' => 'instructor'])

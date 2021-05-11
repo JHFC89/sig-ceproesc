@@ -274,4 +274,26 @@ class LessonRequestTest extends TestCase
         $this->assertTrue($resultForRequester);
         $this->assertFalse($resultForNotRequester);
     }
+
+    /** @test */
+    public function get_an_instructor_not_solved_requests()
+    {
+        $lessonA = Lesson::factory()->expired()->hasRequests(1)->create();
+        $instructor = $lessonA->instructor;
+        $unsolvedRequest = $lessonA->openRequest();
+        $unsolvedRequest->release();
+        $lessonB = Lesson::factory()->instructor($instructor)->expired()->hasRequests(1)->create();
+        $solvedRequest = $lessonB->openRequest();
+        $solvedRequest->release();
+        $lessonB->register();
+        $solvedRequest->solve($lessonB);
+        $this->assertFalse($unsolvedRequest->isSolved());
+        $this->assertTrue($solvedRequest->isSolved());
+
+        $unsolvedRequests = LessonRequest::unsolvedRequestsForInstructor($instructor);
+
+        $this->assertCount(1, $unsolvedRequests);
+        $this->assertTrue($unsolvedRequest->is($unsolvedRequests->first()));
+    }
+
 }

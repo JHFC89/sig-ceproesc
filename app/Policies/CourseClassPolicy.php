@@ -18,7 +18,7 @@ class CourseClassPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->isCoordinator();
+        return $user->isCoordinator() || $user->isInstructor();
     }
 
     /**
@@ -32,6 +32,8 @@ class CourseClassPolicy
     {
         if ($user->isNovice()) {
             return $courseClass->isSubscribed($user);
+        } elseif ($user->isInstructor()) {
+            return $courseClass->instructors()->contains($user);
         }
 
         return $user->isCoordinator();

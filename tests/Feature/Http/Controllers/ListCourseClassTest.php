@@ -46,13 +46,13 @@ class ListCourseClassTest extends TestCase
     }
 
     /** @test */
-    public function instructor_cannot_see_a_list_of_courses()
+    public function instructor_can_see_a_list_of_courses()
     {
         $instructor = User::fakeInstructor();
 
         $response = $this->actingAs($instructor)->get(route('classes.index'));
 
-        $response->assertUnauthorized();
+        $response->assertOk();
     }
 
     /** @test */

@@ -1,5 +1,5 @@
 @if ($hasLesson)
-<x-card.list.table-layout :title="$title" class="hidden lg:block">
+<x-card.list.table-layout :title="$title" {{ $attributes->merge(['class' => 'hidden lg:block']) }}>
     <x-slot name="header">
         <x-card.list.table-header class="{{ $columnSize['class'] }}" name="turma"/>
         <x-card.list.table-header class="{{ $columnSize['discipline'] }}" name="disciplina"/>

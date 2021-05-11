@@ -120,11 +120,25 @@ class User extends Authenticatable
         $courseClass->subscribe($this);
     }
 
+    public function unsolvedRequests()
+    {
+        if (! $this->isInstructor()) {
+            return;
+        }
+
+        return LessonRequest::unsolvedRequestsForInstructor($this);
+    }
+
     public function lessons()
     {
         return $this->belongsToMany(Lesson::class)
                     ->as('record')
                     ->withPivot('present', 'observation', 'grade');
+    }
+
+    public function lectures()
+    {
+        return $this->hasMany(Lesson::class, 'instructor_id');
     }
 
     public function roles()

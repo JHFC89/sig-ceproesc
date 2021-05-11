@@ -87,6 +87,15 @@ class LessonRequest extends Model
         return $this->solved_at ? true : false;
     }
 
+    public static function unsolvedRequestsForInstructor(User $instructor)
+    {
+        $lessons_ids = $instructor->lectures->pluck('id')->all();
+
+        return self::query()->whereIn('lesson_id', $lessons_ids)
+                            ->whereNull('solved_at')
+                            ->get();
+    }
+
     public function lesson()
     {
         return $this->belongsTo(Lesson::class);

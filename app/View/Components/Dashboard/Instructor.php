@@ -10,6 +10,8 @@ class Instructor extends Component
 
     public $show;
 
+    public $requests;
+
     /**
      * Create a new component instance.
      *
@@ -24,6 +26,10 @@ class Instructor extends Component
         $this->show = $show;
 
         $this->instructor = request()->user();
+
+        $this->requests = $this->instructor->unsolvedRequests();
+
+        $this->requests->load('lesson');
     }
 
     /**

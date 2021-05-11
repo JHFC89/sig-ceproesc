@@ -172,6 +172,13 @@ class CourseClass extends Model
         return number_format($frequency, 2, ',', '.');
     }
 
+    public function instructors()
+    {
+        $instructors_ids = $this->lessons()->distinct()->pluck('instructor_id');
+
+        return User::find($instructors_ids);
+    }
+
     public function offdays()
     {
         return $this->hasMany(Offday::class);

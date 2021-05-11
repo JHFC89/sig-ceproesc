@@ -15,6 +15,8 @@ class ForWeekList extends Component
 
     public $columnSize;
 
+    public $alwaysShow;
+
     protected $user;
 
     /**
@@ -22,7 +24,7 @@ class ForWeekList extends Component
      *
      * @return void
      */
-    public function __construct($title = '', $user)
+    public function __construct($title = '', $user, $alwaysShow = true)
     {
         $this->user = $user;
 
@@ -33,6 +35,8 @@ class ForWeekList extends Component
         $this->setTitle($title);
 
         $this->setColumnsSizes();
+
+        $this->alwaysShow = $alwaysShow;
     }
 
     /**

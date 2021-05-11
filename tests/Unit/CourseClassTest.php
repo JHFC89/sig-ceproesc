@@ -758,6 +758,18 @@ class CourseClassTest extends TestCase
         $this->assertFalse($result);
     }
 
+    /** @test */
+    public function can_get_the_course_class_instructors()
+    {
+        $courseClass = $this->testCourseClassWithLessons();
+        $lessons = $courseClass->lessons;
+
+        $instructors = $courseClass->instructors(); 
+
+        $this->assertTrue($lessons[0]->instructor->is($instructors[0]));
+        $this->assertTrue($lessons[1]->instructor->is($instructors[1]));
+    }
+
     private function testCourseClass()
     {
         $courseClass = new CourseClass;
