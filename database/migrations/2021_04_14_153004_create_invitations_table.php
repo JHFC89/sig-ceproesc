@@ -15,10 +15,10 @@ class CreateInvitationsTable extends Migration
     {
         Schema::create('invitations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable();
+            $table->foreignId('user_id')->nullable()->constrained();
             $table->foreignId('registration_id');
             $table->string('code');
-            $table->string('email');
+            $table->string('email')->index();
             $table->timestamps();
         });
     }
@@ -30,6 +30,10 @@ class CreateInvitationsTable extends Migration
      */
     public function down()
     {
+        Schema::table('invitations', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+        });
+
         Schema::dropIfExists('invitations');
     }
 }

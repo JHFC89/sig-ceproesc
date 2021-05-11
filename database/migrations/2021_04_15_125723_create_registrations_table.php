@@ -15,11 +15,11 @@ class CreateRegistrationsTable extends Migration
     {
         Schema::create('registrations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable();
-            $table->foreignId('role_id');
-            $table->foreignId('company_id')->nullable();
+            $table->foreignId('user_id')->nullable()->constrained();
+            $table->foreignId('role_id')->constrained();
+            $table->foreignId('company_id')->nullable()->constrained();
             $table->foreignId('employer_id')->nullable();
-            $table->foreignId('course_class_id')->nullable();
+            $table->foreignId('course_class_id')->nullable()->constrained();
             $table->string('name');
             $table->date('birthdate')->nullable();
             $table->string('rg')->nullable();
@@ -38,6 +38,13 @@ class CreateRegistrationsTable extends Migration
      */
     public function down()
     {
+        Schema::table('registrations', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['role_id']);
+            $table->dropForeign(['company_id']);
+            $table->dropForeign(['course_class_id']);
+        });
+
         Schema::dropIfExists('registrations');
     }
 }

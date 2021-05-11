@@ -15,8 +15,8 @@ class CreatesRecordPivotTableForLessonAndUser extends Migration
     {
         Schema::create('lesson_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('lesson_id');
-            $table->foreignId('user_id');
+            $table->foreignId('lesson_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->boolean('present')->nullable();
             $table->string('observation')->nullable();
             $table->string('grade')->nullable();
@@ -31,6 +31,11 @@ class CreatesRecordPivotTableForLessonAndUser extends Migration
      */
     public function down()
     {
+        Schema::table('lesson_user', function (Blueprint $table) {
+            $table->dropForeign(['lesson_id']);
+            $table->dropForeign(['user_id']);
+        });
+
         Schema::dropIfExists('lesson_user');
     }
 }

@@ -7,10 +7,11 @@ use App\Models\Discipline;
 use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class CreateSubscriptionTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseMigrations;
 
     protected $courseClass;
 
@@ -111,7 +112,6 @@ class CreateSubscriptionTest extends TestCase
     /** @test */
     public function cannot_subscribe_if_there_is_no_novices_available()
     {
-        User::all()->each->delete();
         $courseClass = CourseClass::factory()->create();
         $courseClass->createLessonsFromArray($this->lessonsArray());
 

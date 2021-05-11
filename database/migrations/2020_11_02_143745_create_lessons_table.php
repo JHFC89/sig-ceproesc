@@ -15,7 +15,7 @@ class CreateLessonsTable extends Migration
     {
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('instructor_id');
+            $table->foreignId('instructor_id')->constrained('users');
             $table->foreignId('discipline_id');
             $table->dateTime('date');
             $table->string('type');
@@ -33,6 +33,10 @@ class CreateLessonsTable extends Migration
      */
     public function down()
     {
+        Schema::table('lessons', function (Blueprint $table) {
+            $table->dropForeign(['instructor_id']);
+        });
+
         Schema::dropIfExists('lessons');
     }
 }

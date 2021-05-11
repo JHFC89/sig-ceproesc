@@ -15,7 +15,7 @@ class CreateLessonRequestsTable extends Migration
     {
         Schema::create('lesson_requests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('lesson_id');
+            $table->foreignId('lesson_id')->constrained();
             $table->text('justification');
             $table->boolean('rectification')->default(true);
             $table->dateTime('released_at')->nullable();
@@ -31,6 +31,10 @@ class CreateLessonRequestsTable extends Migration
      */
     public function down()
     {
+        Schema::table('lesson_requests', function (Blueprint $table) {
+            $table->dropForeign(['lesson_id']);
+        });
+
         Schema::dropIfExists('lesson_requests');
     }
 }

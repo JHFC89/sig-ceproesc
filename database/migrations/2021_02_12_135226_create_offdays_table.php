@@ -15,8 +15,8 @@ class CreateOffdaysTable extends Migration
     {
         Schema::create('offdays', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_class_id');
-            $table->date('date');
+            $table->foreignId('course_class_id')->constrained();
+            $table->date('date')->index();
             $table->timestamps();
         });
     }
@@ -28,6 +28,10 @@ class CreateOffdaysTable extends Migration
      */
     public function down()
     {
+        Schema::table('offdays', function (Blueprint $table) {
+            $table->dropForeign(['course_class_id']);
+        });
+
         Schema::dropIfExists('offdays');
     }
 }

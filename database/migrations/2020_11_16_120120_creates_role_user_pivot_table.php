@@ -15,8 +15,8 @@ class CreatesRoleUserPivotTable extends Migration
     {
         Schema::create('role_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('role_id');
-            $table->foreignId('user_id');
+            $table->foreignId('role_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }
@@ -28,6 +28,11 @@ class CreatesRoleUserPivotTable extends Migration
      */
     public function down()
     {
+        Schema::table('role_user', function (Blueprint $table) {
+            $table->dropForeign(['role_id']);
+            $table->dropForeign(['user_id']);
+        });
+
         Schema::dropIfExists('role_user');
     }
 }

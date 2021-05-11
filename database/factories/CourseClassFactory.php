@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Course;
 use Carbon\Carbon;
 use App\Models\CourseClass;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -42,7 +43,7 @@ class CourseClassFactory extends Factory
             'practical_duration'                    => 300,
             'vacation_begin'                        => $vacation_begin,
             'vacation_end'                          => $vacation_end,
-            'course_id'                             => 1,
+            'course_id'                             => Course::factory()->create(),
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\User;
+use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Holiday;
 use App\Models\CourseClass;
@@ -27,6 +28,7 @@ class CourseClassTest extends TestCase
         $courseClass->intro_end = Carbon::create(2021, 1, 30); 
         $courseClass->vacation_begin = Carbon::create(2022, 1, 17); 
         $courseClass->vacation_end = Carbon::create(2022, 2, 15); 
+        $courseClass->course_id = Course::factory()->create()->id;
         $courseClass->save(); 
 
         $result = $courseClass->allMonths();
@@ -66,6 +68,7 @@ class CourseClassTest extends TestCase
         $courseClass->intro_end = Carbon::create(2021, 4, 7); 
         $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
         $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->course_id = Course::factory()->create()->id;
         $courseClass->save(); 
         $courseClass->offdays()->createMany([
             ['date' => Carbon::create(2021, 4, 30)],
@@ -118,6 +121,7 @@ class CourseClassTest extends TestCase
         $courseClass->intro_end = Carbon::create(2021, 4, 7); 
         $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
         $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->course_id = Course::factory()->create()->id;
         $courseClass->save(); 
         $courseClass->offdays()->createMany([
             ['date' => Carbon::create(2021, 4, 30)],
@@ -172,6 +176,7 @@ class CourseClassTest extends TestCase
         $courseClass->intro_end = Carbon::create(2021, 4, 7); 
         $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
         $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->course_id = Course::factory()->create()->id;
         $courseClass->save(); 
         $courseClass->offdays()->createMany([
             ['date' => Carbon::create(2021, 4, 30)],
@@ -203,6 +208,7 @@ class CourseClassTest extends TestCase
         $courseClass->intro_end = Carbon::create(2021, 4, 7); 
         $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
         $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->course_id = Course::factory()->create()->id;
         $courseClass->save();
 
         $resultInHours = $courseClass->totalTheoreticalDaysDuration();
@@ -220,6 +226,7 @@ class CourseClassTest extends TestCase
         $courseClass->intro_end = Carbon::create(2021, 4, 7); 
         $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
         $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->course_id = Course::factory()->create()->id;
         $courseClass->save(); 
         $courseClass->offdays()->createMany([
             ['date' => Carbon::create(2021, 6, 1)],
@@ -284,6 +291,7 @@ class CourseClassTest extends TestCase
         $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
         $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
         $courseClass->practical_duration = 1; 
+        $courseClass->course_id = Course::factory()->create()->id;
         $courseClass->save();
 
         $resultInMinutes = $courseClass->totalPracticalDaysDuration();
@@ -301,6 +309,7 @@ class CourseClassTest extends TestCase
         $courseClass->intro_end = Carbon::create(2021, 4, 7); 
         $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
         $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->course_id = Course::factory()->create()->id;
         $courseClass->save(); 
         $courseClass->offdays()->createMany([
             ['date' => Carbon::create(2021, 4, 30)],
@@ -327,6 +336,7 @@ class CourseClassTest extends TestCase
         $courseClass->intro_end = Carbon::create(2021, 4, 7); 
         $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
         $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->course_id = Course::factory()->create()->id;
         $courseClass->save(); 
         $courseClass->extraLessonDays()->createMany([
             ['date' => Carbon::create(2021, 4, 30)],
@@ -353,6 +363,7 @@ class CourseClassTest extends TestCase
         $courseClass->intro_end = Carbon::create(2021, 4, 7); 
         $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
         $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->course_id = Course::factory()->create()->id;
         $courseClass->save(); 
 
         $result = $courseClass->allVacationDays();
@@ -786,7 +797,7 @@ class CourseClassTest extends TestCase
         $courseClass->practical_duration = 1; 
         $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
         $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
-        $courseClass->course_id = 1; 
+        $courseClass->course_id = Course::factory()->create()->id;
 
         return $courseClass;
     }

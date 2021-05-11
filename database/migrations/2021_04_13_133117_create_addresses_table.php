@@ -15,7 +15,7 @@ class CreateAddressesTable extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->nullable();
+            $table->foreignId('company_id')->nullable()->constrained();
             $table->foreignId('registration_id')->nullable();
             $table->string('street');
             $table->string('number');
@@ -35,6 +35,10 @@ class CreateAddressesTable extends Migration
      */
     public function down()
     {
+        Schema::table('addresses', function (Blueprint $table) {
+            $table->dropForeign(['company_id']);
+        });
+
         Schema::dropIfExists('addresses');
     }
 }

@@ -15,7 +15,7 @@ class CreateEvaluationsTable extends Migration
     {
         Schema::create('evaluations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('lesson_id');
+            $table->foreignId('lesson_id')->constrained();
             $table->string('label');
             $table->string('description');
             $table->dateTime('recorded_at')->nullable();
@@ -30,6 +30,10 @@ class CreateEvaluationsTable extends Migration
      */
     public function down()
     {
+        Schema::table('evaluations', function (Blueprint $table) {
+            $table->dropForeign(['lesson_id']);
+        });
+
         Schema::dropIfExists('evaluations');
     }
 }

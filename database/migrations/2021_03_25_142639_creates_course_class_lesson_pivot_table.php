@@ -15,7 +15,7 @@ class CreatesCourseClassLessonPivotTable extends Migration
     {
         Schema::create('course_class_lesson', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_class_id');
+            $table->foreignId('course_class_id')->constrained();
             $table->foreignId('lesson_id');
             $table->timestamps();
         });
@@ -28,6 +28,10 @@ class CreatesCourseClassLessonPivotTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('course_class_lesson', function (Blueprint $table) {
+            $table->dropForeign(['course_class_id']);
+        });
+
+        Schema::dropIfExists('course_class_lesson');
     }
 }

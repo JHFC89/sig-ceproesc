@@ -15,8 +15,8 @@ class CreatesCourseDisciplinePivotTable extends Migration
     {
         Schema::create('course_discipline', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_id');
-            $table->foreignId('discipline_id');
+            $table->foreignId('course_id')->constrained();
+            $table->foreignId('discipline_id')->constrained();
             $table->timestamps();
         });
     }
@@ -28,6 +28,11 @@ class CreatesCourseDisciplinePivotTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('course_discipline', function (Blueprint $table) {
+            $table->dropForeign(['course_id']);
+            $table->dropForeign(['discipline_id']);
+        });
+
+        Schema::dropIfExists('course_discipline');
     }
 }

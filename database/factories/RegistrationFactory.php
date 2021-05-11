@@ -27,8 +27,12 @@ class RegistrationFactory extends Factory
         ];
     }
 
-    public function forEmployer(int $company_id = 1)
+    public function forEmployer(int $company_id = 0)
     {
+        if ($company_id === 0) {
+            $company_id = Company::factory()->create()->id;
+        }
+
         return $this->state(function (array $attributes) use ($company_id) {
             return [
                 'rg'            => $this->faker->randomNumber(8),
@@ -75,7 +79,9 @@ class RegistrationFactory extends Factory
 
     public function forNovice(int $company_id = 0)
     {
-        $company_id = $company_id ?? Company::factory()->create()->id;
+        if ($company_id === 0) {
+            $company_id = Company::factory()->create()->id;
+        }
 
         return $this->state(function (array $attributes) use ($company_id) {
            return [

@@ -15,7 +15,7 @@ class CreateExtraLessonDaysTable extends Migration
     {
         Schema::create('extra_lesson_days', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_class_id');
+            $table->foreignId('course_class_id')->constrained();
             $table->date('date');
             $table->timestamps();
         });
@@ -28,6 +28,10 @@ class CreateExtraLessonDaysTable extends Migration
      */
     public function down()
     {
+        Schema::table('extra_lesson_days', function (Blueprint $table) {
+            $table->dropForeign(['course_class_id']);
+        });
+
         Schema::dropIfExists('extra_lesson_days');
     }
 }
