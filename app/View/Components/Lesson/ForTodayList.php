@@ -74,8 +74,10 @@ class ForTodayList extends Component
             $this->lessons = Lesson::today()->forInstructor($this->user)->get();
         } else if ($this->user->isEmployer()) {
             $this->lessons = Lesson::today()->forEmployer($this->user)->get();
-        } else {
+        } else if ($this->user->isNovice()) {
             $this->lessons = Lesson::today()->forNovice($this->user)->get();
+        } else {
+            $this->lessons = Lesson::today()->get();
         }
     }
 

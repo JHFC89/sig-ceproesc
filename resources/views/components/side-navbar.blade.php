@@ -31,7 +31,6 @@
             </li>
             @endif
 
-            @if (Auth::user()->isNovice() && Auth::user()->courseClass !== null)
             <li>
                 <a href="#" class="flex items-center justify-center px-2 py-2 group border lg:border-none rounded-md {{ request()->routeIs('lessons.*') || request()->routeIs('classes.lessons.index') ? 'font-medium text-gray-100' : '' }} lg:justify-start">
                     <x-icons.register-lesson class="w-6 group-hover:text-gray-400"/>
@@ -48,6 +47,7 @@
                     <span class="lg:ml-10 group-hover:text-gray-400">semana</span>
                 </a>
             </li>
+            @if (Auth::user()->isNovice() && Auth::user()->courseClass !== null)
             <li>
                 <a href="{{ route('classes.lessons.index', ['courseClass' => Auth::user()->courseClass]) }}" class="flex items-center justify-center px-2 py-2 lg:py-1 lg:text-sm group rounded-md {{ request()->routeIs('classes.lessons.index') ? 'font-medium text-gray-100' : '' }} lg:justify-start">
                     <span class="lg:ml-10 group-hover:text-gray-400">todas</span>
@@ -56,30 +56,6 @@
             <li>
                 <a href="{{ route('novices.frequencies.show', ['registration' => Auth::user()->registration]) }}" class="flex items-center justify-center px-2 py-2 lg:py-1 lg:text-sm group rounded-md {{ request()->routeIs('novices.frequencies.show') ? 'font-medium text-gray-100' : '' }} lg:justify-start">
                     <span class="lg:ml-10 group-hover:text-gray-400">frequência</span>
-                </a>
-            </li>
-            @elseif (Auth::user()->isInstructor())
-            <li>
-                <a href="#" class="flex items-center justify-center px-2 py-2 group border lg:border-none rounded-md {{ request()->routeIs('lessons.*') || request()->routeIs('classes.lessons.index') ? 'font-medium text-gray-100' : '' }} lg:justify-start">
-                    <x-icons.register-lesson class="w-6 group-hover:text-gray-400"/>
-                    <span class="ml-4 group-hover:text-gray-400">aulas</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('lessons.today') }}" class="flex items-center justify-center px-2 py-2 lg:py-1 lg:text-sm group rounded-md {{ request()->routeIs('lessons.today') ? 'font-medium text-gray-100' : '' }} lg:justify-start">
-                    <span class="lg:ml-10 group-hover:text-gray-400">hoje</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('lessons.week') }}" class="flex items-center justify-center px-2 py-2 lg:py-1 lg:text-sm group rounded-md {{ request()->routeIs('lessons.week') ? 'font-medium text-gray-100' : '' }} lg:justify-start">
-                    <span class="lg:ml-10 group-hover:text-gray-400">semana</span>
-                </a>
-            </li>
-            @else
-            <li>
-                <a href="#" class="flex items-center justify-center px-2 py-2 group border lg:border-none rounded-md {{ request()->routeIs('lessons.*') ? 'font-medium text-gray-100' : '' }} lg:justify-start">
-                    <x-icons.register-lesson class="w-6 group-hover:text-gray-400"/>
-                    <span class="ml-4 group-hover:text-gray-400">aulas</span>
                 </a>
             </li>
             @endif

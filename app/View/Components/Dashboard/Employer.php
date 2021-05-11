@@ -4,13 +4,11 @@ namespace App\View\Components\Dashboard;
 
 use Illuminate\View\Component;
 
-class Novice extends Component
+class Employer extends Component
 {
-    public $novice;
+    public $employer;
 
     public $show;
-
-    public $frequency;
 
     /**
      * Create a new component instance.
@@ -25,15 +23,8 @@ class Novice extends Component
 
         $this->show = $show;
 
-        $this->novice = request()->user();
-
-        if ($this->novice->isSubscribed()) {
-            $this->frequency = $this->novice
-                                    ->courseClass
-                                    ->noviceFrequency($this->novice);
-        }
+        $this->employer = request()->user();
     }
-
     /**
      * Get the view / contents that represent the component.
      *
@@ -41,6 +32,6 @@ class Novice extends Component
      */
     public function render()
     {
-        return view('components.dashboard.novice');
+        return view('components.dashboard.employer');
     }
 }

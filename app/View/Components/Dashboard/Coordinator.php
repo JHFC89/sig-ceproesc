@@ -2,15 +2,16 @@
 
 namespace App\View\Components\Dashboard;
 
+use App\Models\LessonRequest;
 use Illuminate\View\Component;
 
-class Novice extends Component
+class Coordinator extends Component
 {
-    public $novice;
+    public $coordinator;
 
     public $show;
 
-    public $frequency;
+    public $requests;
 
     /**
      * Create a new component instance.
@@ -25,13 +26,11 @@ class Novice extends Component
 
         $this->show = $show;
 
-        $this->novice = request()->user();
+        $this->coordinator = request()->user();
 
-        if ($this->novice->isSubscribed()) {
-            $this->frequency = $this->novice
-                                    ->courseClass
-                                    ->noviceFrequency($this->novice);
-        }
+        $this->requests = LessonRequest::whereUnsolved()->get();
+
+        $this->requests->load('lesson');
     }
 
     /**
@@ -41,6 +40,6 @@ class Novice extends Component
      */
     public function render()
     {
-        return view('components.dashboard.novice');
+        return view('components.dashboard.coordinator');
     }
 }

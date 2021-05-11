@@ -100,4 +100,9 @@ class LessonRequest extends Model
     {
         return $this->belongsTo(Lesson::class);
     }
+
+    public function scopeWhereUnsolved($query)
+    {
+        return $query->whereNull('solved_at');
+    }
 }

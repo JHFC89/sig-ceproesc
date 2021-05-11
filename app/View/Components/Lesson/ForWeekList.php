@@ -86,8 +86,10 @@ class ForWeekList extends Component
             $this->lessons = Lesson::week()->forInstructor($this->user)->oldest('date')->get();
         } else if ($this->user->isEmployer()) {
             $this->lessons = Lesson::week()->forEmployer($this->user)->oldest('date')->get();
-        } else {
+        } else if ($this->user->isNovice()){
             $this->lessons = Lesson::week()->forNovice($this->user)->oldest('date')->get();
+        } else {
+            $this->lessons = Lesson::week()->oldest('date')->get();
         }
     }
 
