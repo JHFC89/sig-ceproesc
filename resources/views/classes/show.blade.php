@@ -128,7 +128,7 @@
 
         <h2 class="text-xl font-medium text-gray-700 capitalize">cronograma</h2>
 
-        <div class="py-6 mt-4 capitalize bg-white shadow divide-y rounded-md lg:px-6">
+        <div class="py-6 mt-4 capitalize bg-white shadow rounded-md lg:px-6">
             <x-course-class.schedule 
                 class="mx-auto max-w-screen-xl grid gap-6 lg:grid-cols-2 xl:grid-cols-3"
                 :group="$courseClass"

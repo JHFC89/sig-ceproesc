@@ -333,7 +333,7 @@
             </x-card.panel-layout>
 
             @if ($showSchedule)
-                <x-card.panel-layout title="cronograma" wire:loading.class="opacity-50" class="px-6 py-2 divide-y transition-opacity duration-200">
+                <x-card.panel-layout title="cronograma" wire:loading.class="opacity-50" class="px-6 py-6 transition-opacity duration-200">
                     <x-slot name="content">
 
                         <x-course-class.schedule 
