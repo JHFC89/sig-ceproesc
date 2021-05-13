@@ -34,7 +34,7 @@
 
         <x-slot name="inputs">
 
-            <x-card.form-input name="date" label="data de nascimento">
+            <x-card.form-input name="date" label="nova data da aula">
                 <x-slot name="input">
                     <x-card.select-date
                         dayName="date[day]"
