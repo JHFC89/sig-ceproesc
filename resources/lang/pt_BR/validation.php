@@ -215,6 +215,7 @@ return [
         'class.intro_end.day' => 'dia do término da introdução',
         'class.vacation_begin.day' => 'dia de início das férias',
         'class.vacation_end.day' => 'dia do término das férias',
+        'register' => 'conteúdo ministrado',
     ],
 
 ];

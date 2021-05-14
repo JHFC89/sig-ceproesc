@@ -122,7 +122,7 @@
                     >
                     </textarea>
 
-                    <span class="block text-sm text-red-500" x-show="errors.register.hasError" x-text="errors.register.message"></span>
+                    <span class="block text-sm text-red-500 normal-case" x-show="errors.register.hasError" x-text="errors.register.message"></span>
 
                 </x-slot>
             </x-card.form-input>
