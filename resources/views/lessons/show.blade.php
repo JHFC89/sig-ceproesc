@@ -38,6 +38,7 @@
             @endif
             <x-card.list.description-item label="instrutor" :description="$lesson->instructor->name"/>
             <x-card.list.description-item label="data" :description="$lesson->formatted_date"/>
+            <x-card.list.description-item label="horário" :description="$lesson->formatted_type"/>
             @if(Auth::user()->isNovice())
             <x-card.list.description-item label="turma" :description="Auth::user()->class"/>
             @else
