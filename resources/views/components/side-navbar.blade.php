@@ -1,5 +1,5 @@
 <aside {{ $attributes->merge(['class' => 'w-64 h-full overflow-y-auto text-gray-100 bg-gradient-to-b from-gray-800 to-gray-500']) }}>
-    <div class="hidden flex items-center h-16 px-4 text-lg uppercase bg-gray-900 shadow lg:block"> 
+    <div class="hidden items-center h-16 px-4 text-lg uppercase bg-gray-900 shadow lg:flex"> 
         <span class="font-serif text-3xl font-medium text-white">sig</span><span class="ml-2">- ceproesc</span>
     </div>
     <nav class="px-2 py-4">
