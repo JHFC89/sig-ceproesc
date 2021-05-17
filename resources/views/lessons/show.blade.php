@@ -51,7 +51,7 @@
             <x-card.list.description-item type="text" label="observação" :description="Auth::user()->observationForLesson($lesson) ?: 'Nenhuma obervação registrada'"/>
             @endif
             @if($lesson->isRegistered())
-            <x-card.list.description-item type="text" label="registro" :description="$lesson->register"/>
+            <x-card.list.description-item type="text" label="registro" :linebreak="true" :description="$lesson->register"/>
             @endif
             @if(Auth::user()->can('createForLesson', [App\Models\Evaluation::class, $lesson]))
             <x-card.list.description-item type="link" :href="route('lessons.evaluations.create', ['lesson' => $lesson])" label="atividade avaliativa" description="criar"/>

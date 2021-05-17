@@ -100,6 +100,7 @@
 
     <x-card.form-layout 
         x-data="form()" 
+        x-init="setRegister($el)"
         @presence-event.window="updatePresence($event.detail)" 
         @observation-event.window="updateObservation($event.detail)" 
         title="registro da aula"
@@ -111,6 +112,7 @@
                 <x-slot name="input">
 
                     <textarea 
+                        id="registration-textarea"
                         @click="errors.register.hasError = false"
                         x-model="data.register" 
                         class="block w-full border-red-500 form-textarea" 
@@ -119,8 +121,8 @@
                         name="content" 
                         rows="4" 
                         placeholder="Digite aqui o conteúdo ministrado nesta aula"
-                    >
-                    </textarea>
+                        data-register="{{$lesson->register}}"
+                    ></textarea>
 
                     <span class="block text-sm text-red-500 normal-case" x-show="errors.register.hasError" x-text="errors.register.message"></span>
 
@@ -157,7 +159,7 @@
         function form() {
             return {
                 data: {
-                    register: '{{ $lesson->register }}',
+                    register: '',
                     presenceList: {!! $lesson->novicesPresenceToJson() !!},
                 },
                 message: {
@@ -169,6 +171,9 @@
                         hasError: false,
                         message: 'The field is required',
                     },
+                },
+                setRegister(value) {
+                    this.data.register = value.querySelector('#registration-textarea').dataset.register;
                 },
                 register() {
                     axios.post('lessons/register/{{ $lesson->id }}', this.data)

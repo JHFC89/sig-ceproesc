@@ -1,4 +1,4 @@
-@props(['label', 'description', 'type' => 'title', 'href' => ''])
+@props(['label', 'description', 'type' => 'title', 'href' => '', 'linebreak' => false])
 
 <div class="flex items-center py-4">
     <div class="w-1/3 lg:w-1/4">
@@ -8,7 +8,11 @@
         @if($type == 'link')
             <a href="{{ $href }}" class="inline-block pr-2 font-medium text-blue-500 normal-case underline hover:text-blue-700">{{ $description }}</a>
         @else
-        <span class="inline-block pr-2 font-medium {{ $type == 'text' ? 'normal-case' : '' }}">{{ $description }}</span>
+            @if ($linebreak)
+            <span class="inline-block pr-2 font-medium {{ $type == 'text' ? 'normal-case' : '' }}">{!! nl2br($description) !!}</span>
+            @else
+            <span class="inline-block pr-2 font-medium {{ $type == 'text' ? 'normal-case' : '' }}">{{ $description }}</span>
+            @endif
         @endif
     </div>
 </div>
