@@ -7,6 +7,7 @@
         <x-slot name="items">
             <x-card.list.description-item label="instrutor" :description="$lesson->instructor->name"/>
             <x-card.list.description-item label="data" :description="$lesson->formatted_date"/>
+            <x-card.list.description-item label="horário" :description="$lesson->formatted_type"/>
             <x-card.list.description-item label="turma" :description="$lesson->formatted_course_classes"/>
             <x-card.list.description-item label="disciplina" :description="$lesson->discipline->name"/>
             <x-card.list.description-item label="carga horária" :description="$lesson->hourly_load"/>
@@ -29,9 +30,7 @@
                         rows="4"
                         placeholder="{{ $requestType == 'rectification' ? 'Digite aqui a justificativa para retificar a aula' : 'Digite aqui a justificativa do atraso para registrar a aula' }}"
                     ></textarea>
-                    @error('justification')
-                    <span class="block text-sm text-red-500">{{ $message }}</span>
-                    @enderror
+                    <x-validation-error name="justification"/>
                 </x-slot>
             </x-card.form-input>
 
