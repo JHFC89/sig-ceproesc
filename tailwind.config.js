@@ -5,7 +5,11 @@ module.exports = {
   },
   purge: ["./resources/views/html", "./resources/views/*.blade.php", "./storage/framework/views/*.php", "./app/View/Components/**/*.php"],
   theme: {
-    extend: {},
+    extend: {
+        screens: {
+            '2xl': '1920px',
+        }
+    },
   },
   variants: {
       textColor: ['responsive', 'hover', 'focus', 'group-hover'],

@@ -19,9 +19,9 @@
         </div>
     </div>
 
-    <div class="flex w-full space-x-4 mt-4">
+    <div class="w-full space-y-8 mt-4 2xl:flex 2xl:space-x-4 2xl:space-y-0">
 
-        <x-card.list.table-layout class="w-1/2" title="primeiro horário">
+        <x-card.list.table-layout class="w-full 2xl:w-1/2" title="primeiro horário">
 
             <x-slot name="header">
 
@@ -68,7 +68,7 @@
 
         </x-card.list.table-layout>
 
-        <x-card.list.table-layout class="w-1/2" title="segundo horário">
+        <x-card.list.table-layout class="w-full 2xl:w-1/2" title="segundo horário">
 
             <x-slot name="header">
 

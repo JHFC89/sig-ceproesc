@@ -1,7 +1,7 @@
 <div>
-    <div class="flex w-full space-x-4">
+    <div class="w-full space-y-8 2xl:flex 2xl:space-x-4 2xl:space-y-0">
 
-        <x-card.list.table-layout class="w-1/2" title="disciplinas módulo básico">
+        <x-card.list.table-layout class="w-full 2xl:w-1/2" title="disciplinas módulo básico">
 
             <x-slot name="header">
 
@@ -81,7 +81,7 @@
 
         </x-card.list.table-layout>
 
-        <x-card.list.table-layout class="w-1/2" title="disciplinas módulo específico">
+        <x-card.list.table-layout class="w-full 2xl:w-1/2" title="disciplinas módulo específico">
 
             <x-slot name="header">
 
