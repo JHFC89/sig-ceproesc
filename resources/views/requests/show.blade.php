@@ -16,7 +16,7 @@
         <x-card.list.description-item label="número" :description="$request->id"/>
         <x-card.list.description-item label="data" :description="$request->formatted_date"/>
         <x-card.list.description-item label="instrutor" :description="$request->lesson->instructor->name"/>
-        <x-card.list.description-item label="justificativa" type="text" :description="$request->justification"/>
+        <x-card.list.description-item label="justificativa" type="text" :linebreak="true" :description="$request->justification"/>
     </x-slot>
 </x-card.list.description-layout>
 
