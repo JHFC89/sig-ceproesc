@@ -25,8 +25,8 @@
 
             <x-slot name="header">
 
-                <x-card.list.table-header class="col-span-2" name="data"/>
-                <x-card.list.table-header class="col-span-1 text-center" name="c.h."/>
+                <x-card.list.table-header class="col-span-1" name="data"/>
+                <x-card.list.table-header class="col-span-2 text-center" name="c.h."/>
                 <x-card.list.table-header class="col-span-4 text-center" name="disciplina"/>
                 <x-card.list.table-header class="col-span-4 text-center" name="instrutor"/>
                 <x-card.list.table-header class="col-span-1" name=""/>
@@ -72,8 +72,8 @@
 
             <x-slot name="header">
 
-                <x-card.list.table-header class="col-span-2" name="data"/>
-                <x-card.list.table-header class="col-span-1 text-center" name="c.h."/>
+                <x-card.list.table-header class="col-span-1" name="data"/>
+                <x-card.list.table-header class="col-span-2 text-center" name="c.h."/>
                 <x-card.list.table-header class="col-span-4 text-center" name="disciplina"/>
                 <x-card.list.table-header class="col-span-4 text-center" name="instrutor"/>
                 <x-card.list.table-header class="col-span-1" name=""/>

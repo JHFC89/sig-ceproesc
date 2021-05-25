@@ -685,7 +685,7 @@ class CourseClassTest extends TestCase
             $lesson->registerFor($novice)->present()->complete()->register();
         });
         $this->assertCount(5, $courseClass->lessons);
-        $this->assertEquals(10 * 60, $courseClass->lessons->sum('hourly_load'));
+        $this->assertEquals(5 * (2 * 60), $courseClass->lessons->sum('hourly_load'));
         $this->assertTrue($courseClass->isSubscribed($novice));
         $this->assertTrue($courseClass->lessons->every->isEnrolled($novice));
         $this->assertTrue($courseClass->lessons->every->isRegistered());

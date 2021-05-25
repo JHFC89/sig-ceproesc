@@ -2,15 +2,15 @@
 
     <x-slot name="items">
 
-        <x-card.list.table-body-item class="col-span-2">
+        <x-card.list.table-body-item class="col-span-1">
             <x-slot name="item">
-                <span class="flex items-center h-full">{{ $date->format('d-m-Y') }}</span>
+                <span class="flex items-center h-full text-sm">{{ $date->format('d-m-y') }}</span>
             </x-slot>
         </x-card.list.table-body-item>
 
-        <x-card.list.table-body-item class="col-span-1">
+        <x-card.list.table-body-item class="col-span-2">
             <x-slot name="item">
-                <div class="flex items-center h-full">
+                <div class="flex items-center justify-center h-full">
                     <x-badge :text="$duration . ' Hrs'" :color="$this->extra ? 'red' : 'blue'"/>
                 </div>
             </x-slot>

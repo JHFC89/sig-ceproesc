@@ -418,6 +418,12 @@ class CourseClassForm extends Component
 
     private function validateTheoreticalDuration()
     {
+        $this->generateCourseClass();
+
+        if ($this->courseClass->city == 'matão') {
+            return;
+        }
+
         if ($this->theoreticalDurationDiff() !== 0) {
             throw ValidationException::withMessages([
                 'theoretical_duration' => __('O valor não é igual à carga horária total do programa.')

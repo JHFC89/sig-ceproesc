@@ -162,6 +162,10 @@ class CreateLessonForm extends Component
             $duration = 2;
         } elseif ($duration === 5 && $type === 'second') {
             $duration = 3;
+        } elseif ($duration === 4.5 && $type === 'first') {
+            $duration = 2;
+        } elseif ($duration === 4.5 && $type === 'second') {
+            $duration = 2.5;
         }
 
         return $duration;
@@ -225,14 +229,14 @@ class CreateLessonForm extends Component
 
         $this->emit('disciplinesDurationUpdated', $this->disciplinesDuration);
 
-        if ($previousDuration === 0) {
+        if ($previousDuration == 0) {
             $key = array_search($discipline, $this->completedDisciplines);
             unset($this->completedDisciplines[$key]);
 
             $this->emit('disciplineUncompleted', $this->completedDisciplines);
         }
 
-        if ($updatedDuration === 0) {
+        if ($updatedDuration == 0) {
             array_push($this->completedDisciplines, $discipline);
 
             $this->emit('disciplineCompleted', $this->completedDisciplines);
@@ -257,6 +261,12 @@ class CreateLessonForm extends Component
 
     private function checkLessonsCanBeCreated()
     {
+        if ($this->courseClass->city == 'matão') {
+            $this->createLessonsAvailable = true;
+
+            return;
+        }
+
         if (! $this->allDisciplinesAreCompleted()) {
             $this->createLessonsAvailable = false;
 

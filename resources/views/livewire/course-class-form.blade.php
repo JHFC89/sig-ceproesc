@@ -28,7 +28,7 @@
                         <x-slot name="input">
                             <select 
                                 wire:model="class.city"
-                                class="form-select capitalize @error('course')border-red-500 @enderror" 
+                                class="form-select capitalize @error('class.city')border-red-500 @enderror" 
                                 name="city" 
                                 required
                             >
@@ -215,16 +215,32 @@
                                     <span>Carga Horária</span>
                                     <input 
                                         wire:model="class.first_day_duration.hours"
-                                        class="block w-20 form-input @error('class.first_day_duration')border-red-500 @enderror" 
-                                        name="first_day_duration"
+                                        class="block w-20 form-input @error('class.first_day_duration.hours')border-red-500 @enderror" 
+                                        name="first_day_duration.hours"
                                         type="number"
                                         value="4"
                                         min="1"
                                         max="8"
                                     >
+                                    <span>Horas</span>
                                 </label>
+
+                                <label class="inline-flex items-center space-x-2">
+                                    <select 
+                                        wire:model="class.first_day_duration.minutes"
+                                        class="form-select capitalize @error('class.first_day_duration.minutes')border-red-500 @enderror"
+                                        name="first_day_duration.minutes"
+                                        required
+                                    >
+                                        <option value="0">0</option>
+                                        <option value="30">30</option>
+                                    </select>
+                                    <span>Minutos</span>
+                                </label>
+
                                 <x-validation-error name="class.first_day"/>
-                                <x-validation-error name="class.first_day_duration"/>
+                                <x-validation-error name="class.first_day_duration.hours"/>
+                                <x-validation-error name="class.first_day_duration.minutes"/>
 
                             </div>
                         </x-slot>
@@ -255,14 +271,31 @@
                                     <span>Carga Horária</span>
                                     <input 
                                         wire:model="class.second_day_duration.hours"
-                                        class="block w-20 form-input @error('class.second_day_duration')border-red-500 @enderror" 
-                                        name="second_day_duration"
+                                        class="block w-20 form-input @error('class.second_day_duration.hours')border-red-500 @enderror" 
+                                        name="second_day_duration.hours"
                                         type="number"
                                         value="5"
                                     >
+                                    <span>Horas</span>
                                 </label>
-                                <x-validation-error name="class.first_day"/>
-                                <x-validation-error name="class.first_day_duration"/>
+
+                                <label class="inline-flex items-center space-x-2">
+                                    <select 
+                                        wire:model="class.second_day_duration.minutes"
+                                        class="form-select capitalize @error('class.second_day_duration.minutes')border-red-500 @enderror"
+                                        name="second_day_duration.minutes"
+                                        required
+                                    >
+                                        <option value="0">0</option>
+                                        <option value="30">30</option>
+                                    </select>
+                                    <span>Minutos</span>
+                                </label>
+
+                                <x-validation-error name="class.second_day"/>
+                                <x-validation-error name="class.second_day_duration.hours"/>
+                                <x-validation-error name="class.second_day_duration.minutes"/>
+
                             </div>
                         </x-slot>
                     </x-card.form-input>
