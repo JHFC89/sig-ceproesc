@@ -44,12 +44,22 @@ class Lesson extends Model
         return $relatedCourseClasses;
     }
 
+    public function getHourlyLoadAttribute()
+    {
+        return $this->duration / 60;
+    }
+
+    public function setHourlyLoadAttribute($value)
+    {
+        return $this->attributes['duration'] = $value * 60;
+    }
+
     public static function fromArray(array $lesson)
     {
         return Self::create([
             'date'          => $lesson['date'],
             'type'          => $lesson['type'],
-            'hourly_load'   => $lesson['duration'],
+            'duration'      => $lesson['duration'],
             'instructor_id' => $lesson['instructor_id'],
             'discipline_id' => $lesson['discipline_id'],
         ]);
@@ -325,7 +335,7 @@ class Lesson extends Model
 
     public function scopeTotalDuration($query)
     {
-        return $query->sum('hourly_load');
+        return $query->sum('duration');
     }
 
     public function scopeNotExtra($query, array $dates)

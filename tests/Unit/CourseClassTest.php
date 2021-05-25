@@ -211,9 +211,9 @@ class CourseClassTest extends TestCase
         $courseClass->course_id = Course::factory()->create()->id;
         $courseClass->save();
 
-        $resultInHours = $courseClass->totalTheoreticalDaysDuration();
+        $resultInMinutes = $courseClass->totalTheoreticalDaysDuration();
 
-        $this->assertEquals(56, $resultInHours);
+        $this->assertEquals(56, $resultInMinutes);
     }
 
     /** @test */
@@ -671,7 +671,7 @@ class CourseClassTest extends TestCase
     /** @test */
     public function can_get_a_novice_frequency()
     {
-        $lessons = Lesson::factory()->duration(2)->count(5);
+        $lessons = Lesson::factory()->duration(2 * 60)->count(5);
         $courseClass = CourseClass::factory()->hasNovices(1)->has($lessons)->create();
         $novice = $courseClass->novices->first()->turnIntoNovice()->refresh();
         $courseClass->subscribe($novice);
@@ -685,7 +685,7 @@ class CourseClassTest extends TestCase
             $lesson->registerFor($novice)->present()->complete()->register();
         });
         $this->assertCount(5, $courseClass->lessons);
-        $this->assertEquals(10, $courseClass->lessons->sum('hourly_load'));
+        $this->assertEquals(10 * 60, $courseClass->lessons->sum('hourly_load'));
         $this->assertTrue($courseClass->isSubscribed($novice));
         $this->assertTrue($courseClass->lessons->every->isEnrolled($novice));
         $this->assertTrue($courseClass->lessons->every->isRegistered());

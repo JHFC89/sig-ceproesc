@@ -57,7 +57,7 @@ class ViewLessonTest extends TestCase
             ->create([
                 'date'          => $date,
                 'discipline_id' => $discipline,
-                'hourly_load'   => '123hr',
+                'hourly_load'   => '123',
         ]);
         $lesson->novices->each(function ($novice) {
             $novice->turnIntoNovice()->refresh();
@@ -72,7 +72,7 @@ class ViewLessonTest extends TestCase
             ->assertSee($this->instructor->name)
             ->assertSee($date->format('d/m/Y'))
             ->assertSee('administração')
-            ->assertSee('123hr')
+            ->assertSee('123')
             ->assertDontSee('"presença"')
             ->assertDontSee('"observação"')
             ->assertDontSee('Nenhuma observação registrada')

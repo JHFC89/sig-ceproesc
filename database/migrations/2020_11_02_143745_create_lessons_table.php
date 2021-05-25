@@ -19,7 +19,7 @@ class CreateLessonsTable extends Migration
             $table->foreignId('discipline_id');
             $table->dateTime('date');
             $table->string('type');
-            $table->string('hourly_load');
+            $table->string('duration');
             $table->text('register')->nullable();
             $table->dateTime('registered_at')->nullable();
             $table->timestamps();

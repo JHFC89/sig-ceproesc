@@ -45,9 +45,10 @@ class CourseClassForm extends Component
         'class.vacation_end.day'            => 'required|integer|min:1|max:31',
         'class.first_day'                   => 'required|different:class.second_day',
         'class.second_day'                  => 'required|different:class.first_day',
-        'class.first_day_duration'          => 'required|integer|between:1,6',
-        'class.second_day_duration'         => 'required|integer|between:1,6',
-        'class.second_day_duration'         => 'required|integer|between:1,6',
+        'class.first_day_duration.hours'    => 'required|integer|between:1,6',
+        'class.first_day_duration.minutes'  => 'required|integer|in:0,30',
+        'class.second_day_duration.hours'   => 'required|integer|between:1,6',
+        'class.second_day_duration.minutes' => 'required|integer|in:0,30',
         'class.practical_duration.hours'    => 'required|integer|between:1,6',
         'class.practical_duration.minutes'  => 'required|integer|between:0,59',
     ];
@@ -104,11 +105,11 @@ class CourseClassForm extends Component
         $courseClass->intro_end = $this->date($this->class['intro_end']);
         $courseClass->first_theoretical_activity_day = $this->class['first_day'];
         $courseClass->second_theoretical_activity_day = $this->class['second_day'];
-        $courseClass->practical_duration = $this->practicalDuration();
+        $courseClass->practical_duration = $this->calculateDuration($this->class['practical_duration']);
         $courseClass->vacation_begin = $this->date($this->class['vacation_begin']);
         $courseClass->vacation_end = $this->date($this->class['vacation_end']);
-        $courseClass->first_theoretical_activity_duration = $this->class['first_day_duration'];
-        $courseClass->second_theoretical_activity_duration = $this->class['second_day_duration'];
+        $courseClass->first_theoretical_activity_duration = $this->calculateDuration($this->class['first_day_duration']);
+        $courseClass->second_theoretical_activity_duration = $this->calculateDuration($this->class['second_day_duration']);
 
         $this->courseClass = $courseClass;
     }
@@ -136,9 +137,15 @@ class CourseClassForm extends Component
                 'year'  => $currentYear
             ],
             'first_day'             => 'monday',
-            'first_day_duration'    => 4,
+            'first_day_duration'    => [
+                'hours'     => 4,
+                'minutes'   => 0,
+            ],
             'second_day'            => 'saturday',
-            'second_day_duration'   => 5,
+            'second_day_duration'    => [
+                'hours'     => 5,
+                'minutes'   => 0,
+            ],
             'practical_duration'    => [
                 'hours'   => 5,
                 'minutes' => 15,
@@ -170,10 +177,10 @@ class CourseClassForm extends Component
         return Carbon::create($date['year'], $date['month'], $date['day']);
     }
 
-    private function practicalDuration()
+    private function calculateDuration($duration)
     {
-        $hours = $this->class['practical_duration']['hours'];
-        $minutes = $this->class['practical_duration']['minutes'];
+        $hours = $duration['hours'];
+        $minutes = $duration['minutes'];
 
         $hoursInMinutes = $hours * 60;
 
@@ -267,7 +274,7 @@ class CourseClassForm extends Component
         $secondDaysDuration = $secondDays->count() * $courseClass->second_duration;
         $introDaysDuration = $introDays->count() * $courseClass->first_duration;
 
-        return $firstDaysDuration + $secondDaysDuration + $introDaysDuration;
+        return ($firstDaysDuration + $secondDaysDuration + $introDaysDuration) / 60;
     }
 
     public function calculateTotalPracticalDuration()

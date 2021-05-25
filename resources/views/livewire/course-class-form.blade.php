@@ -214,7 +214,7 @@
                                 <label class="inline-flex items-center space-x-2">
                                     <span>Carga Horária</span>
                                     <input 
-                                        wire:model="class.first_day_duration"
+                                        wire:model="class.first_day_duration.hours"
                                         class="block w-20 form-input @error('class.first_day_duration')border-red-500 @enderror" 
                                         name="first_day_duration"
                                         type="number"
@@ -254,7 +254,7 @@
                                 <label class="inline-flex items-center space-x-2">
                                     <span>Carga Horária</span>
                                     <input 
-                                        wire:model="class.second_day_duration"
+                                        wire:model="class.second_day_duration.hours"
                                         class="block w-20 form-input @error('class.second_day_duration')border-red-500 @enderror" 
                                         name="second_day_duration"
                                         type="number"

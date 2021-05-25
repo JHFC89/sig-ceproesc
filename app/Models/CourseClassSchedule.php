@@ -151,7 +151,7 @@ trait CourseClassSchedule
         $secondDaysDuration = $secondDays->count() * $this->second_duration;
         $introDaysDuration = $introDays->count() * $this->first_duration;
 
-        // return hours
+        // return minutes
         return $firstDaysDuration + $secondDaysDuration + $introDaysDuration;
     }
 

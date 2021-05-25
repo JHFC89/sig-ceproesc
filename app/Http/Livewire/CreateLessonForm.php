@@ -156,6 +156,8 @@ class CreateLessonForm extends Component
             $duration = $this->courseClass->first_duration;
         }
 
+        $duration = $duration / 60;
+
         if ($duration === 4 || $duration === 5 && $type === 'first') {
             $duration = 2;
         } elseif ($duration === 5 && $type === 'second') {
@@ -288,10 +290,20 @@ class CreateLessonForm extends Component
 
     public function createLessons()
     {
-        $lessons = $this->courseClass->createLessonsFromArray($this->lessons);
+        $lessons = collect($this->lessons)->map(function ($lesson, $key) {
+            $lesson['duration'] = $lesson['duration'] * 60;
 
+            return $lesson;
+        })->all();
+        $lessons = $this->courseClass->createLessonsFromArray($lessons);
+
+        $extraLessons = collect($this->extraLessons)->map(function ($lesson) {
+            $lesson['duration'] = $lesson['duration'] * 60;
+
+            return $lesson;
+        })->all();
         $this->createdExtraLessons = $this->courseClass
-                                          ->createLessonsFromArray($this->extraLessons);
+                                          ->createLessonsFromArray($extraLessons);
 
         $this->createdLessons = $lessons;
     }

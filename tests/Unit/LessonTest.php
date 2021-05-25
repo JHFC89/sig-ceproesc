@@ -749,7 +749,7 @@ class LessonTest extends TestCase
         $array = [
             'date'          => $date->format('Y-m-d'),
             'type'          => 'first',
-            'duration'      => 2,
+            'duration'      => 2 * 60,
             'discipline_id' => $discipline->id,
             'instructor_id' => $instructor->id,
         ];
