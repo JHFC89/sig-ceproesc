@@ -1,6 +1,6 @@
 <?php
 
-if (! function_exists('show_route')) {
+if (! function_exists('sig_format_decimal_number')) {
     function sig_format_decimal_number($number, $precision = 2, $separator = '.')
     {
         $numberParts = explode($separator, $number);
