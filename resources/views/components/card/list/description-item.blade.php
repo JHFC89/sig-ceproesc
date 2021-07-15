@@ -1,6 +1,6 @@
 @props(['label', 'description', 'type' => 'title', 'href' => '', 'linebreak' => false])
 
-<div class="flex items-center py-4">
+<div class="relative flex items-center py-4">
     <div class="w-1/3 lg:w-1/4">
         <span class="text-gray-600">{{ $label }}</span>
     </div>
@@ -15,4 +15,5 @@
             @endif
         @endif
     </div>
+    {{ $slot }}
 </div>

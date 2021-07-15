@@ -26,6 +26,17 @@ class Registration extends Model
         return $this->user->email;
     }
 
+    public function setEmailAttribute($value)
+    {
+        if (empty($this->user)) {
+            $this->invitation->email = $value;
+            return $this->invitation->save();
+        }
+
+        $this->user->email = $value;
+        return $this->user->save();
+    }
+
     public function getFormattedBirthdateAttribute()
     {
         return $this->birthdate->format('d/m/Y');
@@ -57,8 +68,8 @@ class Registration extends Model
     public static function employersForCompany(Company $company)
     {
         return self::query()->with('invitation')
-                            ->where('company_id', $company->id)
-                            ->get();
+            ->where('company_id', $company->id)
+            ->get();
     }
 
     public static function formatBirthdateFromArray(array $birthdate)
@@ -71,7 +82,7 @@ class Registration extends Model
         $user = $this->user;
 
         if (empty($user)) {
-            return $this->isForAdmin(); 
+            return $this->isForAdmin();
         }
 
         return $user->isCoordinator() && $user->isAdmin();

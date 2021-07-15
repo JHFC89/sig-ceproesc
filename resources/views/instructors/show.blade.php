@@ -2,6 +2,10 @@
 
 @section('title', 'Instrutor')
 
+@push('head')
+    @livewireStyles
+@endpush
+
 @section('content')
 
     @if (session()->has('status'))
@@ -21,10 +25,12 @@
                 :description="$registration->name"
             />
 
-            <x-card.list.description-item
+            <livewire:update-registration
                 label="e-mail"
                 type="text"
-                :description="$registration->email"
+                property="email"
+                :registration="$registration"
+                :updatable="Auth::user()->isCoordinator() || Auth::user()->isAdmin()"
             />
 
             <x-card.list.description-item
@@ -37,9 +43,11 @@
                 :description="$registration->rg"
             />
 
-            <x-card.list.description-item
+            <livewire:update-registration
                 label="CPF"
-                :description="$registration->cpf"
+                property="cpf"
+                :registration="$registration"
+                :updatable="Auth::user()->isCoordinator() || Auth::user()->isAdmin()"
             />
 
             <x-card.list.description-item
@@ -103,3 +111,7 @@
     </div>
 
 @endsection
+
+@push('footer')
+    @livewireScripts
+@endpush

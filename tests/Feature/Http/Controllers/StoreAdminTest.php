@@ -19,7 +19,7 @@ class StoreAdminTest extends TestCase
 
     protected $from;
 
-    protected function setUp():void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -43,12 +43,12 @@ class StoreAdminTest extends TestCase
         $data = $this->data;
 
         $response = $this->actingAs($this->admin)
-                         ->post(route('admins.store'), $data);
+            ->post(route('admins.store'), $data);
 
         $response->assertOk()
-                 ->assertViewHas('registration')
-                 ->assertViewIs('admins.show')
-                 ->assertSessionHas('status', 'Administrador cadastrado com sucesso!');
+            ->assertViewHas('registration')
+            ->assertViewIs('admins.show')
+            ->assertSessionHas('status', 'Administrador cadastrado com sucesso!');
 
         $registration = Registration::where('name', 'Test Admin Name')->first();
         $this->assertEquals($data['name'], $registration->name);
@@ -80,7 +80,7 @@ class StoreAdminTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)
-                         ->post(route('admins.store'), $this->data);
+            ->post(route('admins.store'), $this->data);
 
         $response->assertUnauthorized();
         $this->assertNull(Registration::where('name', $this->data['name'])->first());
@@ -93,7 +93,7 @@ class StoreAdminTest extends TestCase
         $coordinator = User::fakeCoordinator();
 
         $response = $this->actingAs($coordinator)
-                         ->post(route('admins.store'), $this->data);
+            ->post(route('admins.store'), $this->data);
 
         $response->assertUnauthorized();
         $this->assertNull(Registration::where('name', $this->data['name'])->first());
@@ -106,7 +106,7 @@ class StoreAdminTest extends TestCase
         $instructor = User::fakeInstructor();
 
         $response = $this->actingAs($instructor)
-                         ->post(route('admins.store'), $this->data);
+            ->post(route('admins.store'), $this->data);
 
         $response->assertUnauthorized();
         $this->assertNull(Registration::where('name', $this->data['name'])->first());
@@ -119,7 +119,7 @@ class StoreAdminTest extends TestCase
         $novice = User::fakeNovice();
 
         $response = $this->actingAs($novice)
-                         ->post(route('admins.store'), $this->data);
+            ->post(route('admins.store'), $this->data);
 
         $response->assertUnauthorized();
         $this->assertNull(Registration::where('name', $this->data['name'])->first());
@@ -132,7 +132,7 @@ class StoreAdminTest extends TestCase
         $employer = User::fakeEmployer();
 
         $response = $this->actingAs($employer)
-                         ->post(route('admins.store'), $this->data);
+            ->post(route('admins.store'), $this->data);
 
         $response->assertUnauthorized();
         $this->assertNull(Registration::where('name', $this->data['name'])->first());
@@ -145,11 +145,11 @@ class StoreAdminTest extends TestCase
         unset($this->data['name']);
 
         $response = $this->actingAs($this->admin)
-                         ->from($this->from)
-                         ->post(route('admins.store'), $this->data);
+            ->from($this->from)
+            ->post(route('admins.store'), $this->data);
 
         $response->assertSessionHasErrors('name')
-                 ->assertRedirect($this->from);
+            ->assertRedirect($this->from);
     }
 
     /** @test */
@@ -158,11 +158,11 @@ class StoreAdminTest extends TestCase
         unset($this->data['email']);
 
         $response = $this->actingAs($this->admin)
-                         ->from($this->from)
-                         ->post(route('admins.store'), $this->data);
+            ->from($this->from)
+            ->post(route('admins.store'), $this->data);
 
         $response->assertSessionHasErrors('email')
-                 ->assertRedirect($this->from);
+            ->assertRedirect($this->from);
     }
 
     /** @test */
@@ -171,11 +171,11 @@ class StoreAdminTest extends TestCase
         $this->data['email'] = 'not an email';
 
         $response = $this->actingAs($this->admin)
-                         ->from($this->from)
-                         ->post(route('admins.store'), $this->data);
+            ->from($this->from)
+            ->post(route('admins.store'), $this->data);
 
         $response->assertSessionHasErrors('email')
-                 ->assertRedirect($this->from);
+            ->assertRedirect($this->from);
     }
 
     /** @test */
@@ -185,11 +185,11 @@ class StoreAdminTest extends TestCase
         $this->data['email'] = 'used@test.com';
 
         $response = $this->actingAs($this->admin)
-                         ->from($this->from)
-                         ->post(route('admins.store'), $this->data);
+            ->from($this->from)
+            ->post(route('admins.store'), $this->data);
 
         $response->assertSessionHasErrors('email')
-                 ->assertRedirect($this->from);
+            ->assertRedirect($this->from);
     }
 
     /** @test */
@@ -201,10 +201,10 @@ class StoreAdminTest extends TestCase
         $this->data['email'] = 'used@test.com';
 
         $response = $this->actingAs($this->admin)
-                         ->from($this->from)
-                         ->post(route('admins.store'), $this->data);
+            ->from($this->from)
+            ->post(route('admins.store'), $this->data);
 
         $response->assertSessionHasErrors('email')
-                 ->assertRedirect($this->from);
+            ->assertRedirect($this->from);
     }
 }
