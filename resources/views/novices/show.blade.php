@@ -147,6 +147,11 @@
             @endif
         @endif
 
+        <livewire:destroy-registration
+            :authorized="Auth::user()->isAdmin() || Auth::user()->isCoordinator()"
+            :registration="$registration"
+        />
+
         <x-user-management :user="$registration->user"/>
 
     </div>

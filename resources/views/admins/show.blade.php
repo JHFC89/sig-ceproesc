@@ -43,8 +43,14 @@
 
     </x-card.list.description-layout>
 
-    @if ($registration->canBeDemotedToCoordinator())
     <div class="flex flex-col space-y-3 justify-end text-center mt-4 lg:flex-row lg:space-y-0 lg:space-x-2">
+
+        <livewire:destroy-registration
+            :authorized="Auth::user()->isAdmin()"
+            :registration="$registration"
+        />
+
+        @if ($registration->canBeDemotedToCoordinator())
         <form
             action="{{ route('admin-coordinators.destroy', ['registration' => $registration->id]) }}"
             method="POST"
@@ -58,8 +64,9 @@
                 remover acesso administrativo
             </button>
         </form>
+        @endif
+
     </div>
-    @endif
 
 @endsection
 

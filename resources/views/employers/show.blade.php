@@ -63,6 +63,11 @@
 
     <div class="flex flex-col space-y-3 justify-end text-center mt-4 lg:flex-row lg:space-y-0 lg:space-x-2">
 
+        <livewire:destroy-registration
+            :authorized="Auth::user()->isAdmin() || Auth::user()->isCoordinator()"
+            :registration="$registration"
+        />
+
         <x-user-management :user="$registration->user"/>
 
     </div>
