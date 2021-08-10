@@ -22,14 +22,14 @@ class CourseClassTest extends TestCase
     public function can_get_all_months()
     {
         $courseClass = $this->testCourseClass();
-        $courseClass->begin = Carbon::create(2021, 1, 16); 
-        $courseClass->end = Carbon::create(2022, 6, 16); 
-        $courseClass->intro_begin = Carbon::create(2021, 1, 16); 
-        $courseClass->intro_end = Carbon::create(2021, 1, 30); 
-        $courseClass->vacation_begin = Carbon::create(2022, 1, 17); 
-        $courseClass->vacation_end = Carbon::create(2022, 2, 15); 
+        $courseClass->begin = Carbon::create(2021, 1, 16);
+        $courseClass->end = Carbon::create(2022, 6, 16);
+        $courseClass->intro_begin = Carbon::create(2021, 1, 16);
+        $courseClass->intro_end = Carbon::create(2021, 1, 30);
+        $courseClass->vacation_begin = Carbon::create(2022, 1, 17);
+        $courseClass->vacation_end = Carbon::create(2022, 2, 15);
         $courseClass->course_id = Course::factory()->create()->id;
-        $courseClass->save(); 
+        $courseClass->save();
 
         $result = $courseClass->allMonths();
 
@@ -62,14 +62,14 @@ class CourseClassTest extends TestCase
     public function can_get_all_theoretical_activity_days_without_extra_lessons()
     {
         $courseClass = $this->testCourseClass();
-        $courseClass->begin = Carbon::create(2021, 4, 1); 
-        $courseClass->end = Carbon::create(2021, 7, 1); 
-        $courseClass->intro_begin = Carbon::create(2021, 4, 1); 
-        $courseClass->intro_end = Carbon::create(2021, 4, 7); 
-        $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
-        $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->begin = Carbon::create(2021, 4, 1);
+        $courseClass->end = Carbon::create(2021, 7, 1);
+        $courseClass->intro_begin = Carbon::create(2021, 4, 1);
+        $courseClass->intro_end = Carbon::create(2021, 4, 7);
+        $courseClass->vacation_begin = Carbon::create(2021, 5, 3);
+        $courseClass->vacation_end = Carbon::create(2021, 5, 17);
         $courseClass->course_id = Course::factory()->create()->id;
-        $courseClass->save(); 
+        $courseClass->save();
         $courseClass->offdays()->createMany([
             ['date' => Carbon::create(2021, 4, 30)],
             ['date' => Carbon::create(2021, 6, 11)],
@@ -115,14 +115,14 @@ class CourseClassTest extends TestCase
     public function can_get_all_theoretical_activity_days_with_extra_lessons()
     {
         $courseClass = $this->testCourseClass();
-        $courseClass->begin = Carbon::create(2021, 4, 1); 
-        $courseClass->end = Carbon::create(2021, 7, 1); 
-        $courseClass->intro_begin = Carbon::create(2021, 4, 1); 
-        $courseClass->intro_end = Carbon::create(2021, 4, 7); 
-        $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
-        $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->begin = Carbon::create(2021, 4, 1);
+        $courseClass->end = Carbon::create(2021, 7, 1);
+        $courseClass->intro_begin = Carbon::create(2021, 4, 1);
+        $courseClass->intro_end = Carbon::create(2021, 4, 7);
+        $courseClass->vacation_begin = Carbon::create(2021, 5, 3);
+        $courseClass->vacation_end = Carbon::create(2021, 5, 17);
         $courseClass->course_id = Course::factory()->create()->id;
-        $courseClass->save(); 
+        $courseClass->save();
         $courseClass->offdays()->createMany([
             ['date' => Carbon::create(2021, 4, 30)],
             ['date' => Carbon::create(2021, 6, 11)],
@@ -170,14 +170,14 @@ class CourseClassTest extends TestCase
     public function can_get_all_theoretical_activity_days_for_a_month()
     {
         $courseClass = $this->testCourseClass();
-        $courseClass->begin = Carbon::create(2021, 4, 1); 
-        $courseClass->end = Carbon::create(2021, 7, 1); 
-        $courseClass->intro_begin = Carbon::create(2021, 4, 1); 
-        $courseClass->intro_end = Carbon::create(2021, 4, 7); 
-        $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
-        $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->begin = Carbon::create(2021, 4, 1);
+        $courseClass->end = Carbon::create(2021, 7, 1);
+        $courseClass->intro_begin = Carbon::create(2021, 4, 1);
+        $courseClass->intro_end = Carbon::create(2021, 4, 7);
+        $courseClass->vacation_begin = Carbon::create(2021, 5, 3);
+        $courseClass->vacation_end = Carbon::create(2021, 5, 17);
         $courseClass->course_id = Course::factory()->create()->id;
-        $courseClass->save(); 
+        $courseClass->save();
         $courseClass->offdays()->createMany([
             ['date' => Carbon::create(2021, 4, 30)],
             ['date' => Carbon::create(2021, 6, 11)],
@@ -202,12 +202,12 @@ class CourseClassTest extends TestCase
     public function can_get_total_duration_for_theoretical_activity_days()
     {
         $courseClass = $this->testCourseClass();
-        $courseClass->begin = Carbon::create(2021, 4, 1); 
-        $courseClass->end = Carbon::create(2021, 4, 30); 
-        $courseClass->intro_begin = Carbon::create(2021, 4, 1); 
-        $courseClass->intro_end = Carbon::create(2021, 4, 7); 
-        $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
-        $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->begin = Carbon::create(2021, 4, 1);
+        $courseClass->end = Carbon::create(2021, 4, 30);
+        $courseClass->intro_begin = Carbon::create(2021, 4, 1);
+        $courseClass->intro_end = Carbon::create(2021, 4, 7);
+        $courseClass->vacation_begin = Carbon::create(2021, 5, 3);
+        $courseClass->vacation_end = Carbon::create(2021, 5, 17);
         $courseClass->course_id = Course::factory()->create()->id;
         $courseClass->save();
 
@@ -220,14 +220,14 @@ class CourseClassTest extends TestCase
     public function can_get_all_practical_activity_days()
     {
         $courseClass = $this->testCourseClass();
-        $courseClass->begin = Carbon::create(2021, 4, 1); 
-        $courseClass->end = Carbon::create(2021, 7, 1); 
-        $courseClass->intro_begin = Carbon::create(2021, 4, 1); 
-        $courseClass->intro_end = Carbon::create(2021, 4, 7); 
-        $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
-        $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->begin = Carbon::create(2021, 4, 1);
+        $courseClass->end = Carbon::create(2021, 7, 1);
+        $courseClass->intro_begin = Carbon::create(2021, 4, 1);
+        $courseClass->intro_end = Carbon::create(2021, 4, 7);
+        $courseClass->vacation_begin = Carbon::create(2021, 5, 3);
+        $courseClass->vacation_end = Carbon::create(2021, 5, 17);
         $courseClass->course_id = Course::factory()->create()->id;
-        $courseClass->save(); 
+        $courseClass->save();
         $courseClass->offdays()->createMany([
             ['date' => Carbon::create(2021, 6, 1)],
         ]);
@@ -284,13 +284,13 @@ class CourseClassTest extends TestCase
     public function can_get_total_duration_for_practical_activity_days()
     {
         $courseClass = $this->testCourseClass();
-        $courseClass->begin = Carbon::create(2021, 4, 1); 
-        $courseClass->end = Carbon::create(2021, 4, 30); 
-        $courseClass->intro_begin = Carbon::create(2021, 4, 1); 
-        $courseClass->intro_end = Carbon::create(2021, 4, 7); 
-        $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
-        $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
-        $courseClass->practical_duration = 1; 
+        $courseClass->begin = Carbon::create(2021, 4, 1);
+        $courseClass->end = Carbon::create(2021, 4, 30);
+        $courseClass->intro_begin = Carbon::create(2021, 4, 1);
+        $courseClass->intro_end = Carbon::create(2021, 4, 7);
+        $courseClass->vacation_begin = Carbon::create(2021, 5, 3);
+        $courseClass->vacation_end = Carbon::create(2021, 5, 17);
+        $courseClass->practical_duration = 1;
         $courseClass->course_id = Course::factory()->create()->id;
         $courseClass->save();
 
@@ -303,14 +303,14 @@ class CourseClassTest extends TestCase
     public function can_get_all_offdays()
     {
         $courseClass = $this->testCourseClass();
-        $courseClass->begin = Carbon::create(2021, 4, 1); 
-        $courseClass->end = Carbon::create(2021, 7, 30); 
-        $courseClass->intro_begin = Carbon::create(2021, 4, 1); 
-        $courseClass->intro_end = Carbon::create(2021, 4, 7); 
-        $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
-        $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->begin = Carbon::create(2021, 4, 1);
+        $courseClass->end = Carbon::create(2021, 7, 30);
+        $courseClass->intro_begin = Carbon::create(2021, 4, 1);
+        $courseClass->intro_end = Carbon::create(2021, 4, 7);
+        $courseClass->vacation_begin = Carbon::create(2021, 5, 3);
+        $courseClass->vacation_end = Carbon::create(2021, 5, 17);
         $courseClass->course_id = Course::factory()->create()->id;
-        $courseClass->save(); 
+        $courseClass->save();
         $courseClass->offdays()->createMany([
             ['date' => Carbon::create(2021, 4, 30)],
             ['date' => Carbon::create(2021, 6, 11)],
@@ -330,14 +330,14 @@ class CourseClassTest extends TestCase
     public function can_get_all_extra_lesson_days()
     {
         $courseClass = $this->testCourseClass();
-        $courseClass->begin = Carbon::create(2021, 4, 1); 
-        $courseClass->end = Carbon::create(2021, 7, 30); 
-        $courseClass->intro_begin = Carbon::create(2021, 4, 1); 
-        $courseClass->intro_end = Carbon::create(2021, 4, 7); 
-        $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
-        $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->begin = Carbon::create(2021, 4, 1);
+        $courseClass->end = Carbon::create(2021, 7, 30);
+        $courseClass->intro_begin = Carbon::create(2021, 4, 1);
+        $courseClass->intro_end = Carbon::create(2021, 4, 7);
+        $courseClass->vacation_begin = Carbon::create(2021, 5, 3);
+        $courseClass->vacation_end = Carbon::create(2021, 5, 17);
         $courseClass->course_id = Course::factory()->create()->id;
-        $courseClass->save(); 
+        $courseClass->save();
         $courseClass->extraLessonDays()->createMany([
             ['date' => Carbon::create(2021, 4, 30)],
             ['date' => Carbon::create(2021, 6, 11)],
@@ -357,14 +357,14 @@ class CourseClassTest extends TestCase
     public function can_get_all_vacation_days()
     {
         $courseClass = $this->testCourseClass();
-        $courseClass->begin = Carbon::create(2021, 4, 1); 
-        $courseClass->end = Carbon::create(2021, 7, 30); 
-        $courseClass->intro_begin = Carbon::create(2021, 4, 1); 
-        $courseClass->intro_end = Carbon::create(2021, 4, 7); 
-        $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
-        $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->begin = Carbon::create(2021, 4, 1);
+        $courseClass->end = Carbon::create(2021, 7, 30);
+        $courseClass->intro_begin = Carbon::create(2021, 4, 1);
+        $courseClass->intro_end = Carbon::create(2021, 4, 7);
+        $courseClass->vacation_begin = Carbon::create(2021, 5, 3);
+        $courseClass->vacation_end = Carbon::create(2021, 5, 17);
         $courseClass->course_id = Course::factory()->create()->id;
-        $courseClass->save(); 
+        $courseClass->save();
 
         $result = $courseClass->allVacationDays();
 
@@ -580,7 +580,8 @@ class CourseClassTest extends TestCase
         ];
         $courseClassA->createLessonsFromArray($arrayA);
         $this->assertEquals(4, Lesson::count());
-        //Lessons B and C are equal to Class A's Lessons B and C
+        // Lessons B and C are equal to Class A's Lessons B and C
+        // Lesson D is equal, but with different duration
         $arrayB = [
             [
                 'id' => 'Lesson A',
@@ -609,10 +610,10 @@ class CourseClassTest extends TestCase
             [
                 'id' => 'Lesson D',
                 'date' => $dateD,
-                'type' => 'first',
-                'duration' => 3,
-                'instructor_id' => $instructorA->id,
-                'discipline_id' => $disciplineB->id,
+                'type' => 'second',
+                'duration' => 10,
+                'instructor_id' => $instructorB->id,
+                'discipline_id' => $disciplineA->id,
             ],
         ];
 
@@ -621,6 +622,41 @@ class CourseClassTest extends TestCase
         $this->assertEquals(6, Lesson::count());
         $this->assertEquals(4, $courseClassA->lessons()->count());
         $this->assertEquals(4, $courseClassB->lessons()->count());
+    }
+
+    /** @test */
+    public function equal_lessons_from_different_cities_are_not_duplicate()
+    {
+        $courseClassA = $this->testCourseClass();
+        $courseClassA->name = 'Class A';
+        $courseClassA->city = 'City A';
+        $courseClassA->save();
+        $courseClassB = $this->testCourseClass();
+        $courseClassB->name = 'Class B';
+        $courseClassB->city = 'City B';
+        $courseClassB->save();
+        $instructor = User::fakeInstructor();
+        $discipline = Discipline::factory()->create();
+        $date = $courseClassA->begin->addDays(1)->format('Y-m-d');
+
+        $array = [
+            [
+                'id' => 'Lesson A',
+                'date' => $date,
+                'type' => 'first',
+                'duration' => 2,
+                'instructor_id' => $instructor->id,
+                'discipline_id' => $discipline->id,
+            ],
+        ];
+        $courseClassA->createLessonsFromArray($array);
+        $this->assertEquals(1, Lesson::count());
+
+        $courseClassB->createLessonsFromArray($array);
+
+        $this->assertEquals(2, Lesson::count());
+        $this->assertEquals(1, $courseClassA->lessons()->count());
+        $this->assertEquals(1, $courseClassB->lessons()->count());
     }
 
     /** @test */
@@ -689,7 +725,7 @@ class CourseClassTest extends TestCase
         $this->assertTrue($courseClass->isSubscribed($novice));
         $this->assertTrue($courseClass->lessons->every->isEnrolled($novice));
         $this->assertTrue($courseClass->lessons->every->isRegistered());
-        
+
         $result = $courseClass->noviceFrequency($novice);
 
         $this->assertEquals('80,00', $result);
@@ -700,8 +736,8 @@ class CourseClassTest extends TestCase
     {
         $lessons = Lesson::factory()->duration(2)->count(5);
         $courseClass = CourseClass::factory()->hasNovices(1)
-                                             ->has($lessons)
-                                             ->create();
+            ->has($lessons)
+            ->create();
         $novice = $courseClass->novices->first()->turnIntoNovice()->refresh();
         $courseClass->subscribe($novice);
 
@@ -710,29 +746,29 @@ class CourseClassTest extends TestCase
         $date = now()->subDays(3);
         $courseClass->lessons[0]->update(['date' => $date]);
         $courseClass->lessons[0]->registerFor($novice)
-                                ->present()
-                                ->complete()
-                                ->register();
+            ->present()
+            ->complete()
+            ->register();
         $courseClass->lessons[1]->update(['date' => $date->addDay()]);
         $courseClass->lessons[1]->registerFor($novice)
-                                ->absent()
-                                ->complete()
-                                ->register();
+            ->absent()
+            ->complete()
+            ->register();
         $courseClass->lessons[2]->update(['date' => $date->addDay()]);
         $courseClass->lessons[2]->registerFor($novice)
-                                ->absent()
-                                ->complete()
-                                ->register();
+            ->absent()
+            ->complete()
+            ->register();
         $courseClass->lessons[3]->update(['date' => $date->addDay()]);
         $courseClass->lessons[3]->registerFor($novice)
-                                ->absent()
-                                ->complete()
-                                ->register();
+            ->absent()
+            ->complete()
+            ->register();
         $courseClass->lessons[4]->update(['date' => $date->addDay()]);
         $courseClass->lessons[4]->registerFor($novice)
-                                ->absent()
-                                ->complete()
-                                ->register();
+            ->absent()
+            ->complete()
+            ->register();
         $this->assertCount(5, $courseClass->lessons);
         $this->assertEquals(10, $courseClass->lessons->sum('hourly_load'));
         $this->assertTrue($courseClass->isSubscribed($novice));
@@ -747,7 +783,7 @@ class CourseClassTest extends TestCase
             ['date' => $lessons[3]->date->toString()],
             ['date' => $lessons[4]->date->toString()],
         ]);
-        
+
         $result = $courseClass->noviceFrequency($novice);
 
         $this->assertEquals('100,00', $result);
@@ -763,7 +799,7 @@ class CourseClassTest extends TestCase
         $this->assertCount(5, $courseClass->lessons);
         $this->assertTrue($courseClass->lessons->every->isEnrolled($novice));
         $this->assertFalse($courseClass->lessons->every->isRegistered());
-        
+
         $result = $courseClass->noviceFrequency($novice);
 
         $this->assertFalse($result);
@@ -775,7 +811,7 @@ class CourseClassTest extends TestCase
         $courseClass = $this->testCourseClassWithLessons();
         $lessons = $courseClass->lessons;
 
-        $instructors = $courseClass->instructors(); 
+        $instructors = $courseClass->instructors();
 
         $this->assertTrue($lessons[0]->instructor->is($instructors[0]));
         $this->assertTrue($lessons[1]->instructor->is($instructors[1]));
@@ -784,19 +820,19 @@ class CourseClassTest extends TestCase
     private function testCourseClass()
     {
         $courseClass = new CourseClass;
-        $courseClass->name = 'test name'; 
-        $courseClass->city = 'fake city'; 
-        $courseClass->begin = Carbon::create(2021, 4, 1); 
-        $courseClass->end = Carbon::create(2021, 7, 1); 
-        $courseClass->intro_begin = Carbon::create(2021, 4, 1); 
-        $courseClass->intro_end = Carbon::create(2021, 4, 7); 
-        $courseClass->first_theoretical_activity_day = 'friday'; 
-        $courseClass->first_theoretical_activity_duration = 4; 
-        $courseClass->second_theoretical_activity_day = 'saturday'; 
-        $courseClass->second_theoretical_activity_duration = 5; 
-        $courseClass->practical_duration = 1; 
-        $courseClass->vacation_begin = Carbon::create(2021, 5, 3); 
-        $courseClass->vacation_end = Carbon::create(2021, 5, 17); 
+        $courseClass->name = 'test name';
+        $courseClass->city = 'fake city';
+        $courseClass->begin = Carbon::create(2021, 4, 1);
+        $courseClass->end = Carbon::create(2021, 7, 1);
+        $courseClass->intro_begin = Carbon::create(2021, 4, 1);
+        $courseClass->intro_end = Carbon::create(2021, 4, 7);
+        $courseClass->first_theoretical_activity_day = 'friday';
+        $courseClass->first_theoretical_activity_duration = 4;
+        $courseClass->second_theoretical_activity_day = 'saturday';
+        $courseClass->second_theoretical_activity_duration = 5;
+        $courseClass->practical_duration = 1;
+        $courseClass->vacation_begin = Carbon::create(2021, 5, 3);
+        $courseClass->vacation_end = Carbon::create(2021, 5, 17);
         $courseClass->course_id = Course::factory()->create()->id;
 
         return $courseClass;

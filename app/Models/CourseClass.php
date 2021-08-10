@@ -69,19 +69,26 @@ class CourseClass extends Model
 
     private function existingLessonsBetweenDuration($lessons)
     {
-        return Lesson::whereBetween('date', [$this->begin, $this->end])
-            ->where(function($query) use ($lessons) {
+        $existingLessons = Lesson::with('courseClasses:city')
+            ->whereBetween('date', [$this->begin, $this->end])
+            ->where(function ($query) use ($lessons) {
                 $lessons->each(function ($lesson) use ($query) {
                     $query->orWhere(function ($query) use ($lesson) {
                         $query->where('date', $lesson['date'])
-                              ->where('type', $lesson['type'])
-                              ->where('instructor_id', $lesson['instructor_id'])
-                              ->where('discipline_id', $lesson['discipline_id']);
-
+                            ->where('type', $lesson['type'])
+                            ->where('duration', $lesson['duration'])
+                            ->where('instructor_id', $lesson['instructor_id'])
+                            ->where('discipline_id', $lesson['discipline_id']);
                     });
                 });
             })
             ->get();
+
+        $existingLessons = $existingLessons->filter(function ($lesson) {
+            return $lesson->courseClasses->first()->city === $this->city;
+        });
+
+        return $existingLessons;
     }
 
     private function filterExistingLessons($lessons, $existingLessons)
@@ -93,7 +100,6 @@ class CourseClass extends Model
         return $lessons->reject(function ($lesson) use ($duplicates) {
             return $duplicates->contains($lesson['date'] . '-' . $lesson['type']);
         });
-
     }
 
     public function subscribe(User $novice)
@@ -145,27 +151,27 @@ class CourseClass extends Model
 
     public function noviceFrequency(User $novice)
     {
-        if (! $this->isSubscribed($novice)) {
+        if (!$this->isSubscribed($novice)) {
             return;
         };
 
         $extraLessons = $this->extraLessonDays->map->format('Y-m-d')->all();
 
         $registeredLessonsDuration = (int) $this->lessons()
-                                                ->registered()
-                                                ->notExtra($extraLessons)
-                                                ->totalDuration();
+            ->registered()
+            ->notExtra($extraLessons)
+            ->totalDuration();
 
         if ($registeredLessonsDuration === 0) {
             return false;
         }
 
         $presenceDuration = (int) $novice->lessons()
-                                         ->registered()
-                                         ->wherePresent($novice->id)
-                                         ->totalDuration();
+            ->registered()
+            ->wherePresent($novice->id)
+            ->totalDuration();
 
-        $frequency = ($presenceDuration * 100)/$registeredLessonsDuration;
+        $frequency = ($presenceDuration * 100) / $registeredLessonsDuration;
 
         $frequency = sig_format_decimal_number($frequency);
 
