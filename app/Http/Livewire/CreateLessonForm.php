@@ -34,7 +34,7 @@ class CreateLessonForm extends Component
 
     protected $listeners = [
         'preSelectedInstructorsUpdated',
-        'lessonAdded', 
+        'lessonAdded',
         'lessonReseted',
     ];
 
@@ -69,19 +69,19 @@ class CreateLessonForm extends Component
         }
 
         return $lessons->filter(function ($lesson) use ($date, $type) {
-                return $lesson['type'] === $type 
-                    && $lesson['date'] === $date->format('Y-m-d');
+            return $lesson['type'] === $type
+                && $lesson['date'] === $date->format('Y-m-d');
         })->first();
     }
 
     public function dates()
     {
         return $this->courseClass
-                    ->theoreticalDaysForMonth(
-                        $this->month['month'], 
-                        $this->month['year'],
-                        false
-                    );
+            ->theoreticalDaysForMonth(
+                $this->month['month'],
+                $this->month['year'],
+                false
+            );
     }
 
     public function isExtraLesson($date)
@@ -142,12 +142,12 @@ class CreateLessonForm extends Component
         }
 
         return 'bg-gray-200 text-gray-400 pointer-events-none';
-    } 
+    }
 
     public function calculateDuration($date, $type = 'first')
     {
         // TODO: CourseClass method to calculate the lesson duration
-        
+
         if ($date->is($this->courseClass->first_day)) {
             $duration = $this->courseClass->first_duration;
         } elseif ($date->is($this->courseClass->second_day)) {
@@ -186,7 +186,7 @@ class CreateLessonForm extends Component
 
         $lesson_id = $lesson['id'];
 
-        $prevDiscipline = $this->lessons[$lesson_id]['discipline_id'] ?? false; 
+        $prevDiscipline = $this->lessons[$lesson_id]['discipline_id'] ?? false;
 
         $this->lessons[$lesson_id] = $lesson;
 
@@ -267,16 +267,16 @@ class CreateLessonForm extends Component
             return;
         }
 
-        if (! $this->allDisciplinesAreCompleted()) {
+        if (!$this->allDisciplinesAreCompleted()) {
             $this->createLessonsAvailable = false;
 
-            return; 
+            return;
         }
 
-        if (! $this->allLessonDatesAreAssigned()) {
+        if (!$this->allLessonDatesAreAssigned()) {
             $this->createLessonsAvailable = false;
-        
-           return; 
+
+            return;
         }
 
         if ($this->courseClass->hasLessons()) {
@@ -288,13 +288,13 @@ class CreateLessonForm extends Component
 
     private function allDisciplinesAreCompleted()
     {
-        return count($this->completedDisciplines) == $this->disciplines->count() 
+        return count($this->completedDisciplines) == $this->disciplines->count()
             && collect($this->disciplinesDuration)->sum() == 0;
     }
 
     private function allLessonDatesAreAssigned()
     {
-        return count($this->lessons) 
+        return count($this->lessons)
             == ($this->courseClass->allTheoreticalDays()->count() * 2);
     }
 
@@ -313,7 +313,7 @@ class CreateLessonForm extends Component
             return $lesson;
         })->all();
         $this->createdExtraLessons = $this->courseClass
-                                          ->createLessonsFromArray($extraLessons);
+            ->createLessonsFromArray($extraLessons);
 
         $this->createdLessons = $lessons;
     }

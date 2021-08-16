@@ -44,6 +44,8 @@ class CourseClass extends Model
 
     public function createLessonsFromArray(array $lessons)
     {
+        $this->refresh();
+
         throw_if(
             $this->hasLessons(),
             CourseClassAlreadyHasLessonsException::class,
@@ -61,6 +63,10 @@ class CourseClass extends Model
         });
 
         $lessons = $lessons->concat($extistingLessons);
+
+        $lessons = $lessons->reject(function ($lesson, $key) {
+            return $this->refresh()->lessons->pluck('id')->contains($lesson->id);
+        });
 
         $this->lessons()->attach($lessons->pluck('id')->toArray());
 
