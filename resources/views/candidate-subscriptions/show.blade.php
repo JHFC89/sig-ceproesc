@@ -164,7 +164,7 @@
                 <div class="flex justify-start items-center w-1/2 pr-12">
                     <div class="w-full space-y-2 text-center uppercase leading-none text-gray-700">
                         <h1 class="text-3xl font-bold tracking-wider">
-                            {{ $answers->for('q1')->value }} Mendonça
+                            {{ $answers->for('q1')->value }} 
                         </h1>
                         <p class="text-xl">
                             {{ \Carbon\Carbon::parse($answers->for('q3')->value)->diff(\Carbon\Carbon::now())->format('%y anos') }}
