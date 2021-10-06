@@ -33,6 +33,7 @@ use App\Http\Controllers\{
     ForTodayLessonListController,
     ProfessionalProfileController,
     ComplementaryProfileController,
+    CandidateSubscriptionController,
 };
 
 /*
@@ -68,7 +69,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::post('/lessons/{lesson}/requests', [LessonRequestController::class, 'store'])->name('lessons.requests.store');
     Route::get('/requests/{request}', [LessonRequestController::class, 'show'])->name('requests.show');
     Route::patch('/requests/{request}', [LessonRequestController::class, 'update'])->name('requests.update');
-   
+
     Route::post('/evaluations/{evaluation}/grades', [EvaluationGradeController::class, 'store'])->name('evaluations.grades.store');
     Route::get('evaluations/{evaluation}', [EvaluationController::class, 'show'])->name('evaluations.show');
     Route::post('/lessons/{lesson}/evaluations', [EvaluationController::class, 'store'])->name('lessons.evaluations.store');
@@ -81,7 +82,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::post('disciplines', [DisciplineController::class, 'store'])
         ->name('disciplines.store');
     Route::get('disciplines/{discipline}/edit', [
-        DisciplineController::class, 
+        DisciplineController::class,
         'edit'
     ])->name('disciplines.edit');
     Route::patch('disciplines/{discipline}', [
@@ -207,10 +208,10 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('profiles/{user}', [ProfileController::class, 'show'])
         ->name('profiles.show');
     Route::patch('account-profiles/{user}', [
-        AccountProfileController::class,'update'
+        AccountProfileController::class, 'update'
     ])->name('account-profiles.update');
     Route::patch('personal-profiles/{user}', [
-        PersonalProfileController::class,'update'
+        PersonalProfileController::class, 'update'
     ])->name('personal-profiles.update');
     Route::patch('professional-profiles/{user}', [
         ProfessionalProfileController::class, 'update'
@@ -223,21 +224,39 @@ Route::middleware(['auth', 'active'])->group(function () {
         ->name('send-invitation');
 
     Route::get('novices/{registration}/frequencies', [
-        NoviceFrequencyController::class,'show'
+        NoviceFrequencyController::class, 'show'
     ])->name('novices.frequencies.show');
 
     Route::get('lessons/{lesson}/edit', [LessonController::class, 'edit'])
         ->name('lessons.edit');
     Route::patch('lesson-dates/{lesson}', [
-        LessonDateController::class,'update'
+        LessonDateController::class, 'update'
     ])->name('lesson-dates.update');
     Route::patch('lesson-instructors/{lesson}', [
-        LessonInstructorController::class,'update'
+        LessonInstructorController::class, 'update'
     ])->name('lesson-instructors.update');
+
+    Route::get('entries', [CandidateSubscriptionController::class, 'index'])
+        ->name('candidate-subscriptions.index');
+
+    Route::get('entries/{entry}', [CandidateSubscriptionController::class, 'show'])
+        ->name('candidate-subscriptions.show');
+
+    Route::patch('answers/{answer}/', [CandidateSubscriptionController::class, 'update'])
+        ->name('candidate-subscriptions.update');
+
+    Route::delete('entries/{entry}', [CandidateSubscriptionController::class, 'destroy'])
+        ->name('candidate-subscriptions.destroy');
 });
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-require __DIR__.'/auth.php';
+Route::get('/ficha-de-inscricao', [CandidateSubscriptionController::class, 'create'])
+    ->name('cadidate-subscriptions.create');
+
+Route::post('/ficha-de-inscricao', [CandidateSubscriptionController::class, 'store'])
+    ->name('cadidate-subscriptions.store');
+
+require __DIR__ . '/auth.php';

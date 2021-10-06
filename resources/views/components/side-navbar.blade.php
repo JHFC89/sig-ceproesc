@@ -334,6 +334,34 @@
                 @endif
 
             @endif
+
+            @if (Auth::user()->isCoordinator() || Auth::user()->isAdmin())
+            <li>
+                <span 
+                    class="
+                        flex items-center justify-center px-2 py-2 group border lg:border-none rounded-md cursor-default lg:justify-start
+                        {{ request()->routeIs('candidate-subscriptions.*')
+                        ? 'font-medium text-gray-100' : '' }}
+                    "
+                >
+                    <x-icons.collection class="w-6 group-hover:text-gray-400"/>
+                    <span class="ml-4 group-hover:text-gray-400">Fichas</span>
+                </span>
+            </li>
+
+                <li>
+                    <a
+                        href="{{ route('candidate-subscriptions.index') }}"
+                        class="
+                            flex items-center justify-center px-2 py-2 lg:py-1 lg:text-sm group rounded-md lg:justify-start
+                            {{ request()->routeIs('candidate-subscriptions.index')
+                            ? 'font-medium text-gray-100' : '' }}
+                        "
+                    >
+                        <span class="lg:ml-10 group-hover:text-gray-400">todas</span>
+                    </a>
+                </li>
+            @endif
         </ul>
     </nav>
 </aside>

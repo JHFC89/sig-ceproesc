@@ -1,6 +1,8 @@
 <?php
 
-return [
+$candidateFormQuestions = App\Models\Subscription::mapQuestionsKeyToContent()->toArray();
+
+$array = [
 
     /*
     |--------------------------------------------------------------------------
@@ -157,7 +159,7 @@ return [
         'date'      => 'data',
         'day'       => 'dia',
         'excerpt'   => 'resumo',
-        'first_name'=> 'primeiro nome',
+        'first_name' => 'primeiro nome',
         'gender'    => 'gênero',
         'hour'      => 'hora',
         'last_name' => 'sobrenome',
@@ -222,5 +224,8 @@ return [
         'register' => 'conteúdo ministrado',
         'justification' => 'justificativa',
     ],
-
 ];
+
+$array['attributes'] = $array['attributes'] + $candidateFormQuestions;
+
+return $array;

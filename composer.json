@@ -14,7 +14,8 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.18.0",
         "laravel/tinker": "^2.5",
-        "livewire/livewire": "^2.3"
+        "livewire/livewire": "^2.3",
+        "matt-daneshvar/laravel-survey": "^0.1.4"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
