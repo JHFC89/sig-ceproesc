@@ -77,7 +77,7 @@ class FakeSubscriptionEntry
         }
 
         $q37 = $this->randomAnswer('escolaridade');
-        $q38 = $this->randomAnswer('conclusão');
+        $q38 = $this->randomAnswer('situação');
         $q39 = $this->randomAnswer('instituição');
         $q40 = $this->randomAnswer('curso');
         $q41 = $this->randomAnswer('nivel');
@@ -272,7 +272,7 @@ class FakeSubscriptionEntry
             'parentesco'   => ['mãe', 'pai', 'irmão', 'irmã', 'tia', 'vó'],
             'renda'   => ['1.700', '1.500', '2.000', '700', '2.300', '1.200'],
             'alistamento'   => ['dispensado', 'não dispensado', 'ainda não convocado'],
-            'conclusão'   => ['completo', 'cursando'],
+            'situação'   => ['completo', 'cursando', 'trancado'],
             'instituição'   => ['escola Maria Márcia', 'Faculdade Aprendizado', 'Escola Estatual de SP', 'Uniara', 'Usp', 'Escola Dr. Eurípedes Araújo'],
             'nivel'   => ['básico', 'intermediário', 'avançado'],
             'informática'   => ['word', 'excel', 'power point'],

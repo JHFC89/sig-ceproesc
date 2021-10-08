@@ -35,6 +35,7 @@
                     x-transition:leave="transition ease-in duration-300"
                     x-transition:leave-start="opacity-100 transform scale-100"
                     x-transition:leave-end="opacity-0 transform scale-90"
+                    style="display: none !important"
                     class="absolute -mr-8 mt-10 top-0 right-0 min-w-full w-64 z-30"
                 >
                     <span class="absolute top-0 right-0 mr-12 -mt-2 w-4 h-4 bg-gray-100 transform rotate-45 border-l border-t z-20"></span>

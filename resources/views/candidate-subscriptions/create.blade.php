@@ -11,6 +11,7 @@
 
         <h1 class="mt-8 text-center font-semibold text-3xl lg:text-4xl">Formulário do Candidato</h1>
         <span class="block italic text-sm text-center text-gray-500">*Todos os campos são <strong>obrigatórios</strong>.</span>
+        <span class="block mt-2 font-semibold text-center text-gray-400 text-xs">Atenção: se você já tem um cadastro, esta nova ficha irá substituir o seu cadastro anterior.</span>
 
         @if ($errors->any())
             <ul class="mt-4 py-4 bg-red-300 text-center text-red-700 font-semibold rounded-md lg:container lg:mx-auto lg:max-w-screen-lg">
@@ -125,15 +126,28 @@
 
                     @foreach ($form->sections[0]->questions as $question)
 
-                    @continue($loop->iteration < 17)
+                        @continue($loop->iteration < 17)
 
-                    <x-dynamic-component
-                        :component="'candidate-subscription.' . $question->type"
-                        :name="$question->key"
-                        :label="$question->content"
-                        :options="$question->options"
-                        :value="old($question->key)"
-                    />
+                        @if ($question->key == 'q18')
+                            <x-dynamic-component
+                                :component="'candidate-subscription.' . $question->type"
+                                :name="$question->key"
+                                :label="$question->content"
+                                :options="$question->options"
+                                :value="old($question->key)"
+                                legend="*Se não tem CNH, escolha 'Nenhum'"
+                            />
+
+                            @continue
+                        @endif
+
+                        <x-dynamic-component
+                            :component="'candidate-subscription.' . $question->type"
+                            :name="$question->key"
+                            :label="$question->content"
+                            :options="$question->options"
+                            :value="old($question->key)"
+                        />
 
                     @endforeach
 
@@ -275,32 +289,57 @@
                         :name="$questions[1]->key"
                         :label="$questions[1]->content"
                         :options="$questions[1]->options"
+                        legend="Se maior de idade, digite seu próprio CPF."
                     />
 
                     @foreach ($form->sections[2]->questions as $question)
 
                         @continue($loop->iteration < 3)
 
-                            @if (in_array($question->key, ['q35', 'q36']))
-                                
-                                <div
-                                    x-data="{show: false}"
-                                    x-on:q4.window="show = $event.detail == 'masculino' ? true : false"
-                                >
-                                    <template x-if="show">
-                                        <x-dynamic-component
-                                            :component="'candidate-subscription.' . $question->type"
-                                            :name="$question->key"
-                                            :label="$question->content"
-                                            :options="$question->options"
-                                            :value="old($question->key)"
-                                        />
-                                    </template>
-                                </div>
+                        @if (in_array($question->key, ['q35', 'q36']))
+                            
+                            <div
+                                x-data="{show: false}"
+                                x-on:q4.window="show = $event.detail == 'masculino' ? true : false"
+                            >
+                                <template x-if="show">
+                                    <x-dynamic-component
+                                        :component="'candidate-subscription.' . $question->type"
+                                        :name="$question->key"
+                                        :label="$question->content"
+                                        :options="$question->options"
+                                        :value="old($question->key)"
+                                    />
+                                </template>
+                            </div>
 
-                                @continue
+                            @continue
 
-                            @endif
+                        @elseif ($question->key == 'q30')
+                            <x-dynamic-component
+                                :component="'candidate-subscription.' . $question->type"
+                                :name="$question->key"
+                                :label="$question->content"
+                                :options="$question->options"
+                                :value="old($question->key)"
+                                legend="Se maior de idade, digite seu próprio nome."
+                            />
+
+                            @continue
+
+                        @elseif ($question->key == 'q32')
+                            <x-dynamic-component
+                                :component="'candidate-subscription.' . $question->type"
+                                :name="$question->key"
+                                :label="$question->content"
+                                :options="$question->options"
+                                :value="old($question->key)"
+                                legend="Se carteira de trabalho digital, o número é seu CPF."
+                            />
+
+                            @continue
+
+                        @endif
 
                         <x-dynamic-component
                             :component="'candidate-subscription.' . $question->type"
@@ -363,6 +402,7 @@
                                 :label="$questions[3]->content"
                                 :options="$questions[3]->options"
                                 :value="old($questions[3]->key)"
+                                legend="Digite o curso e o semestre que você está cursando."
                             />
                         </template>
                     </div>
@@ -588,16 +628,19 @@
 
             </section>
 
-            <button
-                @click.prevent="show()"
-                type="submit"
-                class="block mt-8 mx-auto px-4 py-1 bg-blue-500 text-white uppercase font-semibold rounded-md shadow-md hover:bg-blue-700"
-            >
-                enviar inscrição
-            </button>
+            <div>
+                <span class="block font-semibold text-center text-gray-400 text-xs">Atenção: se você já tem um cadastro, esta nova ficha irá substituir o seu cadastro anterior.</span>
+                <button
+                    @click.prevent="show()"
+                    type="submit"
+                    class="block mt-4 mx-auto px-4 py-1 bg-blue-500 text-white uppercase font-semibold rounded-md shadow-md hover:bg-blue-700"
+                >
+                    enviar inscrição
+                </button>
+            </div>
 
         </form>
-        <div x-show="open" x-transition class="fixed inset-0 flex items-center justify-center text-left bg-black bg-opacity-50">
+        <div x-show="open" style="display: none !important" x-transition class="fixed inset-0 flex items-center justify-center text-left bg-black bg-opacity-50">
             <div class="inline-block bg-white shadow-xl rounded-lg py-10 px-4 text-gray-700 lg:w-1/3">
                 <div>
                     <span class="block font-semibold text-center text-gray-400 text-xs">Atenção: se você já tem um cadastro, esta nova ficha irá substituir o seu cadastro anterior.</span>

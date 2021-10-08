@@ -1,4 +1,4 @@
-@props(['name', 'label', 'options', 'value' => ''])
+@props(['name', 'label', 'options', 'value' => '', 'legend' => null])
 
 <div {{ $attributes }} >
 
@@ -22,4 +22,7 @@
     </div>
     @endforeach
 
+    @unless (empty($legend))
+        <span class="text-xs italic">{{ $legend }}</span>
+    @endunless
 </div>

@@ -1,4 +1,4 @@
-@props(['name', 'label', 'value' => ''])
+@props(['name', 'label', 'value' => '', 'legend' => null])
 
 <div>
     <label for="{{ $name }}" class="font-bold text-base">{{ $label }}</label>
@@ -9,4 +9,7 @@
         value="{{ $value }}"
         class="form-input block w-full"
     >
+    @unless (empty($legend))
+        <span class="text-xs italic">{{ $legend }}</span>
+    @endunless
 </div>

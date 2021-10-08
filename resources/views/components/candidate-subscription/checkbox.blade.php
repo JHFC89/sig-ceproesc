@@ -1,4 +1,11 @@
-@props(['name', 'label', 'options', 'value' => [],'case' => 'capitalize'])
+@props([
+    'name',
+    'label',
+    'options',
+    'value' => [],
+    'case' => 'capitalize',
+    'legend' => null
+])
 
 <div
     x-data="{inputs: null}"
@@ -21,21 +28,25 @@
     <h3 class="font-bold text-base">{{ $label }}</h3>
 
     @foreach ($options as $option)
-    <div>
-        <label class="inline-flex items-center">
-            <input
-                required
-                type="checkbox"
-                name="{{ $name }}"
-                value="{{ $option }}"
-                @if (in_array($option, $value))
-                    checked
-                @endif
-                class="form-checkbox"
-            >
-            <span class="ml-2 {{ $case }}">{{ $option }}</span>
-        </label>
-    </div>
+        <div>
+            <label class="inline-flex items-center">
+                <input
+                    required
+                    type="checkbox"
+                    name="{{ $name }}"
+                    value="{{ $option }}"
+                    @if (in_array($option, $value))
+                        checked
+                    @endif
+                    class="form-checkbox"
+                >
+                <span class="ml-2 {{ $case }}">{{ $option }}</span>
+            </label>
+        </div>
     @endforeach
+
+    @unless (empty($legend))
+        <span class="text-xs italic">{{ $legend }}</span>
+    @endunless
 
 </div>

@@ -1,4 +1,4 @@
-@props(['name', 'label', 'options', 'value' => ''])
+@props(['name', 'label', 'options', 'value' => '', 'legend' => null])
 
 <div {{ $attributes }}>
     <label for="{{ $name }}" class="font-bold text-base">{{ $label }}</label>
@@ -15,4 +15,7 @@
             </option>
         @endforeach
     </select>
+    @unless (empty($legend))
+        <span class="text-xs italic">{{ $legend }}</span>
+    @endunless
 </div>

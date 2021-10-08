@@ -21,6 +21,7 @@
         @edit.window="show($event.detail)"
         x-show="open"
         x-transition
+        style="display: none !important"
         class="fixed inset-0 z-10 flex items-center justify-center text-left bg-black bg-opacity-50"
     >
         <form
@@ -111,6 +112,7 @@
             <div
                 x-show="open"
                 x-transition
+                style="display: none !important"
                 class="fixed inset-0 z-10 flex items-center justify-center text-left bg-black bg-opacity-50"
             >
                 <div class="inline-block bg-white shadow-xl rounded-lg py-10 px-4 text-gray-700 lg:w-1/3">
@@ -255,9 +257,20 @@
 
                             <p class="text-xs uppercase font-bold">
                                 escolaridade:
-                                <span class="font-normal capitalize">
-                                    {{ $answers->for('q37')->value }}
-                                </span>
+                                @if ($answers->for('q37')->value == 'ensino superior')
+                                    <span class="font-normal capitalize">
+                                        {{ $answers->for('q37')->value }} - 
+                                        {{ $answers->for('q40')->value }}
+                                        ({{ $answers->for('q39')->value }}) - 
+                                        {{ $answers->for('q38')->value }}
+
+                                    </span>
+                                @else
+                                    <span class="font-normal capitalize">
+                                        {{ $answers->for('q37')->value }} -
+                                        {{ $answers->for('q38')->value }}
+                                    </span>
+                                @endif
                             </p>
 
                             <p class="text-xs uppercase font-bold">
@@ -274,7 +287,7 @@
 
                             @if ($answers->for('q43')->value == 'sim')
                             <p class="text-xs uppercase font-bold">
-                                capacitação:
+                                cursos complementares:
                                 <span class="font-normal normal-case">
                                     {{ $answers->allFor('q44')->pluck('value')->join(', ', ' e ') }}
                                     ({{ $answers->allFor('q45')->pluck('value')->join(', ', ' e ') }})

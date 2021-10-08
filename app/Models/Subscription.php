@@ -318,10 +318,10 @@ class Subscription extends Model
                     'options'   => ['ensino fundamental', 'ensino médio', 'ensino superior'],
                 ],
                 [
-                    'content'   => 'Conclusão',
+                    'content'   => 'Situação',
                     'type'      => 'radio',
                     'rules'     => ['string', 'max:20'],
-                    'options'   => ['completo', 'cursando'],
+                    'options'   => ['completo', 'cursando', 'trancado'],
                 ],
                 [
                     'content'   => 'Instituição de ensino',
@@ -348,7 +348,7 @@ class Subscription extends Model
                     'options'   => ['word', 'excel', 'power point', 'nenhum'],
                 ],
                 [
-                    'content'   => 'Possui alguma capacitação?',
+                    'content'   => 'Possui cursos complementares?',
                     'type'      => 'radio',
                     'rules'     => ['string', 'max:10', 'in:sim,não'],
                     'options'   => ['sim', 'não'],
