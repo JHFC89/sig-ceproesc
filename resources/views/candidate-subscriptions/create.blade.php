@@ -271,7 +271,7 @@
                                     input = value.replace(/[^0-9]/g, '').replace(/^(\d{3})?(\d{3})?(\d{3})?(\d{2})?/g, '$1.$2.$3-$4').substr(0, 14)
                                 }
                             });
-                            $el.lastElementChild.setAttribute('x-model', 'input');
+                            $el.querySelector('input').setAttribute('x-model', 'input');
                         "
                         :component="'candidate-subscription.' . $questions[0]->type"
                         :name="$questions[0]->key"
@@ -283,7 +283,7 @@
                         x-data="{input: '{{ old($questions[1]->key, '') }}'}"
                         x-init="
                             $watch('input', (value, oldvalue) => { if (oldvalue < value) { input = value.replace(/[^0-9]/g, '').replace(/^(\d{3})?(\d{3})?(\d{3})?(\d{2})?/g, '$1.$2.$3-$4').substr(0, 14) }});
-                            $el.lastElementChild.setAttribute('x-model', 'input');
+                            $el.querySelector('input').setAttribute('x-model', 'input');
                         "
                         :component="'candidate-subscription.' . $questions[1]->type"
                         :name="$questions[1]->key"
@@ -633,7 +633,7 @@
                 <button
                     @click.prevent="show()"
                     type="submit"
-                    class="block mt-4 mx-auto px-4 py-1 bg-blue-500 text-white uppercase font-semibold rounded-md shadow-md hover:bg-blue-700"
+                    class="block mx-auto px-4 py-1 bg-blue-500 text-white uppercase font-semibold rounded-md shadow-md hover:bg-blue-700"
                 >
                     enviar inscrição
                 </button>
