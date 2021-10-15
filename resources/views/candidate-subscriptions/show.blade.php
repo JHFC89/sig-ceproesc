@@ -147,20 +147,12 @@
 
     <!-- Invisible PDF model  -->
     <div class="hidden">
-        <div id="print" style="width: 210mm; height: 296mm;" class="flex flex-col pt-20 pb-10 bg-white">
+        <div id="print" style="width: 210mm; height: 296mm;" class="relative flex overflow-hidden flex-col pt-12 bg-white">
 
             <section class="flex">
 
-                <div class="relative flex items-center w-1/2">
-                    <div class="w-1/2 h-48 bg-blue-800">
-                    </div>
-                    <div class="w-1/2 h-48"></div>
-                    <div class="absolute flex items-center inset-0">
-                        <div class="w-48 h-48 flex flex-col justify-center items-center mx-auto bg-gray-200 rounded-full transform scale-105">
-                            <x-icons.logo-ceproesc class="-mt-4 w-full h-auto"/>
-                            <h3 class="-mt-4 uppercase tracking-widest font-bold text-base text-blue-900">jovem aprendiz</h3>
-                        </div>
-                    </div>
+                <div class="flex items-center w-1/2 pl-4">
+                    <x-icons.logo-ceproesc class="w-10/12 h-auto"/>
                 </div>
 
                 <div class="flex justify-start items-center w-1/2 pr-12">
@@ -501,7 +493,19 @@
 
             </section>
 
-            <footer class="mt-auto h-14 bg-blue-800"></footer>
+            <footer class="mt-auto py-2 text-white bg-blue-900">
+                <div class="text-center text-sm font-normal">
+                    <span>Rua Expedicionários do Brasil, 2269 - Centro, Araraquara-SP | 14801-3660</span>
+                </div>
+                <div class="flex justify-center mt-1 space-x-8">
+                    <div>
+                        <span>(16) 9 9116-2756</span>
+                    </div>
+                    <div>
+                        <span>(16) 3322-5810</span>
+                    </div>
+                </div>
+            </footer>
 
         </div>
     </div>
