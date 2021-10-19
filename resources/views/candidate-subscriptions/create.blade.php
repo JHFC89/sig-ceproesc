@@ -6,8 +6,8 @@
 
     <section x-data="modal()" @keydown.window.escape="hide()" class="container mx-auto px-2 py-8">
 
-        <x-icons.logo-ceproesc class="mx-auto w-64 h-auto -mt-8"/>
-        <a href="https://ceproesc.com.br/" class="block -mt-4 text-center text-sm underline text-gray-500 hover:text-green-500">Voltar para a home</a>
+        <x-icons.logo-ceproesc class="mx-auto w-64 h-auto"/>
+        <a href="https://ceproesc.com.br/" class="block mt-4 text-center text-sm underline text-gray-500 hover:text-green-500">Voltar para a home</a>
 
         <h1 class="mt-8 text-center font-semibold text-3xl lg:text-4xl">Formulário do Candidato</h1>
         <span class="block italic text-sm text-center text-gray-500">*Todos os campos são <strong>obrigatórios</strong>.</span>
@@ -633,7 +633,7 @@
                 <button
                     @click.prevent="show()"
                     type="submit"
-                    class="block mx-auto px-4 py-1 bg-blue-500 text-white uppercase font-semibold rounded-md shadow-md hover:bg-blue-700"
+                    class="block mt-4 mx-auto px-4 py-1 bg-blue-500 text-white uppercase font-semibold rounded-md shadow-md hover:bg-blue-700"
                 >
                     enviar inscrição
                 </button>
@@ -647,11 +647,7 @@
                     <h3 class="mt-8 text-center font-semibold text-lg">Leia atentamente a política de privacidade:</h3>
                     <div class="max-h-80 overflow-y-scroll mt-2 py-4 px-2 space-y-4 bg-gray-100 rounded-lg">
 
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-                        <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem</p>
-                        <p>Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
+                        <p>Autorizo o Ceproesc/Proeaja a utilizar e transferir todas as informações por mim apresentadas no cadastro de forma deliberada, a direcionamento às empresas parceiras do Programa de Inclusão Produtiva desenvolvidos pelas instituições sendo, programa jovem aprendiz e programa de Estágio, para que as mesmas tenham acesso aos meus dados quando dos processos de seleção abertos para possíveis contratações.</p>
 
                         <div>
                             <h3 class="font-bold text-base">Termos política de privacidade</h3>
