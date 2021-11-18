@@ -350,7 +350,7 @@
 
                     </article>
 
-                    @if ($answers->for('q21')->value > 0)
+                    @if ($answers->for('q21')->value > 0 && $answers->for('q22') !== null)
                     <article>
 
                         <h2 class="text-lg font-bold text-blue-800 uppercase tracking-wider">moradores da residência</h2>
