@@ -252,7 +252,7 @@
                                 @if ($answers->for('q37')->value == 'ensino superior')
                                     <span class="font-normal capitalize">
                                         {{ $answers->for('q37')->value }} - 
-                                        {{ $answers->for('q40')->value }}
+                                        {{ optional($answers->for('q40'))->value }}
                                         ({{ $answers->for('q39')->value }}) - 
                                         {{ $answers->for('q38')->value }}
 
