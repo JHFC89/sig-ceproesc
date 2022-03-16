@@ -309,6 +309,7 @@
                                         :label="$question->content"
                                         :options="$question->options"
                                         :value="old($question->key)"
+                                        :legend="$question->key == 'q36' ? 'Se você não tiver número de reservista, preecha com um \'x\'.' : ''"
                                     />
                                 </template>
                             </div>
@@ -335,6 +336,18 @@
                                 :options="$question->options"
                                 :value="old($question->key)"
                                 legend="Se carteira de trabalho digital, o número é seu CPF."
+                            />
+
+                            @continue
+
+                        @elseif ($question->key == 'q34')
+                            <x-dynamic-component
+                                :component="'candidate-subscription.' . $question->type"
+                                :name="$question->key"
+                                :label="$question->content"
+                                :options="$question->options"
+                                :value="old($question->key)"
+                                legend="Se você não tiver título de eleitor, preencha com um 'x'."
                             />
 
                             @continue
@@ -589,6 +602,17 @@
                 <div class="mt-4 space-y-4 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0">
 
                     @foreach ($form->sections[5]->questions as $question)
+
+                        @if ($question->key == 'q53')
+                            <x-dynamic-component
+                                :component="'candidate-subscription.' . $question->type"
+                                :name="$question->key"
+                                :label="str_replace(':', '/estágio:', $question->content)"
+                                :options="$question->options"
+                                :value="old($question->key)"
+                            />
+                            @continue
+                        @endif
                     <x-dynamic-component
                         :component="'candidate-subscription.' . $question->type"
                         :name="$question->key"
