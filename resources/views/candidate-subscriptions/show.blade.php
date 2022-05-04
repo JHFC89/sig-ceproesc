@@ -451,7 +451,7 @@
                             </p>
 
                             <p class="font-bold mt-2">
-                                Expectativas com o programa jovem aprendiz
+                                Expectativas com o programa jovem aprendiz/estágio
                             </p>
                             <p class="font-normal">
                                 {{ ucfirst($answers->for('q53')->value) }}
@@ -681,6 +681,20 @@
                         @if ($answer->question->key == 'q58')
             
                             @break
+            
+                        @endif
+
+                        @if ($answer->question->key == 'q53')
+
+                            <x-card.list.description-item
+                                :label="str_replace(':', '/Estágio:', $answer->question->content)"
+                                :description="$answer->value"
+                                :type="$answer->question->type == 'textarea' ? 'text' : 'title'"
+                                :linebreak="$answer->question->type == 'textarea'"
+                                :layout="true"
+                            />
+            
+                            @continue
             
                         @endif
 
