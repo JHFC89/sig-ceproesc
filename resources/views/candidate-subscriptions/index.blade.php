@@ -117,6 +117,19 @@
                             </li>
 
                             <li>
+                                <label for="complementary" class="block px-2 py-1 bg-gray-100">cursos complementares</label>
+                                <div class="px-2 py-2">
+                                    <input
+                                        x-model="filter.complementary.value"
+                                        name="complementary"
+                                        id="complementary"
+                                        type="text"
+                                        class="block w-full form-input font-sans py-0 px-1 rounded-md"
+                                    >
+                                </div>
+                            </li>
+
+                            <li>
                                 <label for="district" class="block px-2 py-1 bg-gray-100">bairro</label>
                                 <div class="px-2 py-2">
                                     <input
@@ -271,6 +284,10 @@
                 course: {
                     value: '{{ request()->input('filter.course', null) }}',
                     active: {{ request()->has('filter.course') ? 'true' : 'false' }} 
+                },
+                complementary: {
+                    value: '{{ request()->input('filter.complementary', null) }}',
+                    active: {{ request()->has('filter.complementary') ? 'true' : 'false' }} 
                 },
                 district: {
                     value: '{{ request()->input('filter.district', null) }}',

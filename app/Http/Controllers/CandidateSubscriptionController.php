@@ -137,14 +137,15 @@ class CandidateSubscriptionController extends Controller
     private function applyFilter($entries, $field, $value)
     {
         $questions = [
-            'name'      => 1,
-            'age'       => 3,
-            'gender'    => 4,
-            'schooling' => 37,
-            'course'    => 40,
-            'district'  => 13,
-            'city'      => 8,
-            'employed'  => 51,
+            'name'              => 1,
+            'age'               => 3,
+            'gender'            => 4,
+            'schooling'         => 37,
+            'course'            => 40,
+            'complementary'     => 44,
+            'district'          => 13,
+            'city'              => 8,
+            'employed'          => 51,
         ];
 
         if (!array_key_exists($field, $questions)) {
