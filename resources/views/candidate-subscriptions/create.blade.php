@@ -406,7 +406,7 @@
 
                     <div
                         x-data="{show: false}"
-                        x-on:q38.window="show = $event.detail == 'ensino superior' ? true : false"
+                        x-on:q38.window="if($event.detail == 'ensino superior' || $event.detail == 'ensino técnico'){show = true} else {show = false}"
                     >
                         <template x-if="show">
                             <x-dynamic-component

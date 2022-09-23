@@ -98,6 +98,7 @@
                                         <option value="">---</option>
                                         <option value="ensino fundamental">Ensino Fundamental</option>
                                         <option value="ensino médio">Ensino Médio</option>
+                                        <option value="ensino técnico">Ensino Técnico</option>
                                         <option value="ensino superior">Ensino Superior</option>
                                     </select>
                                 </div>
