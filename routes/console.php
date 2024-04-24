@@ -4,6 +4,7 @@ use App\Models\{AprendizForm, Registration, Role};
 use Illuminate\Database\Eloquent\Collection;
 use MattDaneshvar\Survey\Models\Question;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 use MattDaneshvar\Survey\Models\Entry;
 
 /*
@@ -36,10 +37,17 @@ Artisan::command('candidate-form:add-option-to-question {question_id} {option}',
 })->purpose('Add option to a question by passing it´s ID and the new option');
 
 Artisan::command('candidate-form:import-canidate-form-to-new-model', function () {
-    Entry::with('answers', 'answers.question')->where('created_at', '>', '2023-04-01')->chunk(50, function (Collection $entries) {
-        $entries->each(function (Entry $entry) {
-            AprendizForm::importFromOldModel($entry);
+    $errors = 0;
+    Entry::with('answers', 'answers.question')->where('created_at', '>', '2023-04-01')->chunk(50, function (Collection $entries) use (&$errors) {
+        $entries->each(function (Entry $entry) use (&$errors) {
+            try {
+                AprendizForm::importFromOldModel($entry);
+            } catch (\Throwable $th) {
+                $errors++;
+                Log::warning($th->getMessage());
+            }
         });
     });
     $this->info('Candidate forms created: ' . AprendizForm::count());
+    $this->warn('Errors count: ' . $errors);
 })->purpose('Import the old candidate form model data to the new model');
