@@ -1,8 +1,10 @@
 <?php
 
-use App\Models\{Registration, Role};
+use App\Models\{AprendizForm, Registration, Role};
+use Illuminate\Database\Eloquent\Collection;
 use MattDaneshvar\Survey\Models\Question;
 use Illuminate\Support\Facades\Artisan;
+use MattDaneshvar\Survey\Models\Entry;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,12 +18,12 @@ use Illuminate\Support\Facades\Artisan;
 */
 
 Artisan::command('invite-admin {name} {email}', function ($name, $email) {
-        $registration = Registration::create([
-            'name'      => $name,
-            'role_id'   => Role::whereRole(Role::ADMIN)->id,
-        ]);
+    $registration = Registration::create([
+        'name'      => $name,
+        'role_id'   => Role::whereRole(Role::ADMIN)->id,
+    ]);
 
-        $registration->sendInvitationEmail($email);
+    $registration->sendInvitationEmail($email);
 })->purpose('Invite a new admin to create an account');
 
 Artisan::command('candidate-form:add-option-to-question {question_id} {option}', function ($question_id, $option) {
@@ -32,3 +34,12 @@ Artisan::command('candidate-form:add-option-to-question {question_id} {option}',
 
     $question->save();
 })->purpose('Add option to a question by passing it´s ID and the new option');
+
+Artisan::command('candidate-form:import-canidate-form-to-new-model', function () {
+    Entry::with('answers', 'answers.question')->where('created_at', '>', '2023-04-01')->chunk(50, function (Collection $entries) {
+        $entries->each(function (Entry $entry) {
+            AprendizForm::importFromOldModel($entry);
+        });
+    });
+    $this->info('Candidate forms created: ' . AprendizForm::count());
+})->purpose('Import the old candidate form model data to the new model');
