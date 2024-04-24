@@ -16,6 +16,13 @@ class CandidateController extends Controller
         return view('candidates.index', compact('entries'));
     }
 
+    public function show(AprendizForm $entry)
+    {
+        $this->checkAuthorization();
+
+        return view('candidates.show', compact('entry'));
+    }
+
     private function getEntries()
     {
         $entries = AprendizForm::select('id','nome', 'data_de_nascimento', 'genero', 'cidade_onde_mora', 'escolaridade');

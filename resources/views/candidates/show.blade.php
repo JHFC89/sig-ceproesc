@@ -11,8 +11,6 @@
 @if (session()->has('status'))
     <x-alert type="success" :message="session('status')"/>
 @endif
-
-
 <section class="space-y-4">
 
     <!-- Actions -->
@@ -58,7 +56,7 @@
                 <template x-if="question.id == 'q63'">
                     <label for="value">
                         <span x-text="question.content" class="font-bold text-base"></span>
-                        <textarea x-bind:name="question.id" class="form-textarea w-full mt-1" rows="4">{{ $answers->for('q63')->value }}</textarea>
+                        <textarea x-bind:name="question.id" class="form-textarea w-full mt-1" rows="4">{{ $entry->historico }}</textarea>
                     </label>
                 </template>
 
@@ -158,13 +156,13 @@
                 <div class="flex justify-start items-center w-1/2 pr-12">
                     <div class="w-full space-y-2 text-center uppercase leading-none text-gray-700">
                         <h1 class="text-3xl font-bold tracking-wider">
-                            {{ $answers->for('q1')->value }}
+                            {{ $entry->nome }}
                         </h1>
                         <p class="text-xl">
-                            {{ \Carbon\Carbon::parse($answers->for('q3')->value)->diff(\Carbon\Carbon::now())->format('%y anos') }}
+                            {{ \Carbon\Carbon::parse($entry->data_de_nascimento)->diff(\Carbon\Carbon::now())->format('%y anos') }}
                         </p>
                         <p class="text-xl">
-                            {{ \Carbon\Carbon::parse($answers->for('q3')->value)->format('d/m/Y') }}
+                            {{ \Carbon\Carbon::parse($entry->data_de_nascimento)->format('d/m/Y') }}
                         </p>
                     </div>
                 </div>
@@ -184,16 +182,16 @@
                             <p class="text-xs uppercase font-bold">
                                 sexo:
                                 <span class="font-normal capitalize">
-                                    {{ $answers->for('q4')->value }}
+                                    {{ $entry->genero }}
                                 </span>
                             </p>
 
                             <p class="text-xs uppercase font-bold">
                                 cnh:
                                 <span class="font-normal capitalize">
-                                    {{ $answers->for('q17')->value }}
-                                    @if ($answers->for('q17')->value == 'sim')
-                                    ({{ $answers->for('q18')->value }})
+                                    {{ $entry->carteira_de_habilitação }}
+                                    @if ($entry->carteira_de_habilitação == 'sim')
+                                    ({{ $entry->categoria }})
                                     @endif
                                 </span>
                             </p>
@@ -201,39 +199,39 @@
                             <p class="text-xs uppercase font-bold">
                                 rg:
                                 <span class="font-normal capitalize">
-                                    {{ $answers->for('q33')->value }}
+                                    {{ $entry->rg }}
                                 </span>
                             </p>
 
                             <p class="text-xs uppercase font-bold">
                                 cpf:
                                 <span class="font-normal capitalize">
-                                    {{ $answers->for('q28')->value }}
+                                    {{ $entry->cpf }}
                                 </span>
                             </p>
 
                             <p class="text-xs uppercase font-bold">
                                 carteira de trabalho:
                                 <span class="font-normal capitalize">
-                                    {{ $answers->for('q31')->value }}
-                                    - Nº {{ $answers->for('q32')->value }}
+                                    {{ $entry->carteira_de_trabalho }}
+                                    - Nº {{ $entry->numero_de_serie }}
                                 </span>
                             </p>
 
-                            @if ($answers->for('q4')->value == 'masculino' && isset($answers->for('q35')->value))
+                            @if ($entry->genero == 'masculino' && isset($entry->alistamento_militar))
 
                                 <p class="text-xs uppercase font-bold">
                                     alistamento militar:
                                     <span class="font-normal capitalize">
-                                        {{ $answers->for('q35')->value }}
+                                        {{ $entry->alistamento_militar }}
                                     </span>
                                 </p>
 
-                                @unless ($answers->for('q35')->value == 'ainda não convocado')
+                                @unless ($entry->alistamento_militar == 'ainda não convocado')
                                     <p class="text-xs uppercase font-bold">
                                         número de reservista:
                                         <span class="font-normal capitalize">
-                                            {{ $answers->for('q36')->value }}
+                                            {{ $entry->numero_de_reservista }}
                                         </span>
                                     </p>
                                 @endunless
@@ -243,24 +241,24 @@
                             <p class="text-xs uppercase font-bold">
                                 título de eleitor:
                                 <span class="font-normal capitalize">
-                                    {{ $answers->for('q34')->value }}
+                                    {{ $entry->q34 }}
                                 </span>
                             </p>
 
                             <p class="text-xs uppercase font-bold">
                                 escolaridade:
-                                @if ($answers->for('q37')->value == 'ensino superior')
+                                @if ($entry->escolaridade == 'ensino superior')
                                     <span class="font-normal capitalize">
-                                        {{ $answers->for('q37')->value }} -
-                                        {{ optional($answers->for('q40'))->value }}
-                                        ({{ $answers->for('q39')->value }}) -
-                                        {{ $answers->for('q38')->value }}
+                                        {{ $entry->escolaridade }} -
+                                        {{ optional($entry)->curso }}
+                                        ({{ $entry->instituicao_de_ensino }}) -
+                                        {{ $entry->situacao_escolaridade }}
 
                                     </span>
                                 @else
                                     <span class="font-normal capitalize">
-                                        {{ $answers->for('q37')->value }} -
-                                        {{ $answers->for('q38')->value }}
+                                        {{ $entry->escolaridade }} -
+                                        {{ $entry->situacao_escolaridade }}
                                     </span>
                                 @endif
                             </p>
@@ -268,21 +266,26 @@
                             <p class="text-xs uppercase font-bold">
                                 conhecimentos em informática:
                                 <span class="font-normal capitalize">
-                                    {{ $answers->for('q41')->value }}
-                                    @unless ($answers->for('q42')->value == 'nenhum')
+                                    {{ $entry->nivel_de_conhecimentos_em_informatica }}
+                                    @unless ($entry->conhecimentos_em_informatica == 'nenhum')
                                     <span class="normal-case">
-                                        ({{ $answers->allFor('q42')->pluck('value')->join(', ', ' e ') }})
+                                        ({{ collect(json_decode($entry->conhecimentos_em_informatica))->join(', ', ' e ') }})
                                     </span>
                                     @endunless
                                 </span>
                             </p>
 
-                            @if ($answers->for('q43')->value == 'sim')
+                            @if ($entry->possui_cursos_complementares == 'sim')
                             <p class="text-xs uppercase font-bold">
                                 cursos complementares:
                                 <span class="font-normal normal-case">
-                                    {{ $answers->allFor('q44')->pluck('value')->join(', ', ' e ') }}
-                                    ({{ $answers->allFor('q45')->pluck('value')->join(', ', ' e ') }})
+                                    @php
+                                        $cursosArray = json_decode($entry->cursos_complementares, true);
+                                        $formatedCursos = collect($cursosArray)->map(function ($curso) {
+                                            return "{$curso['Nome do curso']} ({$curso['Instituição do curso']})";
+                                        })->join(', ', ' e ');
+                                    @endphp
+                                    {{ $formatedCursos }}
                                 </span>
                             </p>
                             @endif
@@ -290,21 +293,21 @@
                             <p class="text-xs uppercase font-bold">
                                 habilidade manual:
                                 <span class="font-normal capitalize">
-                                    {{ $answers->for('q5')->value }}
+                                    {{ $entry->habilidade_manual }}
                                 </span>
                             </p>
 
                             <p class="text-xs uppercase font-bold">
                                 naturalidade:
                                 <span class="font-normal capitalize">
-                                    {{ $answers->for('q7')->value }}/{{ $answers->for('q6')->value }}
+                                    {{ $entry->cidade_onde_nasceu }}/{{ $entry->estado_de_naturalidade }}
                                 </span>
                             </p>
 
                             <p class="text-xs uppercase font-bold">
                                 família recebe auxílio do governo:
                                 <span class="font-normal capitalize">
-                                    {{ $answers->for('q27')->value }}
+                                    {{ $entry->a_familia_recebe_algum_auxilio_do_governo }}
                                 </span>
                             </p>
 
@@ -321,28 +324,28 @@
                             <p class="text-xs uppercase font-bold">
                                 celular:
                                 <span class="font-normal capitalize">
-                                    {{ $answers->for('q15')->value }}
+                                    {{ $entry->telefone }}
                                 </span>
                             </p>
 
                             <p class="text-xs uppercase font-bold">
                                 recado:
                                 <span class="font-normal capitalize">
-                                    {{ $answers->for('q16')->value }}
+                                    {{ $entry->telefone_de_recado }}
                                 </span>
                             </p>
 
                             <p class="text-xs uppercase font-bold">
                                 e-mail:
                                 <span class="font-normal normal-case">
-                                    {{ $answers->for('q2')->value }}
+                                    {{ $entry->email }}
                                 </span>
                             </p>
 
                             <p class="text-xs uppercase font-bold">
                                 endereço:
                                 <span class="font-normal normal-case">
-                                    {{ $answers->for('q9')->value }}, {{ $answers->for('q10')->value }}, {{ $answers->for('q13')->value }}, {{ $answers->for('q8')->value }} - CEP: {{ $answers->for('q11')->value }} - Zona {{ $answers->for('q12')->value }}
+                                    {{ $entry->logradouro }}, {{ $entry->numero }}, {{ $entry->bairro }}, {{ $entry->cidade_onde_mora }} - CEP: {{ $entry->cep }} - Zona {{ $entry->zona }}
                                 </span>
                             </p>
 
@@ -350,34 +353,25 @@
 
                     </article>
 
-                    @if ($answers->for('q21')->value > 0 && $answers->for('q22') !== null)
+                    @if ($entry->quantas_pessoas_moram_com_voce > 0 && $entry->moradores !== null)
                     <article>
 
                         <h2 class="text-lg font-bold text-blue-800 uppercase tracking-wider">moradores da residência</h2>
 
-                        <div class="mt-1 space-y-4 text-xs">
-
-                            @php
-                            $residents['q22'] = $answers->allFor('q22');
-                            $residents['q23'] = $answers->allFor('q23');
-                            $residents['q24'] = $answers->allFor('q24');
-                            $residents['q25'] = $answers->allFor('q25');
-                            $residents['q26'] = $answers->allFor('q26');
-                            @endphp
-                            @for ($i = 0; $i < $answers->for('q21')->value; $i++)
+                        <div class="mt-1 space-y-1 text-xs">
+                            @foreach (json_decode($entry->moradores, true) as $morador)
                                 <div>
                                     <p>
-                                        {{ Str::words($residents['q22']->shift()->value, 1, ',') }}
-                                        {{ $residents['q24']->shift()->value }}
-                                        ({{ $residents['q23']->shift()->value }}):
-                                        {{ $residents['q25']->shift()->value }}
+                                        {{ Str::words($morador['Nome do morador'], 1, ',') }}
+                                        {{ $morador['Idade do morador'] }}
+                                        ({{ $morador['Parentesco'] }}):
+                                        {{ $morador['Ocupação'] }}
                                     </p>
                                     <p>
-                                        Renda: {{ $residents['q26']->shift()->value }}
+                                        Renda: {{ $morador['Renda'] }}
                                     </p>
                                 </div>
-                            @endfor
-
+                            @endforeach
                         </div>
 
                     </article>
@@ -387,20 +381,28 @@
 
                 <div class="w-1/2 space-y-6">
 
-                    @if ($answers->for('q47')->value == 'sim')
+                    @if ($entry->possui_experiencia_profissional == 'sim')
                         <article>
 
                             <h2 class="text-lg font-bold text-blue-800 uppercase tracking-wider">histórico de trabalho</h2>
 
-                            <div class="mt-1">
-                                @foreach ($answers->allIn(['q48', 'q49', 'q50']) as $answer)
+                            <div class="mt-1 space-y-1">
+                                @foreach (json_decode($entry->experiencia_profissional, true) as $empresa)
 
-                                    <p class="text-xs uppercase font-bold">
-                                        {{ $answer->question->content }}:
-                                        <span class="font-normal normal-case">
-                                            {{ ucfirst($answer->value) }}
-                                        </span>
-                                    </p>
+                                    <div>
+                                        <p class="text-xs uppercase font-bold">
+                                            Empresa:
+                                            <span class="font-normal normal-case">
+                                                {{ ucfirst($empresa['Empresa']) }}
+                                            </span>
+                                        </p>
+                                        <p class="text-xs uppercase font-bold">
+                                            Cargo:
+                                            <span class="font-normal normal-case">
+                                                {{ ucfirst($empresa['Cargo']) }}
+                                            </span>
+                                        </p>
+                                    </div>
 
                                 @endforeach
                             </div>
@@ -419,70 +421,70 @@
                                 Quais seus principais objetivos?
                             </p>
                             <p class="font-normal">
-                                {{ ucfirst($answers->for('q52')->value) }}
+                                {{ ucfirst($entry->quais_seus_principais_objetivos) }}
                             </p>
 
                             <p class="font-bold mt-2">
                                 Com qual desses comportamentos você mais se identifica?
                             </p>
                             <p class="font-normal capitalize">
-                                {{ ucfirst($answers->for('q54')->value) }}
+                                {{ ucfirst($entry->comportamento_que_se_identifica) }}
                             </p>
 
                             <p class="font-bold mt-2">
                                 Uma música para se ouvir todos os dias
                             </p>
                             <p class="font-normal">
-                                {{ ucfirst($answers->for('q56')->value) }}
+                                {{ ucfirst($entry->uma_música) }}
                             </p>
 
                             <p class="font-bold mt-2">
                                 Quando você se olha no espelho, você enxerga
                             </p>
                             <p class="font-normal">
-                                {{ ucfirst($answers->allFor('q58')->pluck('value')->join(', ', ' e ')) }}
+                                {{ ucfirst(collect(json_decode($entry->no_espelho_voce_enxerga))->join(', ', ' e ')) }}
                             </p>
 
                             <p class="font-bold mt-2">
                                 Qual profissão gostaria de ter?
                             </p>
                             <p class="font-normal">
-                                {{ ucfirst($answers->for('q60')->value) }}
+                                {{ ucfirst($entry->qual_profissao_gostaria) }}
                             </p>
 
                             <p class="font-bold mt-2">
                                 Expectativas com o programa jovem aprendiz/estágio
                             </p>
                             <p class="font-normal">
-                                {{ ucfirst($answers->for('q53')->value) }}
+                                {{ ucfirst($entry->expectativas_com_o_programa) }}
                             </p>
 
                             <p class="font-bold mt-2">
                                 Uma frase que resume sua vida
                             </p>
                             <p class="font-normal">
-                                {{ ucfirst($answers->for('q55')->value) }}
+                                {{ ucfirst($entry->uma_frase) }}
                             </p>
 
                             <p class="font-bold mt-2">
                                 Para você pode faltar tudo, menos...
                             </p>
                             <p class="font-normal">
-                                {{ ucfirst($answers->for('q57')->value) }}
+                                {{ ucfirst($entry->pode_faltar_tudo_menos) }}
                             </p>
 
                             <p class="font-bold mt-2">
                                 O que você acrescentaria na sua personalidade?
                             </p>
                             <p class="font-normal">
-                                {{ ucfirst($answers->for('q59')->value) }}
+                                {{ ucfirst($entry->acrescentaria_na_personalidade) }}
                             </p>
 
                             <p class="font-bold mt-2">
                                 Deixe uma mensagem para a humanidade
                             </p>
                             <p class="font-normal">
-                                {{ ucfirst($answers->for('q61')->value) }}
+                                {{ ucfirst($entry->mensagem_para_humanidade) }}
                             </p>
 
                         </div>
@@ -518,19 +520,19 @@
 
                 <x-slot name="items">
 
-                    @foreach ($answers->allIn($sections[0]) as $answer)
+                    @foreach ($entry->getSection('dados cadastrais') as $key => $value)
 
-                        @if ($answer->question->key == 'q3')
+                        @if ($key == 'data_de_nascimento')
 
                             <x-card.list.description-item
-                                :label="$answer->question->content"
-                                :description="\Carbon\Carbon::parse($answer->value)->format('d/m/Y')"
+                                :label="$entry->getTitle($key)"
+                                :description="\Carbon\Carbon::parse($value)->format('d/m/Y')"
                                 :layout="true"
                             />
 
                             <x-card.list.description-item
-                                label="idade"
-                                :description="\Carbon\Carbon::parse($answer->value)->diff(now())->format('%y anos')"
+                                label="Idade"
+                                :description="\Carbon\Carbon::parse($value)->diff(now())->format('%y anos')"
                                 :layout="true"
                             />
 
@@ -539,9 +541,9 @@
                         @endif
 
                         <x-card.list.description-item
-                            :label="$answer->question->content"
-                            :description="$answer->value"
-                            :type="in_array($answer->question->key, ['q2', 'q19', 'q20']) ? 'text' : 'title'"
+                            :label="$entry->getTitle($key)"
+                            :description="$value"
+                            :type="in_array($key, ['email', 'facebook', 'instagram']) ? 'text' : 'title'"
                             :layout="true"
                         />
 
@@ -555,12 +557,45 @@
 
                 <x-slot name="items">
 
-                    @foreach ($answers->allIn($sections[1]) as $answer)
+                    @foreach ($entry->getSection('dados familiares') as $key => $value)
+
+                        @if ($key == 'moradores')
+
+                            @foreach (json_decode($value, true) as $morador)
+                                <x-card.list.description-item
+                                    label="Nome do morador"
+                                    :description="$morador['Nome do morador']"
+                                    :layout="true"
+                                />
+                                <x-card.list.description-item
+                                    label="Parentesco"
+                                    :description="$morador['Parentesco']"
+                                    :layout="true"
+                                />
+                                <x-card.list.description-item
+                                    label="Idade do morador"
+                                    :description="$morador['Idade do morador']"
+                                    :layout="true"
+                                />
+                                <x-card.list.description-item
+                                    label="Ocupação"
+                                    :description="$morador['Ocupação']"
+                                    :layout="true"
+                                />
+                                <x-card.list.description-item
+                                    label="Renda"
+                                    :description="$morador['Renda']"
+                                    :layout="true"
+                                />
+                            @endforeach
+
+                            @continue
+
+                        @endif
 
                         <x-card.list.description-item
-                            :label="$answer->question->content"
-                            :description="$answer->value"
-                            :type="in_array($answer->question->key, ['q2', 'q19', 'q20']) ? 'text' : 'title'"
+                            :label="$entry->getTitle($key)"
+                            :description="$value"
                             :layout="true"
                         />
 
@@ -574,11 +609,15 @@
 
                 <x-slot name="items">
 
-                    @foreach ($answers->allIn($sections[2]) as $answer)
+                    @foreach ($entry->getSection('documentação') as $key => $value)
+
+                        @if ($value == null)
+                            @continue
+                        @endif
 
                         <x-card.list.description-item
-                            :label="$answer->question->content"
-                            :description="$answer->value"
+                            :label="$entry->getTitle($key)"
+                            :description="$value"
                             :layout="true"
                         />
 
@@ -596,11 +635,15 @@
 
                 <x-slot name="items">
 
-                    @foreach ($answers->allIn($sections[3]) as $answer)
+                    @foreach ($entry->getSection('escolaridade') as $key => $value)
+
+                        @if ($value == null)
+                            @continue
+                        @endif
 
                         <x-card.list.description-item
-                            :label="$answer->question->content"
-                            :description="$answer->value"
+                            :label="$entry->getTitle($key)"
+                            :description="$value"
                             :layout="true"
                         />
 
@@ -615,58 +658,84 @@
                 <x-slot name="items">
 
                     <x-card.list.description-item
-                        :label="$answers->for('q41')->question->content"
-                        :description="$answers->for('q41')->value"
+                        :label="$entry->getTitle('nivel_de_conhecimentos_em_informatica')"
+                        :description="$entry->nivel_de_conhecimentos_em_informatica"
                         :layout="true"
                     />
 
                     <x-card.list.description-item
-                        :label="$answers->for('q42')->question->content"
-                        :description="ucfirst($answers->allFor('q42')->pluck('value')->join(', ', ' e '))"
+                        :label="$entry->getTitle('conhecimentos_em_informatica')"
+                        :description="collect(json_decode($entry->conhecimentos_em_informatica))->join(', ', ' e ')"
                         :layout="true"
                         type="text"
                     />
 
-                    @foreach ($answers->allIn($sections[4]) as $answer)
+                    <x-card.list.description-item
+                        :label="$entry->getTitle('possui_cursos_complementares')"
+                        :description="$entry->possui_cursos_complementares"
+                        :layout="true"
+                    />
 
-                        @if (in_array($answer->question->key, ['q41', 'q42']))
-
-                            @continue
-
-                        @endif
-
-                        @if ($answer->question->key === 'q51')
-
-                            <div class="relative">
-                                <x-card.list.description-item
-                                    x-data="
-                                        {{ json_encode(['data' => ['answer' => $answer->id, 'question' => [ 'id' => 'q51', 'content' => $answer->question->content]]]) }}
-                                    "
-                                    :label="$answer->question->content"
-                                    :description="$answer->value"
-                                    :layout="true"
-                                >
-                                    <button
-                                        x-on:click.prevent="$dispatch('edit', data)"
-                                        type="button"
-                                        class="absolute right-0 text-gray-300 hover:text-blue-300"
-                                    >
-                                        <x-icons.edit class="w-6 h-6"/>
-                                    </button>
-                                </x-card.list.description-item>
-                            </div>
-
-                            @continue
-
-                        @endif
-
+                    @foreach (json_decode($entry->cursos_complementares, true) as $curso)
                         <x-card.list.description-item
-                            :label="$answer->question->content"
-                            :description="$answer->value"
+                            label="Nome do curso"
+                            :description="$curso['Nome do curso']"
                             :layout="true"
                         />
-
+                        <x-card.list.description-item
+                            label="Instituição do curso"
+                            :description="$curso['Instituição do curso']"
+                            :layout="true"
+                        />
+                        <x-card.list.description-item
+                            label="Duração do curso"
+                            :description="$curso['Duração do curso']"
+                            :layout="true"
+                        />
                     @endforeach
+
+                    <x-card.list.description-item
+                        :label="$entry->getTitle('possui_experiencia_profissional')"
+                        :description="$entry->possui_experiencia_profissional"
+                        :layout="true"
+                    />
+
+                    @foreach (json_decode($entry->experiencia_profissional, true) as $empresa)
+                        <x-card.list.description-item
+                            label="Empresa"
+                            :description="$empresa['Empresa']"
+                            :layout="true"
+                        />
+                        <x-card.list.description-item
+                            label="Cargo"
+                            :description="$empresa['Cargo']"
+                            :layout="true"
+                        />
+                        <x-card.list.description-item
+                            label="Período"
+                            :description="$empresa['Período']"
+                            :layout="true"
+                        />
+                    @endforeach
+
+                    <div class="relative">
+                        <x-card.list.description-item
+                            x-data="
+                                {{ json_encode(['data' => ['entry' => $entry->id, 'field' => 'esta_empregado']]) }}
+                            "
+                            :label="$entry->getTitle('esta_empregado')"
+                            :description="$entry->esta_empregado"
+                            :layout="true"
+                        >
+                            <button
+                                x-on:click.prevent="$dispatch('edit', data)"
+                                type="button"
+                                class="absolute right-0 text-gray-300 hover:text-blue-300"
+                            >
+                                <x-icons.edit class="w-6 h-6"/>
+                            </button>
+                        </x-card.list.description-item>
+                    </div>
 
                 </x-slot>
 
@@ -676,21 +745,21 @@
 
                 <x-slot name="items">
 
-                    @foreach ($answers->allIn($sections[5]) as $answer)
+                    @foreach ($entry->getSection('sobre você') as $key => $value)
 
-                        @if ($answer->question->key == 'q58')
+                        @if ($key == 'no_espelho_voce_enxerga')
 
                             @break
 
                         @endif
 
-                        @if ($answer->question->key == 'q53')
+                        @if ($key == 'expectativas_com_o_programa')
 
                             <x-card.list.description-item
-                                :label="str_replace(':', '/Estágio:', $answer->question->content)"
-                                :description="$answer->value"
-                                :type="$answer->question->type == 'textarea' ? 'text' : 'title'"
-                                :linebreak="$answer->question->type == 'textarea'"
+                                label="Quais São Suas Expectativas Com O Programa Jovem Aprendiz/Estágio:"
+                                :description="$value"
+                                :type="'textarea' == 'textarea' ? 'text' : 'title'"
+                                :linebreak="'textarea' == 'textarea' ? true : false"
                                 :layout="true"
                             />
 
@@ -699,35 +768,35 @@
                         @endif
 
                         <x-card.list.description-item
-                            :label="$answer->question->content"
-                            :description="$answer->value"
-                            :type="$answer->question->type == 'textarea' ? 'text' : 'title'"
-                            :linebreak="$answer->question->type == 'textarea'"
+                            :label="$entry->getTitle($key)"
+                            :description="$value"
+                            :type="'textarea' == 'textarea' ? 'text' : 'title'"
+                            :linebreak="'textarea' == 'textarea' ? true : false"
                             :layout="true"
                         />
 
                     @endforeach
 
                     <x-card.list.description-item
-                        :label="$answer->question->content"
-                        :description="ucfirst($answers->allFor('q58')->pluck('value')->join(', ', ' e '))"
+                        :label="$entry->getTitle($key)"
+                        :description="collect(json_decode($entry[$key]))->join(', ', ' e ')"
                         :layout="true"
                         type="text"
                     />
 
-                    @foreach ($answers->allIn($sections[5]) as $answer)
+                    @foreach ($entry->getSection('sobre você') as $key => $value)
 
-                        @if (in_array($answer->question->key, ['q52', 'q53', 'q54', 'q55', 'q56', 'q57', 'q58']))
+                        @if (in_array($key, ['quais_seus_principais_objetivos', 'expectativas_com_o_programa', 'comportamento_que_se_identifica', 'uma_frase', 'uma_música', 'pode_faltar_tudo_menos', 'no_espelho_voce_enxerga']))
 
                         @continue
 
                         @endif
 
                         <x-card.list.description-item
-                            :label="$answer->question->content"
-                            :description="$answer->value"
-                            :type="$answer->question->type == 'textarea' ? 'text' : 'title'"
-                            :linebreak="$answer->question->type == 'textarea'"
+                            :label="$entry->getTitle($key)"
+                            :description="$value"
+                            :type="'textarea' == 'textarea' ? 'text' : 'title'"
+                            :linebreak="'textarea' == 'textarea' ? true : false"
                             :layout="true"
                         />
 
@@ -745,10 +814,10 @@
 
             <x-card.list.description-item
                 x-data="
-                    {{ json_encode(['data' => ['answer' => $answers->for('q63')->id, 'question' => [ 'id' => 'q63', 'content' => $answers->for('q63')->question->content]]]) }}
+                    {{ json_encode(['data' => ['entry' => $entry->id, 'field' => $entry->historico]]) }}
                 "
-                :label="$answers->for('q63')->question->content"
-                :description="$answers->for('q63')->value"
+                label="Histórico"
+                :description="$entry->historico"
                 type="text"
                 :linebreak="true"
             >
@@ -767,71 +836,4 @@
 
 </section>
 
-
 @endsection
-
-@push('footer')
-<script>
-    function print() {
-        filename =  'ficha-{{ Str::slug($answers->for('q1')->value, '-') }}.pdf';
-        opt = {
-            filename: filename,
-            image: { type: 'jpeg', quality: 1 },
-        }
-        html2pdf(document.getElementById('print'), opt);
-    }
-</script>
-
-<script>
-    function destroy() {
-        return {
-            open: false,
-
-            show() {
-                this.open = true
-                document.body.classList.add('overflow-hidden')
-            },
-            hide() {
-                this.open = false
-                document.body.classList.remove('overflow-hidden')
-            },
-
-            submit() {
-                this.$refs.form.submit()
-            }
-        }
-    }
-
-    function edit() {
-        return {
-            open: false,
-
-            answer: null,
-
-            question: {
-                id: null,
-                content: null
-            },
-
-            show(data) {
-                this.answer = data.answer
-                this.question = data.question
-
-                this.open = true
-                document.body.classList.add('overflow-hidden')
-            },
-            hide() {
-                this.open = false
-                document.body.classList.remove('overflow-hidden')
-            },
-
-            submit() {
-                action = this.$refs.form.action.replace('/x', `/${this.answer}`)
-                this.$refs.form.action = action
-
-                this.$refs.form.submit()
-            }
-        }
-    }
-</script>
-@endpush

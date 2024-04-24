@@ -82,6 +82,146 @@ class AprendizForm extends Model
         63 => 'historico',
     ];
 
+    public function getSection($name)
+    {
+        $sections = [
+            'dados cadastrais' => [
+                'nome' => $this->nome,
+                'email' => $this->email,
+                'data_de_nascimento' => $this->data_de_nascimento,
+                'genero' => $this->genero,
+                'habilidade_manual' => $this->habilidade_manual,
+                'estado_de_naturalidade' => $this->estado_de_naturalidade,
+                'cidade_onde_nasceu' => $this->nome,
+                'cidade_onde_mora' => $this->cidade_onde_mora,
+                'logradouro' => $this->logradouro,
+                'numero' => $this->numero,
+                'cep' => $this->cep,
+                'zona' => $this->zona,
+                'bairro' => $this->bairro,
+                'complemento' => $this->complemento,
+                'telefone' => $this->telefone,
+                'telefone_de_recado' => $this->telefone_de_recado,
+                'carteira_de_habilitação' => $this->carteira_de_habilitação,
+                'categoria' => $this->categoria,
+                'facebook' => $this->facebook,
+                'instagram' => $this->instagram,
+            ],
+            'dados familiares' => [
+                'quantas_pessoas_moram_com_voce' => $this->quantas_pessoas_moram_com_voce,
+                'moradores' => $this->moradores,
+                'a_familia_recebe_algum_auxilio_do_governo' => $this->a_familia_recebe_algum_auxilio_do_governo,
+            ],
+            'documentação' => [
+                'cpf' => $this->cpf,
+                'cpf_do_responsavel' => $this->cpf_do_responsavel,
+                'nome_do_responsavel' => $this->nome_do_responsavel,
+                'carteira_de_trabalho' => $this->carteira_de_trabalho,
+                'numero_de_serie' => $this->numero_de_serie,
+                'rg' => $this->rg,
+                'titulo_de_eleitor' => $this->titulo_de_eleitor,
+                'alistamento_militar' => $this->alistamento_militar,
+                'numero_de_reservista' => $this->numero_de_reservista,
+            ],
+            'escolaridade' => [
+                'escolaridade' => $this->escolaridade,
+                'situacao_escolaridade' => $this->situacao_escolaridade,
+                'instituicao_de_ensino' => $this->instituicao_de_ensino,
+                'curso' => $this->curso,
+            ],
+            'experiência' => [
+                'nivel_de_conhecimentos_em_informatica' => $this->nivel_de_conhecimentos_em_informatica,
+                'conhecimentos_em_informatica' => $this->conhecimentos_em_informatica,
+                'possui_cursos_complementares' => $this->possui_cursos_complementares,
+                'cursos_complementares' => $this->cursos_complementares,
+                'possui_experiencia_profissional' => $this->possui_experiencia_profissional,
+                'experiencia_profissional' => $this->experiencia_profissional,
+                'esta_empregado' => $this->esta_empregado,
+            ],
+            'sobre você' => [
+                'quais_seus_principais_objetivos' => $this->quais_seus_principais_objetivos,
+                'expectativas_com_o_programa' => $this->expectativas_com_o_programa,
+                'comportamento_que_se_identifica' => $this->comportamento_que_se_identifica,
+                'uma_frase' => $this->uma_frase,
+                'uma_música' => $this->uma_música,
+                'pode_faltar_tudo_menos' => $this->pode_faltar_tudo_menos,
+                'no_espelho_voce_enxerga' => $this->no_espelho_voce_enxerga,
+                'acrescentaria_na_personalidade' => $this->acrescentaria_na_personalidade,
+                'qual_profissao_gostaria' => $this->qual_profissao_gostaria,
+                'mensagem_para_humanidade' => $this->mensagem_para_humanidade,
+                'como_chegou_ao_ceproesc' => $this->como_chegou_ao_ceproesc,
+            ],
+            'interno' => [
+                'historico' => $this->historico,
+            ],
+        ];
+
+        return $sections[$name];
+    }
+
+    public function getTitle($field)
+    {
+        $titles = [
+            'nome' => 'Nome',
+            'email' => 'E-mail',
+            'data_de_nascimento' => 'Data de nascimento',
+            'genero' => 'Gênero',
+            'habilidade_manual' => 'Habilidade manual',
+            'estado_de_naturalidade' => 'Estado de naturalidade',
+            'cidade_onde_nasceu' => 'Cidade onde nasceu',
+            'cidade_onde_mora' => 'Cidade onde mora',
+            'logradouro' => 'Logradouro',
+            'numero' => 'Número',
+            'cep' => 'CEP',
+            'zona' => 'Zona',
+            'bairro' => 'Bairro',
+            'complemento' => 'Complemento',
+            'telefone' => 'Telefone do candidato',
+            'telefone_de_recado' => 'Telefone de recado',
+            'carteira_de_habilitação' => 'Carteira de habilitação',
+            'categoria' => 'Categoria',
+            'facebook' => 'Facebook',
+            'instagram' => 'Instagram',
+            'quantas_pessoas_moram_com_voce' => 'Quantas pessoas moram com você?',
+            'moradores' => 'Moradores',
+            'a_familia_recebe_algum_auxilio_do_governo' => 'A família recebe algum auxílio do governo?',
+            'cpf' => 'CPF do candidato',
+            'cpf_do_responsavel' => 'CPF do responsável',
+            'nome_do_responsavel' => 'Nome do responsável',
+            'carteira_de_trabalho' => 'Carteira de trabalho',
+            'numero_de_serie' => 'Número de série',
+            'rg' => 'RG/UF',
+            'titulo_de_eleitor' => 'Título de eleitor',
+            'alistamento_militar' => 'Alistamento militar',
+            'numero_de_reservista' => 'Número de reservista',
+            'escolaridade' => 'Escolaridade',
+            'situacao_escolaridade' => 'Situação',
+            'instituicao_de_ensino' => 'Instituição de ensino',
+            'curso' => 'Curso',
+            'nivel_de_conhecimentos_em_informatica' => 'Nível de conhecimentos em informática',
+            'conhecimentos_em_informatica' => 'Conhecimentos em informática',
+            'possui_cursos_complementares' => 'Possui cursos complementares?',
+            'cursos_complementares' => 'Cursos complementares',
+            'possui_experiencia_profissional' => 'Possui experiência profissional?',
+            'experiencia_profissional' => 'Experiência profissional?',
+            'esta_empregado' => 'Está empregado atualmente?',
+            'quais_seus_principais_objetivos' => 'Quais seus principais objetivos?',
+            'expectativas_com_o_programa' => 'Quais são suas expectativas com o programa jovem aprendiz:',
+            'comportamento_que_se_identifica' => 'Com qual desses comportamentos você mais se identifica?',
+            'uma_frase' => 'Uma frase que resume sua vida:',
+            'uma_música' => 'Uma música para se ouvir todos os dias',
+            'pode_faltar_tudo_menos' => 'Pra você pode faltar tudo, menos...',
+            'no_espelho_voce_enxerga' => 'Quando você se olha no espelho, você enxerga:',
+            'acrescentaria_na_personalidade' => 'O que você acrescentaria na sua personalidade?',
+            'qual_profissao_gostaria' => 'Qual profissão gostaria de ter?',
+            'mensagem_para_humanidade' => 'Deixe uma mensagem para humanidade:',
+            'como_chegou_ao_ceproesc' => 'Como chegou ao Ceproesc?',
+            'historico' => 'Histórico',
+        ];
+
+        return $titles[$field];
+    }
+
     public static function importFromOldModel(Entry $entry)
     {
         $form = new Self();
