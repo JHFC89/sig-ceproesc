@@ -45,7 +45,7 @@ class CreateAprendizFormsTable extends Migration
             $table->string('nome_do_responsavel', 255);
             $table->enum('carteira_de_trabalho', AprendizForm::CARTEIRA_DE_TRABALHO);
             $table->string('numero_de_serie', 255);
-            $table->string('rg', 20);
+            $table->string('rg', 50);
             $table->string('titulo_de_eleitor', 50)->nullable();
             $table->enum('alistamento_militar', AprendizForm::ALISTAMENTO_MILITAR)->nullable();
             $table->string('numero_de_reservista', 50)->nullable();
