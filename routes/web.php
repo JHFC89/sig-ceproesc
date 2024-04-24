@@ -34,6 +34,7 @@ use App\Http\Controllers\{
     ProfessionalProfileController,
     ComplementaryProfileController,
     CandidateSubscriptionController,
+    CandidateController,
 };
 
 /*
@@ -238,9 +239,13 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     Route::get('entries', [CandidateSubscriptionController::class, 'index'])
         ->name('candidate-subscriptions.index');
+    Route::get('candidates', [CandidateController::class, 'index'])
+        ->name('candidates.index');
 
     Route::get('entries/{entry}', [CandidateSubscriptionController::class, 'show'])
         ->name('candidate-subscriptions.show');
+    Route::get('candidates/{entry}', [CandidateController::class, 'show'])
+        ->name('candidates.show');
 
     Route::patch('answers/{answer}/', [CandidateSubscriptionController::class, 'update'])
         ->name('candidate-subscriptions.update');
