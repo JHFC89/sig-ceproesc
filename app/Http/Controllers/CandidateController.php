@@ -47,9 +47,22 @@ class CandidateController extends Controller
         ]);
     }
 
+    public function destroy(AprendizForm $entry)
+    {
+        $this->checkAuthorization();
+
+        if ($entry->delete()) {
+            session()->flash('status', 'Cadastro deletado com sucesso!');
+        } else {
+            session()->flash('status', 'Algo deu errado: cadastrado não deletado!');
+        }
+
+        return redirect()->route('candidates.index');
+    }
+
     private function getEntries()
     {
-        $entries = AprendizForm::select('id','nome', 'data_de_nascimento', 'genero', 'cidade_onde_mora', 'escolaridade');
+        $entries = AprendizForm::select('id', 'nome', 'data_de_nascimento', 'genero', 'cidade_onde_mora', 'escolaridade');
 
         if (request()->missing('filter')) {
             return $entries->paginate(10);

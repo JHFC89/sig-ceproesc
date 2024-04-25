@@ -96,7 +96,7 @@
             x-data="destroy()"
             x-ref="form"
             @keydown.window.escape="hide()"
-            action="{{ route('candidate-subscriptions.destroy', ['entry' => $entry]) }}"
+            action="{{ route('candidates.destroy', ['entry' => $entry]) }}"
             method="POST"
         >
             @csrf

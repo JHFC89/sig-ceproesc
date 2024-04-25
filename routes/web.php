@@ -254,6 +254,8 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     Route::delete('entries/{entry}', [CandidateSubscriptionController::class, 'destroy'])
         ->name('candidate-subscriptions.destroy');
+    Route::delete('cadidates/{entry}', [CandidateController::class, 'destroy'])
+        ->name('candidates.destroy');
 });
 
 Route::get('/dashboard', function () {
