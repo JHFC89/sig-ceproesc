@@ -249,6 +249,8 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     Route::patch('answers/{answer}/', [CandidateSubscriptionController::class, 'update'])
         ->name('candidate-subscriptions.update');
+    Route::patch('candidates/{entry}/', [CandidateController::class, 'update'])
+        ->name('candidates.update');
 
     Route::delete('entries/{entry}', [CandidateSubscriptionController::class, 'destroy'])
         ->name('candidate-subscriptions.destroy');

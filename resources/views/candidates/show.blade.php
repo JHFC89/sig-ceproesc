@@ -11,6 +11,9 @@
 @if (session()->has('status'))
     <x-alert type="success" :message="session('status')"/>
 @endif
+@if ($errors->any())
+    <x-alert type="warning" message="Houve um erro ao tentar salvar o campo."/>
+@endif
 <section class="space-y-4">
 
     <!-- Actions -->
@@ -24,7 +27,7 @@
     >
         <form
             x-ref="form"
-            action="{{ route('candidate-subscriptions.update', ['answer' => 'x']) }}"
+            action="{{ route('candidates.update', ['entry' => $entry->id]) }}"
             method="POST"
             class="inline-block bg-white shadow-xl rounded-lg py-10 px-4 text-gray-700 lg:w-1/3"
         >
@@ -43,20 +46,20 @@
 
             <div class="mt-4">
 
-                <template x-if="question.id == 'q51'">
+                <template x-if="entry.field == 'esta_empregado'">
                     <label for="value">
-                        <span x-text="question.content" class="font-bold text-base"></span>
-                        <select x-bind:name="question.id" class="form-select w-full mt-1">
+                        <span x-text="entry.field" class="font-bold text-base"></span>
+                        <select x-bind:name="entry.field" class="form-select w-full mt-1">
                             <option value="sim">Sim</option>
                             <option value="não">Não</option>
                         </select>
                     </label>
                 </template>
 
-                <template x-if="question.id == 'q63'">
+                <template x-if="entry.field == 'historico'">
                     <label for="value">
-                        <span x-text="question.content" class="font-bold text-base"></span>
-                        <textarea x-bind:name="question.id" class="form-textarea w-full mt-1" rows="4">{{ $entry->historico }}</textarea>
+                        <span x-text="entry.field" class="font-bold text-base"></span>
+                        <textarea x-bind:name="entry.field" class="form-textarea w-full mt-1" rows="4">{{ $entry->historico }}</textarea>
                     </label>
                 </template>
 
@@ -71,7 +74,7 @@
                     Cancelar
                 </button>
                 <button
-                    @click.prevent="submit()"
+                    type="submit"
                     class="px-4 py-1 bg-blue-500 text-white text-sm uppercase font-semibold rounded-md shadow-md hover:bg-blue-700"
                 >
                     Confirmar
@@ -721,7 +724,7 @@
                     <div class="relative">
                         <x-card.list.description-item
                             x-data="
-                                {{ json_encode(['data' => ['entry' => $entry->id, 'field' => 'esta_empregado']]) }}
+                                {{ json_encode(['data' => ['field' => 'esta_empregado', 'value' => $entry->esta_empregado]]) }}
                             "
                             :label="$entry->getTitle('esta_empregado')"
                             :description="$entry->esta_empregado"
@@ -814,7 +817,7 @@
 
             <x-card.list.description-item
                 x-data="
-                    {{ json_encode(['data' => ['entry' => $entry->id, 'field' => $entry->historico]]) }}
+                    {{ json_encode(['data' => ['field' => 'historico', 'value' => $entry->historico]]) }}
                 "
                 label="Histórico"
                 :description="$entry->historico"
@@ -837,3 +840,61 @@
 </section>
 
 @endsection
+
+@push('footer')
+<script>
+    function print() {
+        filename =  'ficha-{{ Str::slug($entry->nome, '-') }}.pdf';
+        opt = {
+            filename: filename,
+            image: { type: 'jpeg', quality: 1 },
+        }
+        html2pdf(document.getElementById('print'), opt);
+    }
+</script>
+
+<script>
+    function destroy() {
+        return {
+            open: false,
+
+            show() {
+                this.open = true
+                document.body.classList.add('overflow-hidden')
+            },
+            hide() {
+                this.open = false
+                document.body.classList.remove('overflow-hidden')
+            },
+
+            submit() {
+                this.$refs.form.submit()
+            }
+        }
+    }
+
+    function edit() {
+        return {
+            open: false,
+
+            entry: {
+                field: null,
+                value: null
+            },
+
+            show(data) {
+                this.entry.field = data.field
+                this.entry.value = data.value
+
+                this.open = true
+                document.body.classList.add('overflow-hidden')
+            },
+
+            hide() {
+                this.open = false
+                document.body.classList.remove('overflow-hidden')
+            },
+        }
+    }
+</script>
+@endpush

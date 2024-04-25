@@ -23,6 +23,30 @@ class CandidateController extends Controller
         return view('candidates.show', compact('entry'));
     }
 
+    public function update(AprendizForm $entry)
+    {
+        $this->checkAuthorization();
+
+        $data = collect($this->validate(request(), [
+            'esta_empregado' => ['string', 'max:3', 'in:sim,não'],
+            'historico' => ['string', 'max:255']
+        ]));
+
+        $data->each(function ($value, $field) use ($entry) {
+            $entry[$field] = $value;
+        });
+
+        if ($entry->save()) {
+            session()->flash('status', "O campo foi atualizado com sucesso!");
+        } else {
+            session()->flash('status', "Algo deu errado: O campo não foi atualizado!");
+        }
+
+        return redirect()->route('candidates.show', [
+            'entry' => $entry
+        ]);
+    }
+
     private function getEntries()
     {
         $entries = AprendizForm::select('id','nome', 'data_de_nascimento', 'genero', 'cidade_onde_mora', 'escolaridade');
