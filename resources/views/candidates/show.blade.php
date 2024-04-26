@@ -9,28 +9,16 @@
 @section('content')
 
 @if (session()->has('status'))
-    <x-alert type="success" :message="session('status')"/>
+<x-alert type="success" :message="session('status')" />
 @endif
 @if ($errors->any())
-    <x-alert type="warning" message="Houve um erro ao tentar salvar o campo."/>
+<x-alert type="warning" message="Houve um erro ao tentar salvar o campo." />
 @endif
 <section class="space-y-4">
 
     <!-- Actions -->
-    <div
-        x-data="edit()"
-        @edit.window="show($event.detail)"
-        x-show="open"
-        x-transition
-        style="display: none !important"
-        class="fixed inset-0 z-10 flex items-center justify-center text-left bg-black bg-opacity-50"
-    >
-        <form
-            x-ref="form"
-            action="{{ route('candidates.update', ['entry' => $entry->id]) }}"
-            method="POST"
-            class="inline-block bg-white shadow-xl rounded-lg py-10 px-4 text-gray-700 lg:w-1/3"
-        >
+    <div x-data="edit()" @edit.window="show($event.detail)" x-show="open" x-transition style="display: none !important" class="fixed inset-0 z-10 flex items-center justify-center text-left bg-black bg-opacity-50">
+        <form x-ref="form" action="{{ route('candidates.update', ['entry' => $entry->id]) }}" method="POST" class="inline-block bg-white shadow-xl rounded-lg py-10 px-4 text-gray-700 lg:w-1/3">
             @csrf
             @method('PATCH')
 
@@ -66,17 +54,10 @@
             </div>
 
             <div class="flex justify-between mt-8">
-                <button
-                    @click.prevent="hide()"
-                    type="button"
-                    class="px-4 py-1 bg-red-500 text-white text-sm uppercase font-semibold rounded-md shadow-md hover:bg-red-700"
-                >
+                <button @click.prevent="hide()" type="button" class="px-4 py-1 bg-red-500 text-white text-sm uppercase font-semibold rounded-md shadow-md hover:bg-red-700">
                     Cancelar
                 </button>
-                <button
-                    type="submit"
-                    class="px-4 py-1 bg-blue-500 text-white text-sm uppercase font-semibold rounded-md shadow-md hover:bg-blue-700"
-                >
+                <button type="submit" class="px-4 py-1 bg-blue-500 text-white text-sm uppercase font-semibold rounded-md shadow-md hover:bg-blue-700">
                     Confirmar
                 </button>
             </div>
@@ -85,37 +66,18 @@
 
     <!-- Actions -->
     <div class="flex justify-between">
-        <button
-            onclick="print()"
-            type="button"
-            class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown"
-        >
+        <button onclick="print()" type="button" class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-blue-600 hover:bg-blue-500 hover:text-blue-100 rounded-md shadown">
             baixar PDF
         </button>
-        <form
-            x-data="destroy()"
-            x-ref="form"
-            @keydown.window.escape="hide()"
-            action="{{ route('candidates.destroy', ['entry' => $entry]) }}"
-            method="POST"
-        >
+        <form x-data="destroy()" x-ref="form" @keydown.window.escape="hide()" action="{{ route('candidates.destroy', ['entry' => $entry]) }}" method="POST">
             @csrf
             @method('DELETE')
 
-            <button
-                @click.prevent="show()"
-                type="submit"
-                class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-red-600 hover:bg-red-500 hover:text-blue-100 rounded-md shadown"
-            >
+            <button @click.prevent="show()" type="submit" class="px-4 py-2 text-sm font-medium leading-none text-white capitalize bg-red-600 hover:bg-red-500 hover:text-blue-100 rounded-md shadown">
                 deletar cadastro
             </button>
 
-            <div
-                x-show="open"
-                x-transition
-                style="display: none !important"
-                class="fixed inset-0 z-10 flex items-center justify-center text-left bg-black bg-opacity-50"
-            >
+            <div x-show="open" x-transition style="display: none !important" class="fixed inset-0 z-10 flex items-center justify-center text-left bg-black bg-opacity-50">
                 <div class="inline-block bg-white shadow-xl rounded-lg py-10 px-4 text-gray-700 lg:w-1/3">
                     <div>
                         <span class="block font-semibold text-center text-red-600 text-2xl">
@@ -126,17 +88,10 @@
                         </h3>
                     </div>
                     <div class="flex justify-between mt-8">
-                        <button
-                            @click.prevent="hide()"
-                            type="button"
-                            class="px-4 py-1 bg-red-500 text-white text-sm uppercase font-semibold rounded-md shadow-md hover:bg-red-700"
-                        >
+                        <button @click.prevent="hide()" type="button" class="px-4 py-1 bg-red-500 text-white text-sm uppercase font-semibold rounded-md shadow-md hover:bg-red-700">
                             Cancelar
                         </button>
-                        <button
-                            @click.prevent="submit()"
-                            class="px-4 py-1 bg-blue-500 text-white text-sm uppercase font-semibold rounded-md shadow-md hover:bg-blue-700"
-                        >
+                        <button @click.prevent="submit()" class="px-4 py-1 bg-blue-500 text-white text-sm uppercase font-semibold rounded-md shadow-md hover:bg-blue-700">
                             Confirmar
                         </button>
                     </div>
@@ -153,7 +108,7 @@
             <section class="flex">
 
                 <div class="flex items-center w-1/2 pl-4">
-                    <x-icons.logo-ceproesc class="w-10/12 h-auto"/>
+                    <x-icons.logo-ceproesc class="w-10/12 h-auto" />
                 </div>
 
                 <div class="flex justify-start items-center w-1/2 pr-12">
@@ -192,8 +147,8 @@
                             <p class="text-xs uppercase font-bold">
                                 cnh:
                                 <span class="font-normal capitalize">
-                                    {{ $entry->carteira_de_habilitação }}
-                                    @if ($entry->carteira_de_habilitação == 'sim')
+                                    {{ $entry->carteira_de_habilitacao }}
+                                    @if ($entry->carteira_de_habilitacao == 'sim')
                                     ({{ $entry->categoria }})
                                     @endif
                                 </span>
@@ -223,21 +178,21 @@
 
                             @if ($entry->genero == 'masculino' && isset($entry->alistamento_militar))
 
-                                <p class="text-xs uppercase font-bold">
-                                    alistamento militar:
-                                    <span class="font-normal capitalize">
-                                        {{ $entry->alistamento_militar }}
-                                    </span>
-                                </p>
+                            <p class="text-xs uppercase font-bold">
+                                alistamento militar:
+                                <span class="font-normal capitalize">
+                                    {{ $entry->alistamento_militar }}
+                                </span>
+                            </p>
 
-                                @unless ($entry->alistamento_militar == 'ainda não convocado')
-                                    <p class="text-xs uppercase font-bold">
-                                        número de reservista:
-                                        <span class="font-normal capitalize">
-                                            {{ $entry->numero_de_reservista }}
-                                        </span>
-                                    </p>
-                                @endunless
+                            @unless ($entry->alistamento_militar == 'ainda não convocado')
+                            <p class="text-xs uppercase font-bold">
+                                número de reservista:
+                                <span class="font-normal capitalize">
+                                    {{ $entry->numero_de_reservista }}
+                                </span>
+                            </p>
+                            @endunless
 
                             @endif
 
@@ -251,18 +206,18 @@
                             <p class="text-xs uppercase font-bold">
                                 escolaridade:
                                 @if ($entry->escolaridade == 'ensino superior')
-                                    <span class="font-normal capitalize">
-                                        {{ $entry->escolaridade }} -
-                                        {{ optional($entry)->curso }}
-                                        ({{ $entry->instituicao_de_ensino }}) -
-                                        {{ $entry->situacao_escolaridade }}
+                                <span class="font-normal capitalize">
+                                    {{ $entry->escolaridade }} -
+                                    {{ optional($entry)->curso }}
+                                    ({{ $entry->instituicao_de_ensino }}) -
+                                    {{ $entry->situacao_escolaridade }}
 
-                                    </span>
+                                </span>
                                 @else
-                                    <span class="font-normal capitalize">
-                                        {{ $entry->escolaridade }} -
-                                        {{ $entry->situacao_escolaridade }}
-                                    </span>
+                                <span class="font-normal capitalize">
+                                    {{ $entry->escolaridade }} -
+                                    {{ $entry->situacao_escolaridade }}
+                                </span>
                                 @endif
                             </p>
 
@@ -283,10 +238,10 @@
                                 cursos complementares:
                                 <span class="font-normal normal-case">
                                     @php
-                                        $cursosArray = json_decode($entry->cursos_complementares, true);
-                                        $formatedCursos = collect($cursosArray)->map(function ($curso) {
-                                            return "{$curso['Nome do curso']} ({$curso['Instituição do curso']})";
-                                        })->join(', ', ' e ');
+                                    $cursosArray = json_decode($entry->cursos_complementares, true);
+                                    $formatedCursos = collect($cursosArray)->map(function ($curso) {
+                                    return "{$curso['Nome do curso']} ({$curso['Instituição do curso']})";
+                                    })->join(', ', ' e ');
                                     @endphp
                                     {{ $formatedCursos }}
                                 </span>
@@ -363,17 +318,17 @@
 
                         <div class="mt-1 space-y-1 text-xs">
                             @foreach (json_decode($entry->moradores, true) as $morador)
-                                <div>
-                                    <p>
-                                        {{ Str::words($morador['Nome do morador'], 1, ',') }}
-                                        {{ $morador['Idade do morador'] }}
-                                        ({{ $morador['Parentesco'] }}):
-                                        {{ $morador['Ocupação'] }}
-                                    </p>
-                                    <p>
-                                        Renda: {{ $morador['Renda'] }}
-                                    </p>
-                                </div>
+                            <div>
+                                <p>
+                                    {{ Str::words($morador['Nome do morador'], 1, ',') }}
+                                    {{ $morador['Idade do morador'] }}
+                                    ({{ $morador['Parentesco'] }}):
+                                    {{ $morador['Ocupação'] }}
+                                </p>
+                                <p>
+                                    Renda: {{ $morador['Renda'] }}
+                                </p>
+                            </div>
                             @endforeach
                         </div>
 
@@ -385,32 +340,32 @@
                 <div class="w-1/2 space-y-6">
 
                     @if ($entry->possui_experiencia_profissional == 'sim')
-                        <article>
+                    <article>
 
-                            <h2 class="text-lg font-bold text-blue-800 uppercase tracking-wider">histórico de trabalho</h2>
+                        <h2 class="text-lg font-bold text-blue-800 uppercase tracking-wider">histórico de trabalho</h2>
 
-                            <div class="mt-1 space-y-1">
-                                @foreach (json_decode($entry->experiencia_profissional, true) as $empresa)
+                        <div class="mt-1 space-y-1">
+                            @foreach (json_decode($entry->experiencia_profissional, true) as $empresa)
 
-                                    <div>
-                                        <p class="text-xs uppercase font-bold">
-                                            Empresa:
-                                            <span class="font-normal normal-case">
-                                                {{ ucfirst($empresa['Empresa']) }}
-                                            </span>
-                                        </p>
-                                        <p class="text-xs uppercase font-bold">
-                                            Cargo:
-                                            <span class="font-normal normal-case">
-                                                {{ ucfirst($empresa['Cargo']) }}
-                                            </span>
-                                        </p>
-                                    </div>
-
-                                @endforeach
+                            <div>
+                                <p class="text-xs uppercase font-bold">
+                                    Empresa:
+                                    <span class="font-normal normal-case">
+                                        {{ ucfirst($empresa['Empresa']) }}
+                                    </span>
+                                </p>
+                                <p class="text-xs uppercase font-bold">
+                                    Cargo:
+                                    <span class="font-normal normal-case">
+                                        {{ ucfirst($empresa['Cargo']) }}
+                                    </span>
+                                </p>
                             </div>
 
-                        </article>
+                            @endforeach
+                        </div>
+
+                    </article>
                     @endif
 
 
@@ -438,7 +393,7 @@
                                 Uma música para se ouvir todos os dias
                             </p>
                             <p class="font-normal">
-                                {{ ucfirst($entry->uma_música) }}
+                                {{ ucfirst($entry->uma_musica) }}
                             </p>
 
                             <p class="font-bold mt-2">
@@ -492,7 +447,7 @@
 
                         </div>
 
-                    <article>
+                        <article>
 
                 </div>
 
@@ -525,30 +480,17 @@
 
                     @foreach ($entry->getSection('dados cadastrais') as $key => $value)
 
-                        @if ($key == 'data_de_nascimento')
+                    @if ($key == 'data_de_nascimento')
 
-                            <x-card.list.description-item
-                                :label="$entry->getTitle($key)"
-                                :description="\Carbon\Carbon::parse($value)->format('d/m/Y')"
-                                :layout="true"
-                            />
+                    <x-card.list.description-item :label="$entry->getTitle($key)" :description="\Carbon\Carbon::parse($value)->format('d/m/Y')" :layout="true" />
 
-                            <x-card.list.description-item
-                                label="Idade"
-                                :description="\Carbon\Carbon::parse($value)->diff(now())->format('%y anos')"
-                                :layout="true"
-                            />
+                    <x-card.list.description-item label="Idade" :description="\Carbon\Carbon::parse($value)->diff(now())->format('%y anos')" :layout="true" />
 
-                        @continue
+                    @continue
 
-                        @endif
+                    @endif
 
-                        <x-card.list.description-item
-                            :label="$entry->getTitle($key)"
-                            :description="$value"
-                            :type="in_array($key, ['email', 'facebook', 'instagram']) ? 'text' : 'title'"
-                            :layout="true"
-                        />
+                    <x-card.list.description-item :label="$entry->getTitle($key)" :description="$value" :type="in_array($key, ['email', 'facebook', 'instagram']) ? 'text' : 'title'" :layout="true" />
 
                     @endforeach
 
@@ -562,45 +504,21 @@
 
                     @foreach ($entry->getSection('dados familiares') as $key => $value)
 
-                        @if ($key == 'moradores')
+                    @if ($key == 'moradores')
 
-                            @foreach (json_decode($value, true) as $morador)
-                                <x-card.list.description-item
-                                    label="Nome do morador"
-                                    :description="$morador['Nome do morador']"
-                                    :layout="true"
-                                />
-                                <x-card.list.description-item
-                                    label="Parentesco"
-                                    :description="$morador['Parentesco']"
-                                    :layout="true"
-                                />
-                                <x-card.list.description-item
-                                    label="Idade do morador"
-                                    :description="$morador['Idade do morador']"
-                                    :layout="true"
-                                />
-                                <x-card.list.description-item
-                                    label="Ocupação"
-                                    :description="$morador['Ocupação']"
-                                    :layout="true"
-                                />
-                                <x-card.list.description-item
-                                    label="Renda"
-                                    :description="$morador['Renda']"
-                                    :layout="true"
-                                />
-                            @endforeach
+                    @foreach (json_decode($value, true) as $morador)
+                    <x-card.list.description-item label="Nome do morador" :description="$morador['Nome do morador']" :layout="true" />
+                    <x-card.list.description-item label="Parentesco" :description="$morador['Parentesco']" :layout="true" />
+                    <x-card.list.description-item label="Idade do morador" :description="$morador['Idade do morador']" :layout="true" />
+                    <x-card.list.description-item label="Ocupação" :description="$morador['Ocupação']" :layout="true" />
+                    <x-card.list.description-item label="Renda" :description="$morador['Renda']" :layout="true" />
+                    @endforeach
 
-                            @continue
+                    @continue
 
-                        @endif
+                    @endif
 
-                        <x-card.list.description-item
-                            :label="$entry->getTitle($key)"
-                            :description="$value"
-                            :layout="true"
-                        />
+                    <x-card.list.description-item :label="$entry->getTitle($key)" :description="$value" :layout="true" />
 
                     @endforeach
 
@@ -614,15 +532,11 @@
 
                     @foreach ($entry->getSection('documentação') as $key => $value)
 
-                        @if ($value == null)
-                            @continue
-                        @endif
+                    @if ($value == null)
+                    @continue
+                    @endif
 
-                        <x-card.list.description-item
-                            :label="$entry->getTitle($key)"
-                            :description="$value"
-                            :layout="true"
-                        />
+                    <x-card.list.description-item :label="$entry->getTitle($key)" :description="$value" :layout="true" />
 
                     @endforeach
 
@@ -640,15 +554,11 @@
 
                     @foreach ($entry->getSection('escolaridade') as $key => $value)
 
-                        @if ($value == null)
-                            @continue
-                        @endif
+                    @if ($value == null)
+                    @continue
+                    @endif
 
-                        <x-card.list.description-item
-                            :label="$entry->getTitle($key)"
-                            :description="$value"
-                            :layout="true"
-                        />
+                    <x-card.list.description-item :label="$entry->getTitle($key)" :description="$value" :layout="true" />
 
                     @endforeach
 
@@ -660,82 +570,32 @@
 
                 <x-slot name="items">
 
-                    <x-card.list.description-item
-                        :label="$entry->getTitle('nivel_de_conhecimentos_em_informatica')"
-                        :description="$entry->nivel_de_conhecimentos_em_informatica"
-                        :layout="true"
-                    />
+                    <x-card.list.description-item :label="$entry->getTitle('nivel_de_conhecimentos_em_informatica')" :description="$entry->nivel_de_conhecimentos_em_informatica" :layout="true" />
 
-                    <x-card.list.description-item
-                        :label="$entry->getTitle('conhecimentos_em_informatica')"
-                        :description="collect(json_decode($entry->conhecimentos_em_informatica))->join(', ', ' e ')"
-                        :layout="true"
-                        type="text"
-                    />
+                    <x-card.list.description-item :label="$entry->getTitle('conhecimentos_em_informatica')" :description="collect(json_decode($entry->conhecimentos_em_informatica))->join(', ', ' e ')" :layout="true" type="text" />
 
-                    <x-card.list.description-item
-                        :label="$entry->getTitle('possui_cursos_complementares')"
-                        :description="$entry->possui_cursos_complementares"
-                        :layout="true"
-                    />
+                    <x-card.list.description-item :label="$entry->getTitle('possui_cursos_complementares')" :description="$entry->possui_cursos_complementares" :layout="true" />
 
                     @foreach (json_decode($entry->cursos_complementares, true) as $curso)
-                        <x-card.list.description-item
-                            label="Nome do curso"
-                            :description="$curso['Nome do curso']"
-                            :layout="true"
-                        />
-                        <x-card.list.description-item
-                            label="Instituição do curso"
-                            :description="$curso['Instituição do curso']"
-                            :layout="true"
-                        />
-                        <x-card.list.description-item
-                            label="Duração do curso"
-                            :description="$curso['Duração do curso']"
-                            :layout="true"
-                        />
+                    <x-card.list.description-item label="Nome do curso" :description="$curso['Nome do curso']" :layout="true" />
+                    <x-card.list.description-item label="Instituição do curso" :description="$curso['Instituição do curso']" :layout="true" />
+                    <x-card.list.description-item label="Duração do curso" :description="$curso['Duração do curso']" :layout="true" />
                     @endforeach
 
-                    <x-card.list.description-item
-                        :label="$entry->getTitle('possui_experiencia_profissional')"
-                        :description="$entry->possui_experiencia_profissional"
-                        :layout="true"
-                    />
+                    <x-card.list.description-item :label="$entry->getTitle('possui_experiencia_profissional')" :description="$entry->possui_experiencia_profissional" :layout="true" />
 
                     @foreach (json_decode($entry->experiencia_profissional, true) as $empresa)
-                        <x-card.list.description-item
-                            label="Empresa"
-                            :description="$empresa['Empresa']"
-                            :layout="true"
-                        />
-                        <x-card.list.description-item
-                            label="Cargo"
-                            :description="$empresa['Cargo']"
-                            :layout="true"
-                        />
-                        <x-card.list.description-item
-                            label="Período"
-                            :description="$empresa['Período']"
-                            :layout="true"
-                        />
+                    <x-card.list.description-item label="Empresa" :description="$empresa['Empresa']" :layout="true" />
+                    <x-card.list.description-item label="Cargo" :description="$empresa['Cargo']" :layout="true" />
+                    <x-card.list.description-item label="Período" :description="$empresa['Período']" :layout="true" />
                     @endforeach
 
                     <div class="relative">
-                        <x-card.list.description-item
-                            x-data="
+                        <x-card.list.description-item x-data="
                                 {{ json_encode(['data' => ['field' => 'esta_empregado', 'value' => $entry->esta_empregado]]) }}
-                            "
-                            :label="$entry->getTitle('esta_empregado')"
-                            :description="$entry->esta_empregado"
-                            :layout="true"
-                        >
-                            <button
-                                x-on:click.prevent="$dispatch('edit', data)"
-                                type="button"
-                                class="absolute right-0 text-gray-300 hover:text-blue-300"
-                            >
-                                <x-icons.edit class="w-6 h-6"/>
+                            " :label="$entry->getTitle('esta_empregado')" :description="$entry->esta_empregado" :layout="true">
+                            <button x-on:click.prevent="$dispatch('edit', data)" type="button" class="absolute right-0 text-gray-300 hover:text-blue-300">
+                                <x-icons.edit class="w-6 h-6" />
                             </button>
                         </x-card.list.description-item>
                     </div>
@@ -750,58 +610,35 @@
 
                     @foreach ($entry->getSection('sobre você') as $key => $value)
 
-                        @if ($key == 'no_espelho_voce_enxerga')
+                    @if ($key == 'no_espelho_voce_enxerga')
 
-                            @break
+                    @break
 
-                        @endif
+                    @endif
 
-                        @if ($key == 'expectativas_com_o_programa')
+                    @if ($key == 'expectativas_com_o_programa')
 
-                            <x-card.list.description-item
-                                label="Quais São Suas Expectativas Com O Programa Jovem Aprendiz/Estágio:"
-                                :description="$value"
-                                :type="'textarea' == 'textarea' ? 'text' : 'title'"
-                                :linebreak="'textarea' == 'textarea' ? true : false"
-                                :layout="true"
-                            />
+                    <x-card.list.description-item label="Quais São Suas Expectativas Com O Programa Jovem Aprendiz/Estágio:" :description="$value" :type="'textarea' == 'textarea' ? 'text' : 'title'" :linebreak="'textarea' == 'textarea' ? true : false" :layout="true" />
 
-                            @continue
+                    @continue
 
-                        @endif
+                    @endif
 
-                        <x-card.list.description-item
-                            :label="$entry->getTitle($key)"
-                            :description="$value"
-                            :type="'textarea' == 'textarea' ? 'text' : 'title'"
-                            :linebreak="'textarea' == 'textarea' ? true : false"
-                            :layout="true"
-                        />
+                    <x-card.list.description-item :label="$entry->getTitle($key)" :description="$value" :type="'textarea' == 'textarea' ? 'text' : 'title'" :linebreak="'textarea' == 'textarea' ? true : false" :layout="true" />
 
                     @endforeach
 
-                    <x-card.list.description-item
-                        :label="$entry->getTitle($key)"
-                        :description="collect(json_decode($entry[$key]))->join(', ', ' e ')"
-                        :layout="true"
-                        type="text"
-                    />
+                    <x-card.list.description-item :label="$entry->getTitle($key)" :description="collect(json_decode($entry[$key]))->join(', ', ' e ')" :layout="true" type="text" />
 
                     @foreach ($entry->getSection('sobre você') as $key => $value)
 
-                        @if (in_array($key, ['quais_seus_principais_objetivos', 'expectativas_com_o_programa', 'comportamento_que_se_identifica', 'uma_frase', 'uma_música', 'pode_faltar_tudo_menos', 'no_espelho_voce_enxerga']))
+                    @if (in_array($key, ['quais_seus_principais_objetivos', 'expectativas_com_o_programa', 'comportamento_que_se_identifica', 'uma_frase', 'uma_musica', 'pode_faltar_tudo_menos', 'no_espelho_voce_enxerga']))
 
-                        @continue
+                    @continue
 
-                        @endif
+                    @endif
 
-                        <x-card.list.description-item
-                            :label="$entry->getTitle($key)"
-                            :description="$value"
-                            :type="'textarea' == 'textarea' ? 'text' : 'title'"
-                            :linebreak="'textarea' == 'textarea' ? true : false"
-                            :layout="true"
-                        />
+                    <x-card.list.description-item :label="$entry->getTitle($key)" :description="$value" :type="'textarea' == 'textarea' ? 'text' : 'title'" :linebreak="'textarea' == 'textarea' ? true : false" :layout="true" />
 
                     @endforeach
                 </x-slot>
@@ -815,21 +652,11 @@
 
         <x-slot name="items">
 
-            <x-card.list.description-item
-                x-data="
+            <x-card.list.description-item x-data="
                     {{ json_encode(['data' => ['field' => 'historico', 'value' => $entry->historico]]) }}
-                "
-                label="Histórico"
-                :description="$entry->historico"
-                type="text"
-                :linebreak="true"
-            >
-                <button
-                    x-on:click.prevent="$dispatch('edit', data)"
-                    type="button"
-                    class="text-gray-300 hover:text-blue-300"
-                >
-                    <x-icons.edit class="w-6 h-6"/>
+                " label="Histórico" :description="$entry->historico" type="text" :linebreak="true">
+                <button x-on:click.prevent="$dispatch('edit', data)" type="button" class="text-gray-300 hover:text-blue-300">
+                    <x-icons.edit class="w-6 h-6" />
                 </button>
             </x-card.list.description-item>
 
@@ -844,10 +671,13 @@
 @push('footer')
 <script>
     function print() {
-        filename =  'ficha-{{ Str::slug($entry->nome, '-') }}.pdf';
+        filename = 'ficha-{{ Str::slug($entry->nome, ' - ') }}.pdf';
         opt = {
             filename: filename,
-            image: { type: 'jpeg', quality: 1 },
+            image: {
+                type: 'jpeg',
+                quality: 1
+            },
         }
         html2pdf(document.getElementById('print'), opt);
     }

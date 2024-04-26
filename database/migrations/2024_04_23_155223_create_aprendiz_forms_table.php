@@ -33,7 +33,7 @@ class CreateAprendizFormsTable extends Migration
             $table->string('complemento', 255)->nullable();
             $table->string('telefone', 15);
             $table->string('telefone_de_recado', 15);
-            $table->enum('carteira_de_habilitação', ['sim', 'não']);
+            $table->enum('carteira_de_habilitacao', ['sim', 'não']);
             $table->enum('categoria', AprendizForm::CATEGORIAS_CNH);
             $table->string('facebook', 255);
             $table->string('instagram', 255);
@@ -64,7 +64,7 @@ class CreateAprendizFormsTable extends Migration
             $table->string('expectativas_com_o_programa', 255);
             $table->enum('comportamento_que_se_identifica', AprendizForm::COMPORTAMENTOS_QUE_SE_IDENTIFICA);
             $table->string('uma_frase', 255);
-            $table->string('uma_música', 255);
+            $table->string('uma_musica', 255);
             $table->string('pode_faltar_tudo_menos', 255);
             $table->json('no_espelho_voce_enxerga');
             $table->string('acrescentaria_na_personalidade', 255);
