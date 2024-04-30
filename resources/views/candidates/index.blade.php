@@ -94,9 +94,12 @@
                             </li>
 
                             <li>
-                                <label for="city" class="block px-2 py-1 bg-gray-100">cidade</label>
+                                <label for="city" class="flex flex-col justify-center px-2 py-1 bg-gray-100">
+                                    cidade
+                                    <span class="text-xs font-sans font-normal normal-case">(Separado por vírgulas e sem espaço)</span>
+                                </label>
                                 <div class="px-2 py-2">
-                                    <input x-model="filter.city.value" name="city" id="city" type="text" class="block w-full form-input font-sans py-0 px-1 rounded-md">
+                                    <input x-model="filter.city.value" name="city" id="city" type="text" placeholder="Araraquara,São Carlos,Matão" class="block w-full form-input font-sans py-0 px-1 rounded-md">
                                 </div>
                             </li>
 

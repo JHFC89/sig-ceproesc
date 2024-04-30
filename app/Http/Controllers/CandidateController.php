@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AprendizForm;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CandidateController extends Controller
 {
@@ -151,6 +152,16 @@ class CandidateController extends Controller
             if (in_array($column, ['data_de_nascimento', 'escolaridade', 'esta_empregado'])) {
                 $query->where($column, $value);
 
+                return;
+            }
+
+            if ($column === 'cidade_onde_mora') {
+                $cities = STR::of($value)->explode(',');
+                $query->where(function ($query) use ($cities) {
+                    $cities->each(function ($city) use ($query) {
+                        $query->orWhere('cidade_onde_mora', $city);
+                    });
+                });
                 return;
             }
 
