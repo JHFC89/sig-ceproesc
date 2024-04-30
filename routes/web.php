@@ -264,8 +264,12 @@ Route::get('/dashboard', function () {
 
 Route::get('/ficha-de-inscricao', [CandidateSubscriptionController::class, 'create'])
     ->name('cadidate-subscriptions.create');
+Route::get('/ficha-de-inscricao-do-candidato', [CandidateController::class, 'create'])
+    ->name('cadidates.create');
 
 Route::post('/ficha-de-inscricao', [CandidateSubscriptionController::class, 'store'])
     ->name('cadidate-subscriptions.store');
+Route::post('/ficha-de-inscricao-do-candidato', [CandidateController::class, 'store'])
+    ->name('cadidates.store');
 
 require __DIR__ . '/auth.php';

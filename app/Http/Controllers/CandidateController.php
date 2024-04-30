@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AprendizForm;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class CandidateController extends Controller
 {
@@ -21,6 +22,42 @@ class CandidateController extends Controller
         $this->checkAuthorization();
 
         return view('candidates.show', compact('entry'));
+    }
+
+    public function create()
+    {
+        return view('candidates.create');
+    }
+
+    public function store()
+    {
+        $data = $this->validate(request(), AprendizForm::getRules());
+
+        $data['moradores'] = AprendizForm::parseInputToJson($data['moradores'], 5);
+
+        if (request()->has('cursos_complementares')) {
+            $data['cursos_complementares'] = AprendizForm::parseInputToJson($data['cursos_complementares'], 3);
+        }
+
+        if (request()->has('experiencia_profissional')) {
+            $data['experiencia_profissional'] = AprendizForm::parseInputToJson($data['experiencia_profissional'], 3);
+        }
+
+        $data['conhecimentos_em_informatica'] = json_encode($data['conhecimentos_em_informatica']);
+        $data['no_espelho_voce_enxerga'] = json_encode($data['no_espelho_voce_enxerga']);
+
+        $data['historico'] = '';
+
+        DB::transaction(function () use ($data) {
+            $existingCpfForm = AprendizForm::where('cpf', $data['cpf'])->first();
+            if ($existingCpfForm) {
+                $existingCpfForm->delete();
+            }
+
+            AprendizForm::create($data);
+        });
+
+        return view('candidate-subscriptions.store');
     }
 
     public function update(AprendizForm $entry)

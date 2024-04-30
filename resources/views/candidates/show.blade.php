@@ -572,7 +572,7 @@
 
                     <x-card.list.description-item :label="$entry->getTitle('nivel_de_conhecimentos_em_informatica')" :description="$entry->nivel_de_conhecimentos_em_informatica" :layout="true" />
 
-                    <x-card.list.description-item :label="$entry->getTitle('conhecimentos_em_informatica')" :description="collect(json_decode($entry->conhecimentos_em_informatica))->join(', ', ' e ')" :layout="true" type="text" />
+                    <x-card.list.description-item :label="$entry->getTitle('conhecimentos_em_informatica')" :description="ucfirst(collect(json_decode($entry->conhecimentos_em_informatica))->join(', ', ' e '))" :layout="true" type="text" />
 
                     <x-card.list.description-item :label="$entry->getTitle('possui_cursos_complementares')" :description="$entry->possui_cursos_complementares" :layout="true" />
 
@@ -624,11 +624,11 @@
 
                     @endif
 
-                    <x-card.list.description-item :label="$entry->getTitle($key)" :description="$value" :type="'textarea' == 'textarea' ? 'text' : 'title'" :linebreak="'textarea' == 'textarea' ? true : false" :layout="true" />
+                    <x-card.list.description-item :label="$entry->getTitle($key)" :description="ucfirst($value)" :type="'textarea' == 'textarea' ? 'text' : 'title'" :linebreak="'textarea' == 'textarea' ? true : false" :layout="true" />
 
                     @endforeach
 
-                    <x-card.list.description-item :label="$entry->getTitle($key)" :description="collect(json_decode($entry[$key]))->join(', ', ' e ')" :layout="true" type="text" />
+                    <x-card.list.description-item :label="$entry->getTitle($key)" :description="ucfirst(collect(json_decode($entry[$key]))->join(', ', ' e '))" :layout="true" type="text" />
 
                     @foreach ($entry->getSection('sobre você') as $key => $value)
 
@@ -638,7 +638,7 @@
 
                     @endif
 
-                    <x-card.list.description-item :label="$entry->getTitle($key)" :description="$value" :type="'textarea' == 'textarea' ? 'text' : 'title'" :linebreak="'textarea' == 'textarea' ? true : false" :layout="true" />
+                    <x-card.list.description-item :label="$entry->getTitle($key)" :description="ucfirst($value)" :type="'textarea' == 'textarea' ? 'text' : 'title'" :linebreak="'textarea' == 'textarea' ? true : false" :layout="true" />
 
                     @endforeach
                 </x-slot>

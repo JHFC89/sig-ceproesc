@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\Rule;
 use MattDaneshvar\Survey\Models\{Entry, Answer};
+use Illuminate\Support\Str;
 
 class AprendizForm extends Model
 {
@@ -81,6 +83,8 @@ class AprendizForm extends Model
         62 => 'como_chegou_ao_ceproesc',
         63 => 'historico',
     ];
+
+    protected $guarded = [];
 
     public function getSection($name)
     {
@@ -343,5 +347,89 @@ class AprendizForm extends Model
 
         $form->setCreatedAt($entry->created_at);
         $form->save();
+    }
+
+    static public function getRules()
+    {
+        $rules = [
+            'nome' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'max:255'],
+            'data_de_nascimento' => ['required', 'date'],
+            'genero' => ['required', Rule::in(Self::GENEROS)],
+            'habilidade_manual' => ['required', Rule::in(Self::HABILIDADES_MANUAIS)],
+            'estado_de_naturalidade' => ['required', Rule::in(Self::ESTADOS)],
+            'cidade_onde_nasceu' => ['required', 'string', 'max:100'],
+            'cidade_onde_mora' => ['required', 'string', 'max:100'],
+            'logradouro' => ['required', 'string', 'max:255'],
+            'numero' => ['required', 'string', 'max:10'],
+            'cep' => ['required', 'string', 'max:10'],
+            'zona' => ['required', Rule::in(Self::ZONAS)],
+            'bairro' => ['required', 'string', 'max:255'],
+            'complemento' => ['string', 'max:255'],
+            'telefone' => ['required', 'string', 'max:15'],
+            'telefone_de_recado' => ['required', 'string', 'max:15'],
+            'carteira_de_habilitacao' => ['required', Rule::in(['sim', 'não'])],
+            'categoria' => ['required', Rule::in(Self::CATEGORIAS_CNH)],
+            'facebook' => ['required', 'string', 'max:255'],
+            'instagram' => ['required', 'string', 'max:255'],
+            'quantas_pessoas_moram_com_voce' => ['required', 'integer', 'min:0','max:10'],
+            'moradores' => [Rule::requiredIf(request()->input('quantas_pessoas_moram_com_voce') > 0)],
+            'a_familia_recebe_algum_auxilio_do_governo' => ['required', Rule::in(['sim', 'não'])],
+            'cpf' => ['required', 'string', 'max:14'],
+            'cpf_do_responsavel' => ['required', 'string', 'max:14'],
+            'nome_do_responsavel' => ['required', 'string', 'max:255'],
+            'carteira_de_trabalho' => ['required', Rule::in(Self::CARTEIRA_DE_TRABALHO)],
+            'numero_de_serie' => ['required', 'string', 'max:255'],
+            'rg' => ['required', 'string', 'max:50'],
+            'titulo_de_eleitor' => ['required', 'string', 'max:50'],
+            'alistamento_militar' => ['required_if:genero,masculino', Rule::in(Self::ALISTAMENTO_MILITAR)],
+            'numero_de_reservista' => ['required_if:genero,masculino', 'string', 'max:50'],
+            'escolaridade' => ['required', Rule::in(Self::ESCOLARIDADE)],
+            'situacao_escolaridade' => ['required', Rule::in(Self::SITUACAO_ESCOLARIDADE)],
+            'instituicao_de_ensino' => ['required', 'string', 'max:255'],
+            'curso' => ['required_if:escolaridade,ensino superior,escolaridade,ensino técnico', 'string', 'max:255'],
+            'nivel_de_conhecimentos_em_informatica' => ['required', Rule::in(Self::NIVEL_INFORMATICA)],
+            'conhecimentos_em_informatica' => ['required', ''],
+            'possui_cursos_complementares' => ['required', Rule::in(['sim', 'não'])],
+            'cursos_complementares' => ['required_if:possui_cursos_complementares,sim', ''],
+            'possui_experiencia_profissional' => ['required', Rule::in(['sim', 'não'])],
+            'experiencia_profissional' => ['required_if:possui_experiencia_profissional,sim', ''],
+            'esta_empregado' => ['required', Rule::in(['sim', 'não'])],
+            'quais_seus_principais_objetivos' => ['required', 'string', 'max:255'],
+            'expectativas_com_o_programa' => ['required', 'string', 'max:255'],
+            'comportamento_que_se_identifica' => ['required', Rule::in(Self::COMPORTAMENTOS_QUE_SE_IDENTIFICA)],
+            'uma_frase' => ['required', 'string', 'max:255'],
+            'uma_musica' => ['required', 'string', 'max:255'],
+            'pode_faltar_tudo_menos' => ['required', 'string', 'max:255'],
+            'no_espelho_voce_enxerga' => ['required', ''],
+            'acrescentaria_na_personalidade' => ['required', 'string', 'max:255'],
+            'qual_profissao_gostaria' => ['required', 'string', 'max:255'],
+            'mensagem_para_humanidade' => ['required', 'string', 'max:255'],
+            'como_chegou_ao_ceproesc' => ['required', Rule::in(Self::COMO_CHEGOU_CEPROESC)],
+            'historico' => ['string', 'max:255'],
+        ];
+
+        return $rules;
+    }
+
+    public static function parseInputToJson($input, $fields) {
+        $mapped = collect($input)->chunk($fields)->map(function ($value) {
+            return $value->flatMap(function ($value) {
+                return $value;
+            });
+        });
+        $json = STR::of($mapped->toJson())
+            ->replace('nome_do_curso', 'Nome do curso')
+            ->replace('instituicao_do_curso', 'Instituição do curso')
+            ->replace('duracao_do_curso', 'Duração do curso')
+            ->replace('empresa', 'Empresa')
+            ->replace('cargo', 'Cargo')
+            ->replace('periodo', 'Período')
+            ->replace('nome_do_morador', 'Nome do morador')
+            ->replace('parentesco', 'Parentesco')
+            ->replace('idade_do_morador', 'Idade do morador')
+            ->replace('ocupacao', 'Ocupação')
+            ->replace('renda', 'Renda');
+        return $json;
     }
 }
