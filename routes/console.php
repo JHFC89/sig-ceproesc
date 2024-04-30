@@ -51,3 +51,8 @@ Artisan::command('candidate-form:import-canidate-form-to-new-model', function ()
     $this->info('Candidate forms created: ' . AprendizForm::count());
     $this->warn('Errors count: ' . $errors);
 })->purpose('Import the old candidate form model data to the new model');
+
+Artisan::command('candidate-form:delete-old-forms', function () {
+    $forms = AprendizForm::whereDate('created_at', '<', now()->subYears(1)->format('Y/m/d'))->delete();
+    $this->info('Candidate forms deleted: ' . $forms);
+})->purpose('Delete forms older than a year');
