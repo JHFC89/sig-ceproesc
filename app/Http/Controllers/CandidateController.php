@@ -119,7 +119,8 @@ class CandidateController extends Controller
     {
         $fields = [
             'name'              => 'nome',
-            'age'               => 'data_de_nascimento',
+            'agefrom'           => 'data_de_nascimento_from',
+            'ageto'             => 'data_de_nascimento_to',
             'gender'            => 'genero',
             'schooling'         => 'escolaridade',
             'course'            => 'curso',
@@ -136,10 +137,14 @@ class CandidateController extends Controller
         $column = $fields[$field];
 
         return $entries->where(function (Builder $query) use ($column, $value) {
-            if ($column === 'data_de_nascimento') {
+            if ($column === 'data_de_nascimento_from') {
                 $query->whereDate('data_de_nascimento', '<=', now()->subYears($value)->format('Y/m/d'));
-                $query->whereDate('data_de_nascimento', '>=', now()->subYears($value + 1)->format('Y/m/d'));
 
+                return;
+            }
+
+            if ($column === 'data_de_nascimento_to') {
+                $query->whereDate('data_de_nascimento', '>=', now()->subYears($value + 1)->format('Y/m/d'));
                 return;
             }
 

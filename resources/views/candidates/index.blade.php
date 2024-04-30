@@ -41,8 +41,10 @@
 
                             <li>
                                 <label for="age" class="block px-2 py-1 bg-gray-100">idade</label>
-                                <div class="px-2 py-2">
-                                    <input x-model="filter.age.value" name="age" id="age" type="text" class="block w-full form-input font-sans py-0 px-1 rounded-md">
+                                <div class="px-2 py-2 flex items-center gap-x-2">
+                                    <input x-model="filter.agefrom.value" name="agefrom" id="agefrom" type="text" class="w-full form-input font-sans py-0 px-1 rounded-md">
+                                    <span class="font-sans font-normal normal-case">até</span>
+                                    <input x-model="filter.ageto.value" name="ageto" id="ageto" type="text" class="w-full form-input font-sans py-0 px-1 rounded-md">
                                 </div>
                             </li>
 
@@ -203,9 +205,13 @@
                     value: '{{ request()->input('filter.name', null) }}',
                     active: {{ request()->has('filter.name') ? 'true' : 'false' }}
                 },
-                age: {
-                    value: '{{ request()->input('filter.age', null) }}',
-                    active: {{ request()->has('filter.age') ? 'true' : 'false' }}
+                agefrom: {
+                    value: '{{ request()->input('filter.agefrom', null) }}',
+                    active: {{ request()->has('filter.agefrom') ? 'true' : 'false' }}
+                },
+                ageto: {
+                    value: '{{ request()->input('filter.ageto', null) }}',
+                    active: {{ request()->has('filter.ageto') ? 'true' : 'false' }}
                 },
                 gender: {
                     value: '{{ request()->input('filter.gender', null) }}',
