@@ -237,24 +237,24 @@ Route::middleware(['auth', 'active'])->group(function () {
         LessonInstructorController::class, 'update'
     ])->name('lesson-instructors.update');
 
-    Route::get('entries', [CandidateSubscriptionController::class, 'index'])
+    Route::get('deprecated-entries', [CandidateSubscriptionController::class, 'index'])
         ->name('candidate-subscriptions.index');
-    Route::get('candidates', [CandidateController::class, 'index'])
+    Route::get('entries', [CandidateController::class, 'index'])
         ->name('candidates.index');
 
-    Route::get('entries/{entry}', [CandidateSubscriptionController::class, 'show'])
+    Route::get('deprecated-entries/{entry}', [CandidateSubscriptionController::class, 'show'])
         ->name('candidate-subscriptions.show');
-    Route::get('candidates/{entry}', [CandidateController::class, 'show'])
+    Route::get('entries/{entry}', [CandidateController::class, 'show'])
         ->name('candidates.show');
 
-    Route::patch('answers/{answer}/', [CandidateSubscriptionController::class, 'update'])
+    Route::patch('deprecated-answers/{answer}/', [CandidateSubscriptionController::class, 'update'])
         ->name('candidate-subscriptions.update');
-    Route::patch('candidates/{entry}/', [CandidateController::class, 'update'])
+    Route::patch('entries/{entry}/', [CandidateController::class, 'update'])
         ->name('candidates.update');
 
-    Route::delete('entries/{entry}', [CandidateSubscriptionController::class, 'destroy'])
+    Route::delete('deprecated-entries/{entry}', [CandidateSubscriptionController::class, 'destroy'])
         ->name('candidate-subscriptions.destroy');
-    Route::delete('cadidates/{entry}', [CandidateController::class, 'destroy'])
+    Route::delete('entries/{entry}', [CandidateController::class, 'destroy'])
         ->name('candidates.destroy');
 });
 
@@ -262,14 +262,14 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::get('/ficha-de-inscricao', [CandidateSubscriptionController::class, 'create'])
+Route::get('/deprecated-ficha-de-inscricao', [CandidateSubscriptionController::class, 'create'])
     ->name('cadidate-subscriptions.create');
-Route::get('/ficha-de-inscricao-do-candidato', [CandidateController::class, 'create'])
+Route::get('/ficha-de-inscricao', [CandidateController::class, 'create'])
     ->name('cadidates.create');
 
-Route::post('/ficha-de-inscricao', [CandidateSubscriptionController::class, 'store'])
+Route::post('/deprecated-ficha-de-inscricao', [CandidateSubscriptionController::class, 'store'])
     ->name('cadidate-subscriptions.store');
-Route::post('/ficha-de-inscricao-do-candidato', [CandidateController::class, 'store'])
+Route::post('/ficha-de-inscricao', [CandidateController::class, 'store'])
     ->name('cadidates.store');
 
 require __DIR__ . '/auth.php';
