@@ -33,6 +33,7 @@
                         name="nome"
                         label="Nome"
                         :value="old('nome')"
+                        legend="Se usar nome social, coloque entre parênteses."
                     />
                     <x-candidate-subscription.text
                         name="email"
