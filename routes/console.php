@@ -38,7 +38,7 @@ Artisan::command('candidate-form:add-option-to-question {question_id} {option}',
 
 Artisan::command('candidate-form:import-canidate-form-to-new-model', function () {
     $errors = 0;
-    Entry::with('answers', 'answers.question')->where('created_at', '>', '2023-04-01')->chunk(50, function (Collection $entries) use (&$errors) {
+    Entry::with('answers', 'answers.question')->chunk(50, function (Collection $entries) use (&$errors) {
         $entries->each(function (Entry $entry) use (&$errors) {
             try {
                 AprendizForm::importFromOldModel($entry);
