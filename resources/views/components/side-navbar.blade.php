@@ -1,5 +1,5 @@
 <aside {{ $attributes->merge(['class' => 'w-64 h-full overflow-y-auto text-gray-100 bg-gradient-to-b from-gray-800 to-gray-500']) }}>
-    <div class="hidden items-center h-16 px-4 text-lg uppercase bg-gray-900 shadow lg:flex"> 
+    <div class="hidden items-center h-16 px-4 text-lg uppercase bg-gray-900 shadow lg:flex">
         <span class="font-serif text-3xl font-medium text-white">sig</span><span class="ml-2">- ceproesc</span>
     </div>
     <nav class="px-2 py-4">
@@ -7,7 +7,7 @@
 
             <li>
                 <a href="{{ route('dashboard') }}" class="flex items-center justify-center px-2 py-2 group border lg:border-none rounded-md {{ request()->routeIs('dashboard')
-|| request()->routeIs('profiles.*') 
+|| request()->routeIs('profiles.*')
 ? 'font-medium text-gray-100' : '' }} lg:justify-start">
                     <x-icons.home class="w-6 group-hover:text-gray-400"/>
                     <span class="ml-4 group-hover:text-gray-400">início</span>
@@ -217,7 +217,7 @@
 
             @if (Auth::user()->isCoordinator() || Auth::user()->isAdmin())
             <li>
-                <span 
+                <span
                     class="
                         flex items-center justify-center px-2 py-2 group border lg:border-none rounded-md cursor-default lg:justify-start
                         {{ request()->routeIs('companies.*')
@@ -337,10 +337,10 @@
 
             @if (Auth::user()->isCoordinator() || Auth::user()->isAdmin())
             <li>
-                <span 
+                <span
                     class="
                         flex items-center justify-center px-2 py-2 group border lg:border-none rounded-md cursor-default lg:justify-start
-                        {{ request()->routeIs('candidate-subscriptions.*')
+                        {{ request()->routeIs('candidates.*')
                         ? 'font-medium text-gray-100' : '' }}
                     "
                 >
@@ -351,10 +351,10 @@
 
                 <li>
                     <a
-                        href="{{ route('candidate-subscriptions.index') }}"
+                        href="{{ route('candidates.index') }}"
                         class="
                             flex items-center justify-center px-2 py-2 lg:py-1 lg:text-sm group rounded-md lg:justify-start
-                            {{ request()->routeIs('candidate-subscriptions.index')
+                            {{ request()->routeIs('candidates.index')
                             ? 'font-medium text-gray-100' : '' }}
                         "
                     >
