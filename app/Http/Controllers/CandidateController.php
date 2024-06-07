@@ -34,7 +34,9 @@ class CandidateController extends Controller
     {
         $data = $this->validate(request(), AprendizForm::getRules());
 
-        $data['moradores'] = AprendizForm::parseInputToJson($data['moradores'], 5);
+        if ($data['quantas_pessoas_moram_com_voce'] > 0) {
+            $data['moradores'] = AprendizForm::parseInputToJson($data['moradores'], 5);
+        }
 
         if (request()->has('cursos_complementares')) {
             $data['cursos_complementares'] = AprendizForm::parseInputToJson($data['cursos_complementares'], 3);
