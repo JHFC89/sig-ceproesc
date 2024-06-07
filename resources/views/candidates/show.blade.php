@@ -504,7 +504,7 @@
 
                     @foreach ($entry->getSection('dados familiares') as $key => $value)
 
-                    @if ($key == 'moradores')
+                    @if ($key == 'moradores' && $value !== null)
 
                     @foreach (json_decode($value, true) as $morador)
                     <x-card.list.description-item label="Nome do morador" :description="$morador['Nome do morador']" :layout="true" />
@@ -518,7 +518,9 @@
 
                     @endif
 
+                    @if ($key != 'moradores')
                     <x-card.list.description-item :label="$entry->getTitle($key)" :description="$value" :layout="true" />
+                    @endif
 
                     @endforeach
 
@@ -577,21 +579,21 @@
                     <x-card.list.description-item :label="$entry->getTitle('possui_cursos_complementares')" :description="$entry->possui_cursos_complementares" :layout="true" />
 
                     @if ($entry->possui_cursos_complementares == 'sim')
-                        @foreach (json_decode($entry->cursos_complementares, true) as $curso)
-                        <x-card.list.description-item label="Nome do curso" :description="$curso['Nome do curso']" :layout="true" />
-                        <x-card.list.description-item label="Instituição do curso" :description="$curso['Instituição do curso']" :layout="true" />
-                        <x-card.list.description-item label="Duração do curso" :description="$curso['Duração do curso']" :layout="true" />
-                        @endforeach
+                    @foreach (json_decode($entry->cursos_complementares, true) as $curso)
+                    <x-card.list.description-item label="Nome do curso" :description="$curso['Nome do curso']" :layout="true" />
+                    <x-card.list.description-item label="Instituição do curso" :description="$curso['Instituição do curso']" :layout="true" />
+                    <x-card.list.description-item label="Duração do curso" :description="$curso['Duração do curso']" :layout="true" />
+                    @endforeach
                     @endif
 
                     <x-card.list.description-item :label="$entry->getTitle('possui_experiencia_profissional')" :description="$entry->possui_experiencia_profissional" :layout="true" />
 
                     @if ($entry->possui_experiencia_profissional == 'sim')
-                        @foreach (json_decode($entry->experiencia_profissional, true) as $empresa)
-                        <x-card.list.description-item label="Empresa" :description="$empresa['Empresa']" :layout="true" />
-                        <x-card.list.description-item label="Cargo" :description="$empresa['Cargo']" :layout="true" />
-                        <x-card.list.description-item label="Período" :description="$empresa['Período']" :layout="true" />
-                        @endforeach
+                    @foreach (json_decode($entry->experiencia_profissional, true) as $empresa)
+                    <x-card.list.description-item label="Empresa" :description="$empresa['Empresa']" :layout="true" />
+                    <x-card.list.description-item label="Cargo" :description="$empresa['Cargo']" :layout="true" />
+                    <x-card.list.description-item label="Período" :description="$empresa['Período']" :layout="true" />
+                    @endforeach
                     @endif
 
                     <div class="relative">
