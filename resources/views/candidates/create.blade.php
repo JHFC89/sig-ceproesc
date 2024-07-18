@@ -6,7 +6,10 @@
 
     <section x-data="modal()" @keydown.window.escape="hide()" class="container mx-auto px-2 py-8">
 
-        <img class="mx-auto w-64 h-auto" src="https://ceproesc.com.br/wp-content/uploads/2024/06/logomarca.png" alt="logo ceproesc">
+        <div class="flex flex-col items-center justify-center lg:flex-row lg:gap-6">
+            <img class="w-64 h-auto p-6" src="https://ceproesc.com.br/wp-content/uploads/2024/06/logomarca.png" alt="logo ceproesc">
+            <img class="w-64 h-auto p-6" src="https://ceproesc.com.br/wp-content/uploads/2024/07/Ceproesc-Proeaja-1.jpg" alt="logo ceproesc-proeaja">
+        </div>
         <a href="https://ceproesc.com.br/" class="block mt-4 text-center text-sm underline text-gray-500 hover:text-green-500">Voltar para a home</a>
 
         <h1 class="mt-8 text-center font-semibold text-3xl lg:text-4xl">Formulário do Candidato</h1>
