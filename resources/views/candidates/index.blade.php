@@ -130,9 +130,10 @@
     <x-slot name="header">
         <x-card.list.table-header class="col-span-3" name="nome" />
         <x-card.list.table-header class="col-span-2 text-center" name="idade" />
-        <x-card.list.table-header class="col-span-2" name="gênero" />
+        <x-card.list.table-header class="col-span-1" name="gênero" />
         <x-card.list.table-header class="col-span-2" name="cidade" />
         <x-card.list.table-header class="col-span-2" name="escolaridade" />
+        <x-card.list.table-header class="col-span-1" name="data" />
         <x-card.list.table-header class="col-span-1" name="" />
     </x-slot>
 
@@ -156,7 +157,7 @@
                     </x-slot>
                 </x-card.list.table-body-item>
 
-                <x-card.list.table-body-item class="flex items-center col-span-2">
+                <x-card.list.table-body-item class="flex items-center col-span-1">
                     <x-slot name="item">
                         <span>{{ $entry->genero }}</span>
                     </x-slot>
@@ -171,6 +172,14 @@
                 <x-card.list.table-body-item class="flex items-center col-span-2">
                     <x-slot name="item">
                         <span>{{ $entry->escolaridade }}</span>
+                    </x-slot>
+                </x-card.list.table-body-item>
+
+                <x-card.list.table-body-item class="flex items-center col-span-1">
+                    <x-slot name="item">
+                        <div class="flex items-center h-full w-full">
+                            <span class="normal-case">{{ $entry->created_at->format('d-m-Y') }}</span>
+                        </div>
                     </x-slot>
                 </x-card.list.table-body-item>
 
@@ -205,48 +214,102 @@
         Alpine.data('filter', () => ({
             filter: {
                 name: {
-                    value: '{{ request()->input('filter.name', null) }}',
-                    active: {{ request()->has('filter.name') ? 'true' : 'false' }}
+                    value: '{{ request()->input('
+                    filter.name ', null) }}',
+                    active: {
+                        {
+                            request() - > has('filter.name') ? 'true' : 'false'
+                        }
+                    }
                 },
                 agefrom: {
-                    value: '{{ request()->input('filter.agefrom', null) }}',
-                    active: {{ request()->has('filter.agefrom') ? 'true' : 'false' }}
+                    value: '{{ request()->input('
+                    filter.agefrom ', null) }}',
+                    active: {
+                        {
+                            request() - > has('filter.agefrom') ? 'true' : 'false'
+                        }
+                    }
                 },
                 ageto: {
-                    value: '{{ request()->input('filter.ageto', null) }}',
-                    active: {{ request()->has('filter.ageto') ? 'true' : 'false' }}
+                    value: '{{ request()->input('
+                    filter.ageto ', null) }}',
+                    active: {
+                        {
+                            request() - > has('filter.ageto') ? 'true' : 'false'
+                        }
+                    }
                 },
                 gender: {
-                    value: '{{ request()->input('filter.gender', null) }}',
-                    active: {{ request()->has('filter.gender') ? 'true' : 'false' }}
+                    value: '{{ request()->input('
+                    filter.gender ', null) }}',
+                    active: {
+                        {
+                            request() - > has('filter.gender') ? 'true' : 'false'
+                        }
+                    }
                 },
                 schooling: {
-                    value: '{{ request()->input('filter.schooling', null) }}',
-                    active: {{ request()->has('filter.schooling') ? 'true' : 'false' }}
+                    value: '{{ request()->input('
+                    filter.schooling ', null) }}',
+                    active: {
+                        {
+                            request() - > has('filter.schooling') ? 'true' : 'false'
+                        }
+                    }
                 },
                 course: {
-                    value: '{{ request()->input('filter.course', null) }}',
-                    active: {{ request()->has('filter.course') ? 'true' : 'false' }}
+                    value: '{{ request()->input('
+                    filter.course ', null) }}',
+                    active: {
+                        {
+                            request() - > has('filter.course') ? 'true' : 'false'
+                        }
+                    }
                 },
                 complementary: {
-                    value: '{{ request()->input('filter.complementary', null) }}',
-                    active: {{ request()->has('filter.complementary') ? 'true' : 'false' }}
+                    value: '{{ request()->input('
+                    filter.complementary ', null) }}',
+                    active: {
+                        {
+                            request() - > has('filter.complementary') ? 'true' : 'false'
+                        }
+                    }
                 },
                 district: {
-                    value: '{{ request()->input('filter.district', null) }}',
-                    active: {{ request()->has('filter.district') ? 'true' : 'false' }}
+                    value: '{{ request()->input('
+                    filter.district ', null) }}',
+                    active: {
+                        {
+                            request() - > has('filter.district') ? 'true' : 'false'
+                        }
+                    }
                 },
                 employed: {
-                    value: '{{ request()->input('filter.employed', null) }}',
-                    active: {{ request()->has('filter.employed') ? 'true' : 'false' }}
+                    value: '{{ request()->input('
+                    filter.employed ', null) }}',
+                    active: {
+                        {
+                            request() - > has('filter.employed') ? 'true' : 'false'
+                        }
+                    }
                 },
                 city: {
-                    value: '{{ request()->input('filter.city', null) }}',
-                    active: {{ request()->has('filter.city') ? 'true' : 'false' }}
+                    value: '{{ request()->input('
+                    filter.city ', null) }}',
+                    active: {
+                        {
+                            request() - > has('filter.city') ? 'true' : 'false'
+                        }
+                    }
                 }
             },
 
-            show: {{ request()->boolean('show') ? 'true' : 'false' }},
+            show: {
+                {
+                    request() - > boolean('show') ? 'true' : 'false'
+                }
+            },
 
             init() {
                 Object.keys(this.filter).forEach((key) => {
@@ -259,7 +322,7 @@
             },
 
             prepareFilters(filters) {
-                return Object.entries(filters).reduce(function (mapped, filter) {
+                return Object.entries(filters).reduce(function(mapped, filter) {
 
                     if (!filter[1].active || filter[1].value == null) {
                         return mapped;
@@ -277,7 +340,7 @@
             },
 
             parseQuery(filters) {
-                query = filters.reduce(function (query, filter, i, a) {
+                query = filters.reduce(function(query, filter, i, a) {
                     query = query + `filter[${filter[0]}]=${filter[1]}`;
 
                     if ((i + 1) < a.length) {

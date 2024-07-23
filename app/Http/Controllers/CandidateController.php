@@ -102,7 +102,7 @@ class CandidateController extends Controller
 
     private function getEntries()
     {
-        $entries = AprendizForm::select('id', 'nome', 'data_de_nascimento', 'genero', 'cidade_onde_mora', 'escolaridade');
+        $entries = AprendizForm::select('id', 'nome', 'data_de_nascimento', 'genero', 'cidade_onde_mora', 'escolaridade', 'created_at');
 
         if (request()->missing('filter')) {
             return $entries->paginate(10);
