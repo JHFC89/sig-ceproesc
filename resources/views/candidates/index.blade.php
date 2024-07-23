@@ -214,102 +214,48 @@
         Alpine.data('filter', () => ({
             filter: {
                 name: {
-                    value: '{{ request()->input('
-                    filter.name ', null) }}',
-                    active: {
-                        {
-                            request() - > has('filter.name') ? 'true' : 'false'
-                        }
-                    }
+                    value: '{{ request()->input('filter.name', null) }}',
+                    active: {{ request()->has('filter.name') ? 'true' : 'false' }}
                 },
                 agefrom: {
-                    value: '{{ request()->input('
-                    filter.agefrom ', null) }}',
-                    active: {
-                        {
-                            request() - > has('filter.agefrom') ? 'true' : 'false'
-                        }
-                    }
+                    value: '{{ request()->input('filter.agefrom', null) }}',
+                    active: {{ request()->has('filter.agefrom') ? 'true' : 'false' }}
                 },
                 ageto: {
-                    value: '{{ request()->input('
-                    filter.ageto ', null) }}',
-                    active: {
-                        {
-                            request() - > has('filter.ageto') ? 'true' : 'false'
-                        }
-                    }
+                    value: '{{ request()->input('filter.ageto', null) }}',
+                    active: {{ request()->has('filter.ageto') ? 'true' : 'false' }}
                 },
                 gender: {
-                    value: '{{ request()->input('
-                    filter.gender ', null) }}',
-                    active: {
-                        {
-                            request() - > has('filter.gender') ? 'true' : 'false'
-                        }
-                    }
+                    value: '{{ request()->input('filter.gender', null) }}',
+                    active: {{ request()->has('filter.gender') ? 'true' : 'false' }}
                 },
                 schooling: {
-                    value: '{{ request()->input('
-                    filter.schooling ', null) }}',
-                    active: {
-                        {
-                            request() - > has('filter.schooling') ? 'true' : 'false'
-                        }
-                    }
+                    value: '{{ request()->input('filter.schooling', null) }}',
+                    active: {{ request()->has('filter.schooling') ? 'true' : 'false' }}
                 },
                 course: {
-                    value: '{{ request()->input('
-                    filter.course ', null) }}',
-                    active: {
-                        {
-                            request() - > has('filter.course') ? 'true' : 'false'
-                        }
-                    }
+                    value: '{{ request()->input('filter.course', null) }}',
+                    active: {{ request()->has('filter.course') ? 'true' : 'false' }}
                 },
                 complementary: {
-                    value: '{{ request()->input('
-                    filter.complementary ', null) }}',
-                    active: {
-                        {
-                            request() - > has('filter.complementary') ? 'true' : 'false'
-                        }
-                    }
+                    value: '{{ request()->input('filter.complementary', null) }}',
+                    active: {{ request()->has('filter.complementary') ? 'true' : 'false' }}
                 },
                 district: {
-                    value: '{{ request()->input('
-                    filter.district ', null) }}',
-                    active: {
-                        {
-                            request() - > has('filter.district') ? 'true' : 'false'
-                        }
-                    }
+                    value: '{{ request()->input('filter.district', null) }}',
+                    active: {{ request()->has('filter.district') ? 'true' : 'false' }}
                 },
                 employed: {
-                    value: '{{ request()->input('
-                    filter.employed ', null) }}',
-                    active: {
-                        {
-                            request() - > has('filter.employed') ? 'true' : 'false'
-                        }
-                    }
+                    value: '{{ request()->input('filter.employed', null) }}',
+                    active: {{ request()->has('filter.employed') ? 'true' : 'false' }}
                 },
                 city: {
-                    value: '{{ request()->input('
-                    filter.city ', null) }}',
-                    active: {
-                        {
-                            request() - > has('filter.city') ? 'true' : 'false'
-                        }
-                    }
+                    value: '{{ request()->input('filter.city', null) }}',
+                    active: {{ request()->has('filter.city') ? 'true' : 'false' }}
                 }
             },
 
-            show: {
-                {
-                    request() - > boolean('show') ? 'true' : 'false'
-                }
-            },
+            show: {{ request()->boolean('show') ? 'true' : 'false' }},
 
             init() {
                 Object.keys(this.filter).forEach((key) => {
