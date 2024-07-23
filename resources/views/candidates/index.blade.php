@@ -128,12 +128,12 @@
     </x-slot>
 
     <x-slot name="header">
+        <x-card.list.table-header class="col-span-1" name="data" />
         <x-card.list.table-header class="col-span-3" name="nome" />
         <x-card.list.table-header class="col-span-2 text-center" name="idade" />
         <x-card.list.table-header class="col-span-1" name="gênero" />
         <x-card.list.table-header class="col-span-2" name="cidade" />
         <x-card.list.table-header class="col-span-2" name="escolaridade" />
-        <x-card.list.table-header class="col-span-1" name="data" />
         <x-card.list.table-header class="col-span-1" name="" />
     </x-slot>
 
@@ -142,6 +142,14 @@
         @foreach ($entries as $entry)
         <x-card.list.table-row>
             <x-slot name="items">
+
+                <x-card.list.table-body-item class="flex items-center col-span-1">
+                    <x-slot name="item">
+                        <div class="flex items-center h-full w-full">
+                            <span class="normal-case">{{ $entry->created_at->format('d-m-Y') }}</span>
+                        </div>
+                    </x-slot>
+                </x-card.list.table-body-item>
 
                 <x-card.list.table-body-item class="flex items-center col-span-3">
                     <x-slot name="item">
@@ -172,14 +180,6 @@
                 <x-card.list.table-body-item class="flex items-center col-span-2">
                     <x-slot name="item">
                         <span>{{ $entry->escolaridade }}</span>
-                    </x-slot>
-                </x-card.list.table-body-item>
-
-                <x-card.list.table-body-item class="flex items-center col-span-1">
-                    <x-slot name="item">
-                        <div class="flex items-center h-full w-full">
-                            <span class="normal-case">{{ $entry->created_at->format('d-m-Y') }}</span>
-                        </div>
                     </x-slot>
                 </x-card.list.table-body-item>
 
