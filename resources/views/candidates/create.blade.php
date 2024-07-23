@@ -32,7 +32,7 @@
                 <h2 class="text-center text-xl lg:text-2xl">Dados Cadastrais</h2>
 
                 <div class="mt-4 space-y-4 lg:grid lg:grid-cols-3 lg:gap-6 lg:space-y-0">
-                    <x-candidate-subscription.text name="nome" label="Nome" :value="old('nome')" legend="Se usar nome social, coloque entre parênteses." />
+                    <x-candidate-subscription.name name="nome" label="Nome completo" :value="old('nome')" legend="Se usar nome social, coloque entre parênteses." />
                     <x-candidate-subscription.text name="email" label="E-mail" :value="old('email')" />
                     <x-candidate-subscription.date name="data_de_nascimento" label="Data de nascimento" :value="old('data_de_nascimento')" />
 
