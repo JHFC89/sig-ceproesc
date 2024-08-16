@@ -108,7 +108,9 @@
             <section class="flex">
 
                 <div class="flex items-center w-1/2 pl-4">
-                    <x-icons.logo-ceproesc class="w-10/12 h-auto" />
+                    <div class="pl-4">
+                        <x-icons.logo-ceproesc2 />
+                    </div>
                 </div>
 
                 <div class="flex justify-start items-center w-1/2 pr-12">
