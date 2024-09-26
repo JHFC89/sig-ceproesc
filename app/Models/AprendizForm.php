@@ -12,6 +12,7 @@ class AprendizForm extends Model
 {
     use HasFactory;
 
+    public const PROGRAMAS = ['estágio', 'aprendiz', 'ambos'];
     public const GENEROS = ['masculino', 'feminino'];
     public const HABILIDADES_MANUAIS = ['destro', 'canhoto'];
     public const ESTADOS = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
@@ -352,6 +353,8 @@ class AprendizForm extends Model
     static public function getRules()
     {
         $rules = [
+            'vaga' => ['nullable', 'string', 'max:255'],
+            'programa' => ['nullable', Rule::in(Self::PROGRAMAS)],
             'nome' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'max:255'],
             'data_de_nascimento' => ['required', 'date'],

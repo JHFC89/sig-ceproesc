@@ -102,7 +102,7 @@ class CandidateController extends Controller
 
     private function getEntries()
     {
-        $entries = AprendizForm::select('id', 'nome', 'data_de_nascimento', 'genero', 'cidade_onde_mora', 'escolaridade', 'created_at');
+        $entries = AprendizForm::select('id', 'nome', 'data_de_nascimento', 'genero', 'cidade_onde_mora', 'escolaridade', 'vaga', 'programa', 'created_at');
 
         if (request()->missing('filter')) {
             return $entries->paginate(10);
@@ -131,6 +131,8 @@ class CandidateController extends Controller
             'district'          => 'bairro',
             'city'              => 'cidade_onde_mora',
             'employed'          => 'esta_empregado',
+            'job'               => 'vaga',
+            'program'           => 'programa',
         ];
 
         if (!array_key_exists($field, $fields)) {
@@ -154,6 +156,11 @@ class CandidateController extends Controller
             if (in_array($column, ['data_de_nascimento', 'escolaridade', 'esta_empregado'])) {
                 $query->where($column, $value);
 
+                return;
+            }
+
+            if ($column === 'programa') {
+                $query->where('programa', $value)->orWhere('programa', 'ambos');
                 return;
             }
 

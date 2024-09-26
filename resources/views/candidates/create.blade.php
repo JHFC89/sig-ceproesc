@@ -26,6 +26,16 @@
 
         <form x-ref="form" action="{{ route('cadidates.store') }}" method="POST" class="space-y-4 lg:container lg:mx-auto lg:max-w-screen-lg lg:space-y-8">
             @csrf
+            <section class="px-2 py-4">
+
+                <h2 class="text-center text-xl lg:text-2xl">Interesses</h2>
+
+                <div class="mt-4 space-y-4 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0">
+                    <x-candidate-subscription.text :optional="true" name="vaga" label="Qual vaga você tem interesse?" :value="old('vaga')" legend="Campo opcional."/>
+                    <x-candidate-subscription.radio :optional="true" name="programa" label="Qual programa você tem interesse?" :options="App\Models\AprendizForm::PROGRAMAS" :value="old('programa')" legend="Campo opcional."/>
+                </div>
+
+            </section>
 
             <section class="px-2 py-4">
 

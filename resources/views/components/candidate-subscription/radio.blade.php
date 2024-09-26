@@ -1,4 +1,4 @@
-@props(['name', 'label', 'options', 'value' => '', 'legend' => null])
+@props(['name', 'label', 'options', 'value' => '', 'legend' => null, 'optional' => false])
 
 <div {{ $attributes }} >
 
@@ -8,7 +8,7 @@
     <div>
         <label class="inline-flex items-center">
             <input
-                required
+                {{ $optional === true ? '' : 'required' }}
                 type="radio"
                 name="{{ $name }}"
                 value="{{ $option }}"

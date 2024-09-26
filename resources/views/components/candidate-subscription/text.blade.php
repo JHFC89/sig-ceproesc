@@ -1,9 +1,9 @@
-@props(['name', 'label', 'value' => '', 'legend' => null])
+@props(['name', 'label', 'value' => '', 'legend' => null, 'optional' => false])
 
 <div {{ $attributes }}>
     <label for="{{ $name }}" class="font-bold text-base">{{ $label }}</label>
     <input
-        required
+        {{ $optional === true ? '' : 'required' }}
         type="text"
         name="{{ $name }}"
         value="{{ $value }}"

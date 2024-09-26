@@ -114,6 +114,24 @@
                                 </div>
                             </li>
 
+                            <li>
+                                <label for="job" class="block px-2 py-1 bg-gray-100">Vaga de interesse</label>
+                                <div class="px-2 py-2">
+                                    <input x-model="filter.job.value" name="job" id="job" type="text" class="block w-full form-input font-sans py-0 px-1 rounded-md">
+                                </div>
+                            </li>
+
+                            <li>
+                                <label for="program" class="block px-2 py-1 bg-gray-100">Programa de interesse</label>
+                                <div class="px-2 py-2">
+                                    <select x-model="filter.program.value" name="program" id="program" type="select" class="block w-full form-select font-sans py-0 px-1 rounded-md">
+                                        <option value="">---</option>
+                                        <option value="aprendiz">Aprendiz</option>
+                                        <option value="estágio">Estágio</option>
+                                    </select>
+                                </div>
+                            </li>
+
                             <li class="flex justify-end px-2 py-2">
                                 <button @click.prevent="send(false)" class="px-4 py-1 text-white font-sans uppercase text-xs bg-blue-500 rounded-md shadow-md hover:bg-blue-700">filtrar</button>
                             </li>
@@ -130,10 +148,11 @@
     <x-slot name="header">
         <x-card.list.table-header class="col-span-1" name="data" />
         <x-card.list.table-header class="col-span-3" name="nome" />
-        <x-card.list.table-header class="col-span-2 text-center" name="idade" />
+        <x-card.list.table-header class="col-span-1 text-center" name="idade" />
         <x-card.list.table-header class="col-span-1" name="gênero" />
         <x-card.list.table-header class="col-span-2" name="cidade" />
         <x-card.list.table-header class="col-span-2" name="escolaridade" />
+        <x-card.list.table-header class="col-span-1" name="programa" />
         <x-card.list.table-header class="col-span-1" name="" />
     </x-slot>
 
@@ -157,7 +176,7 @@
                     </x-slot>
                 </x-card.list.table-body-item>
 
-                <x-card.list.table-body-item class="flex items-center col-span-2">
+                <x-card.list.table-body-item class="flex items-center col-span-1">
                     <x-slot name="item">
                         <div class="flex items-center justify-center h-full w-full">
                             <span class="normal-case">{{ \Carbon\Carbon::parse($entry->data_de_nascimento)->diff(\Carbon\Carbon::now())->format('%y') }}</span>
@@ -185,7 +204,18 @@
 
                 <x-card.list.table-body-item class="flex items-center col-span-1">
                     <x-slot name="item">
+                        <span>{{ $entry->programa }}</span>
+                    </x-slot>
+                </x-card.list.table-body-item>
+
+                <x-card.list.table-body-item class="flex items-center col-span-1">
+                    <x-slot name="item">
                         <div class="flex justify-end space-x-2 w-full">
+                            @if ($entry->vaga)
+                                <span title="{{ $entry->vaga }}">
+                                    <svg class="w-6 text-gray-300 hover:text-blue-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12.3 7.29c.2-.18.44-.29.7-.29c.27 0 .5.11.71.29c.19.21.29.45.29.71c0 .27-.1.5-.29.71c-.21.19-.44.29-.71.29c-.26 0-.5-.1-.7-.29c-.19-.21-.3-.44-.3-.71c0-.26.11-.5.3-.71m-2.5 4.68s2.17-1.72 2.96-1.79c.74-.06.59.79.52 1.23l-.01.06c-.14.53-.31 1.17-.48 1.78c-.38 1.39-.75 2.75-.66 3c.1.34.72-.09 1.17-.39c.06-.04.11-.08.16-.11c0 0 .08-.08.16.03c.02.03.04.06.06.08c.09.14.14.19.02.27l-.04.02c-.22.15-1.16.81-1.54 1.05c-.41.27-1.98 1.17-1.74-.58c.21-1.23.49-2.29.71-3.12c.41-1.5.59-2.18-.33-1.59c-.37.22-.59.36-.72.45c-.11.08-.12.08-.19-.05l-.03-.06l-.05-.08c-.07-.1-.07-.11.03-.2M22 12c0 5.5-4.5 10-10 10S2 17.5 2 12S6.5 2 12 2s10 4.5 10 10m-2 0c0-4.42-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8s8-3.58 8-8"/></svg>
+                                </span>
+                            @endif
                             <a href="{{ route('candidates.show', ['entry' => $entry ]) }}" class="text-gray-300 hover:text-blue-300">
                                 <x-icons.see class="w-6" />
                             </a>
@@ -252,6 +282,14 @@
                 city: {
                     value: '{{ request()->input('filter.city', null) }}',
                     active: {{ request()->has('filter.city') ? 'true' : 'false' }}
+                },
+                job: {
+                    value: '{{ request()->input('filter.job', null) }}',
+                    active: {{ request()->has('filter.job') ? 'true' : 'false' }}
+                },
+                program: {
+                    value: '{{ request()->input('filter.program', null) }}',
+                    active: {{ request()->has('filter.program') ? 'true' : 'false' }}
                 }
             },
 
