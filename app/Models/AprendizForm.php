@@ -97,7 +97,7 @@ class AprendizForm extends Model
                 'genero' => $this->genero,
                 'habilidade_manual' => $this->habilidade_manual,
                 'estado_de_naturalidade' => $this->estado_de_naturalidade,
-                'cidade_onde_nasceu' => $this->nome,
+                'cidade_onde_nasceu' => $this->cidade_onde_nasceu,
                 'cidade_onde_mora' => $this->cidade_onde_mora,
                 'logradouro' => $this->logradouro,
                 'numero' => $this->numero,
@@ -375,7 +375,7 @@ class AprendizForm extends Model
             'categoria' => ['required', Rule::in(Self::CATEGORIAS_CNH)],
             'facebook' => ['required', 'string', 'max:255'],
             'instagram' => ['required', 'string', 'max:255'],
-            'quantas_pessoas_moram_com_voce' => ['required', 'integer', 'min:0','max:10'],
+            'quantas_pessoas_moram_com_voce' => ['required', 'integer', 'min:0', 'max:10'],
             'moradores' => [Rule::requiredIf(request()->input('quantas_pessoas_moram_com_voce') > 0)],
             'a_familia_recebe_algum_auxilio_do_governo' => ['required', Rule::in(['sim', 'não'])],
             'cpf' => ['required', 'string', 'max:14'],
@@ -415,7 +415,8 @@ class AprendizForm extends Model
         return $rules;
     }
 
-    public static function parseInputToJson($input, $fields) {
+    public static function parseInputToJson($input, $fields)
+    {
         $mapped = collect($input)->chunk($fields)->map(function ($value) {
             return $value->flatMap(function ($value) {
                 return $value;
